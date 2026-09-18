@@ -512,7 +512,7 @@ const sponsorRows: SponsorRow[] = [
   ["your-dream-home", "Your Dream Home Conveyancing", "Gold", "gold-your-dream-home-conveyancing.png"],
   ["everest-home-loans", "Everest Home Loans", "Gold"],
   ["solve-education", "Solve Education Consultancy", "Gold"],
-  ["maven-consultancy", "Maven Consultancy", "Silver"],
+  ["maven-consultancy", "Maven Consulting Group", "Silver", "silver-maven-consulting-group.png"],
   ["sunrise-energy", "Sunrise Energy", "Silver"],
   ["derrimut-butcher", "Derrimut Butcher", "Silver", "silver-derrimut-butcher.png"],
   ["sapphire-estate", "Sapphire Estate Agents", "Silver", "silver-sapphire-estate-agents.png"],

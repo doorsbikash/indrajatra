@@ -6,7 +6,6 @@ Updated from the confirmed sponsor register on 18 September 2026.
 
 - Everest Home Loans
 - Solve Education Consultancy
-- Maven Consultancy
 - Sunrise Energy
 - APBiz Solutions
 - Colorate Prints
@@ -24,4 +23,4 @@ Until approved artwork is supplied, the visitor app displays the sponsor's name 
 - Student Destiny and Khukuri Melbourne are not published because the register says "Not approved yet".
 - Everest Landscaping appears under both Gold and Silver; it remains Gold because the earlier approved record and existing artwork identify it as Gold.
 - Preferred Consultancy appears once with a $1,000 paid note and again as an approved Silver sponsor; the explicit Silver category is used.
-- Capkon Home Loans and Central Australian College are grouped with Silver sponsors in the source register, although their category cells are incomplete.
+- Capkon Home Loans and Central Australian College are confirmed Silver sponsors.
