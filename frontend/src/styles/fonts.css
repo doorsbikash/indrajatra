@@ -1,0 +1,28 @@
+/* ------------------------------------------------------------------
+   Self-hosted typefaces.
+
+   Not Google Fonts: Diggers Rest has patchy reception, the app has to
+   work offline once opened, and a render-blocking third-party request
+   is the wrong trade for a festival crowd on 4G. These ship with the
+   bundle and are precached by the service worker.
+
+   Archivo (variable, width axis) is the display voice — it matches the
+   heavy condensed uppercase of the Newa Guthi Victoria wordmark.
+   IBM Plex Sans carries the body and has a real Devanagari sibling,
+   so the Nepal Bhasa names on the trail set in the same family.
+   IBM Plex Mono carries every time on the programme.
+   ------------------------------------------------------------------ */
+
+@import "@fontsource-variable/archivo/wdth.css";
+
+@import "@fontsource/ibm-plex-sans/400.css";
+@import "@fontsource/ibm-plex-sans/500.css";
+@import "@fontsource/ibm-plex-sans/600.css";
+@import "@fontsource/ibm-plex-sans/700.css";
+
+@import "@fontsource/ibm-plex-sans-devanagari/400.css";
+@import "@fontsource/ibm-plex-sans-devanagari/600.css";
+
+@import "@fontsource/ibm-plex-mono/400.css";
+@import "@fontsource/ibm-plex-mono/500.css";
+@import "@fontsource/ibm-plex-mono/600.css";

@@ -1,0 +1,22 @@
+# Content And Launch Checklist
+
+- Final event address, site measurements, parking/public transport notes, and external map link.
+- Eventbrite URL and any digital pass/check-in decision.
+- Official Newa Guthi logo, brand colours, imagery, and usage approval.
+- Final schedule, locations, categories, run sheet, and event-day operators.
+- Illustrated venue map, landmark names, amenity placement, and accessible route notes.
+- Approved English cultural copy for all 12 trail points, named approver, sources, and review date.
+- Approved Nepali and Nepal Bhasa translations; confirm preferred Nepal Bhasa locale label/code.
+- Pronunciation audio, video, and image rights.
+- Vendor/sponsor names, tiers, logos, links, stall numbers, menu highlights, dietary/allergy details.
+- Membership URL, 25% offer code, eligible plans, terms, start/end time, and approval to publish.
+- Newsletter provider/list, consent wording, and spam protection choice.
+- Classes and volunteer URLs/forms.
+- First aid location, lost children/lost property procedure, event contact number, accessibility support, emergency escalation wording.
+- Organiser user list, roles, first-admin bootstrap procedure, and rehearsal plan.
+- Hostinger SSH path, subdomain document root, PHP version/extensions, MySQL database/user, secret storage, backups, and rollback location.
+- Analytics provider/consent/privacy review.
+- AI provider/credentials, approved knowledge set, safety limits, and final enablement decision.
+- Domain DNS, TLS, cache policy, and launch cutover date.
+- QR print proof, label copy, mounting locations, scan test on iOS and Android.
+- Content freeze, backup operator, launch-day support channel, and rollback decision owner.

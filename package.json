@@ -1,0 +1,24 @@
+{
+  "name": "indra-jatra-melbourne-2026",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "npm --prefix frontend run dev",
+    "build": "npm --prefix frontend run build",
+    "preview": "npm --prefix frontend run preview",
+    "typecheck": "npm --prefix frontend run typecheck",
+    "lint": "npm --prefix frontend run lint",
+    "test": "npm --prefix frontend run test",
+    "validate:content": "node --experimental-strip-types scripts/validate-content.mjs",
+    "export:qr": "node --experimental-strip-types scripts/export-qr.mjs",
+    "seed:reset": "node scripts/reset-seed-demo.mjs",
+    "check": "npm run validate:content && npm run typecheck && npm run lint && npm run test && npm run build"
+  },
+  "devDependencies": {
+    "qrcode": "^1.5.4"
+  },
+  "workspaces": [
+    "frontend"
+  ]
+}

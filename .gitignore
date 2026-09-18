@@ -1,0 +1,32 @@
+# Dependencies
+node_modules/
+frontend/node_modules/
+backend/vendor/
+
+# Generated builds and releases
+build/
+frontend/dist/
+frontend/tsconfig.tsbuildinfo
+artifacts/deployment/
+
+# Local configuration and secrets
+.env
+.env.*
+!.env.example
+!deploy/app.env.example
+backend/config/app.env
+config/app.env
+
+# Editor, OS and temporary files
+.DS_Store
+**/.DS_Store
+.idea/
+.vscode/
+*.log
+*.tmp
+*.swp
+
+# Test output
+coverage/
+playwright-report/
+test-results/

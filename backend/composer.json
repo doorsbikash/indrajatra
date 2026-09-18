@@ -1,0 +1,19 @@
+{
+  "name": "newa-guthi/indra-jatra-api",
+  "description": "PHP JSON API boundary for Indra Jatra Melbourne 2026 PWA",
+  "type": "project",
+  "license": "proprietary",
+  "require": {
+    "php": ">=8.2"
+  },
+  "autoload": {
+    "psr-4": {
+      "IndraJatra\\": "src/"
+    }
+  },
+  "scripts": {
+    "test": "php -r \"echo 'Backend smoke OK'.PHP_EOL;\"",
+    "migrate": "php database/migrate.php",
+    "bootstrap-admin": "php database/bootstrap-admin.php"
+  }
+}
