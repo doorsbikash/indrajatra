@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { normaliseTime, parseRunSheet, slugify, toSeedRows, toTimeInput } from "./runSheet";
-import { applyLive, type LiveState } from "./liveStore";
-import type { ScheduleItem } from "../types";
+import { applyLive, applyLiveListings, type LiveState } from "./liveStore";
+import type { Listing, ScheduleItem } from "../types";
 
 const DAY = "2026-09-26";
 const opts = {
@@ -153,6 +153,25 @@ describe("applyLive with organiser edits", () => {
     const original = item();
     const [result] = applyLive([original], state());
     expect(result).toBe(original);
+  });
+});
+
+describe("applyLiveListings", () => {
+  const listing: Listing = {
+    id: "gelato", slug: "gelato", name: "Gelato",
+    listingType: "food", categories: ["Gelato", "Food truck"], published: true
+  };
+
+  it("applies organiser tag additions and removals", () => {
+    const [result] = applyLiveListings([listing], state({
+      listingCategories: { gelato: ["Desserts"] }
+    }));
+    expect(result.categories).toEqual(["Desserts"]);
+  });
+
+  it("leaves untouched listings alone", () => {
+    const [result] = applyLiveListings([listing], state());
+    expect(result).toBe(listing);
   });
 });
 

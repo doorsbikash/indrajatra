@@ -6,7 +6,9 @@ import { SignInSheet } from "../components/SignInSheet";
 import { getRepository } from "../lib/repositories/repository";
 import { auth, type VisitorProfile } from "../lib/auth/auth";
 import { localFestival } from "../lib/storage/localFestival";
-import { applyLive, applyLiveAnnouncements, applyLiveMedia, liveStore } from "../lib/live/liveStore";
+import {
+  applyLive, applyLiveAnnouncements, applyLiveListings, applyLiveMedia, liveStore
+} from "../lib/live/liveStore";
 import { clock, startTicker } from "../lib/clock/clock";
 import type { FestivalData, Locale } from "../lib/types";
 
@@ -78,7 +80,8 @@ export default function App() {
     if (!data) return null;
     void tick;
     // Organiser photo swaps are folded in before anything reads the content.
-    const view = applyLiveMedia(data, live);
+    const mediaView = applyLiveMedia(data, live);
+    const view = { ...mediaView, listings: applyLiveListings(mediaView.listings, live) };
     return {
       data: view,
       schedule: applyLive(view.schedule, live),

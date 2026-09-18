@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import {
-  Ban, CheckCheck, Clock, Image, ListOrdered, Megaphone, Play, Radio,
+  Ban, CheckCheck, Clock, Image, ListOrdered, Megaphone, Play, Radio, Store,
   RotateCcw, ShieldAlert, Undo2
 } from "lucide-react";
 import { useApp } from "../app/AppContext";
@@ -10,14 +10,16 @@ import { clock, DEFAULT_PREVIEW } from "../lib/clock/clock";
 import { formatTime, itemState } from "../lib/dates/schedule";
 import { RunSheetEditor } from "../components/admin/RunSheetEditor";
 import { PhotoManager } from "../components/admin/PhotoManager";
+import { StallEditor } from "../components/admin/StallEditor";
 import { FESTIVAL_DAY } from "../content/seed/data";
 import { t } from "../lib/text";
 
-type Tab = "live" | "runsheet" | "photos";
+type Tab = "live" | "runsheet" | "stalls" | "photos";
 
 const TABS: { id: Tab; label: string; icon: typeof Radio }[] = [
   { id: "live", label: "Run the day", icon: Radio },
   { id: "runsheet", label: "Run sheet", icon: ListOrdered },
+  { id: "stalls", label: "Stalls", icon: Store },
   { id: "photos", label: "Photos", icon: Image }
 ];
 
@@ -77,6 +79,8 @@ export function AdminPage() {
       )}
 
       {tab === "photos" && <PhotoManager data={data} schedule={schedule} toast={toast} />}
+
+      {tab === "stalls" && <StallEditor listings={data.listings} toast={toast} />}
 
       {tab === "live" && (
         <>

@@ -461,7 +461,8 @@ export const listings: Listing[] = [
   },
   {
     id: "evaryde-gelato", slug: "evaryde-gelato", name: "Evaryde Gelato",
-    listingType: "food", categories: ["Gelato", "Food truck", "Electricity requested"],
+    listingType: "food", categories: ["Gelato", "Food truck"],
+    organiserNotes: ["Electricity requested"],
     description: { en: "Gelato and ice cream served from the food-truck area." },
     locationId: "food-trucks", logo: "/brand/vendors/evaryde-gelato.jpg",
     confirmed: true, published: true

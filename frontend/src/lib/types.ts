@@ -102,6 +102,8 @@ export type Listing = {
   description?: LocalizedText;
   highlights?: LocalizedText[];
   dietaryTags?: string[];
+  /** Operational details visible in the organiser console, never the visitor directory. */
+  organiserNotes?: string[];
   locationId?: string;
   websiteUrl?: string;
   socialUrl?: string;

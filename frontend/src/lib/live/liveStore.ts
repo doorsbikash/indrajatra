@@ -21,7 +21,7 @@
    ------------------------------------------------------------------ */
 
 import type {
-  Announcement, FestivalData, ScheduleItem, ScheduleStatus
+  Announcement, FestivalData, Listing, ScheduleItem, ScheduleStatus
 } from "../types";
 
 const KEY = "ij26.live.v1";
@@ -69,13 +69,15 @@ export type LiveState = {
   added?: DraftItem[];
   /** Photo overrides: "hero", "trail:<id>", "sched:<id>" -> src. */
   media?: Record<string, string>;
+  /** Visitor-facing tag overrides for stalls and food vendors. */
+  listingCategories?: Record<string, string[]>;
   updatedAt: number;
 };
 
 export type WriteResult = { ok: boolean; reason?: string };
 
 const empty: LiveState = {
-  schedule: {}, announcements: {}, added: [], media: {}, updatedAt: 0
+  schedule: {}, announcements: {}, added: [], media: {}, listingCategories: {}, updatedAt: 0
 };
 
 let state: LiveState = read();
@@ -207,6 +209,20 @@ export const liveStore = {
 
   setAnnouncement(id: string, published: boolean) {
     commit({ ...state, announcements: { ...state.announcements, [id]: published } });
+  },
+
+  /* ---------------- stalls ---------------- */
+
+  setListingCategories(id: string, categories: string[]) {
+    const listingCategories = { ...(state.listingCategories ?? {}) };
+    listingCategories[id] = categories;
+    commit({ ...state, listingCategories });
+  },
+
+  clearListingCategories(id: string) {
+    const listingCategories = { ...(state.listingCategories ?? {}) };
+    delete listingCategories[id];
+    commit({ ...state, listingCategories });
   },
 
   /* ---------------- run sheet ---------------- */
@@ -381,6 +397,17 @@ export function applyLive(items: ScheduleItem[], live: LiveState): ScheduleItem[
 export function applyLiveAnnouncements(items: Announcement[], live: LiveState): Announcement[] {
   return items.map((a) =>
     a.id in live.announcements ? { ...a, published: live.announcements[a.id] } : a
+  );
+}
+
+/** Fold organiser tag changes onto visitor-facing stall listings. */
+export function applyLiveListings(items: Listing[], live: LiveState): Listing[] {
+  const overrides = live.listingCategories ?? {};
+  if (!Object.keys(overrides).length) return items;
+  return items.map((item) =>
+    Object.prototype.hasOwnProperty.call(overrides, item.id)
+      ? { ...item, categories: overrides[item.id] }
+      : item
   );
 }
 
