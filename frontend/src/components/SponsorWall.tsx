@@ -23,7 +23,11 @@ export function SponsorWall({ compact = false }: { compact?: boolean }) {
             <div className={`sponsor-grid sponsor-grid--${tier.toLowerCase()}`}>
               {inTier.map((sponsor) => (
                 <div className="sponsor-tile" key={sponsor.id} title={sponsor.name}>
-                  <img src={sponsor.logo} alt={sponsor.name} loading="lazy" decoding="async" />
+                  {sponsor.logo ? (
+                    <img src={sponsor.logo} alt={sponsor.name} loading="lazy" decoding="async" />
+                  ) : (
+                    <span className="sponsor-placeholder">{sponsor.name}</span>
+                  )}
                 </div>
               ))}
             </div>

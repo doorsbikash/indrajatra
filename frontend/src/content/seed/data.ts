@@ -425,44 +425,58 @@ export const trailPoints: TrailPoint[] = trailRows.map((row, index) => ({
 export const listings: Listing[] = [
   {
     id: "pasa-ya-kitchen", slug: "pasa-ya-kitchen", name: "Pasa Ya Kitchen",
-    listingType: "food", categories: ["Newari", "Nepali"],
-    description: { en: "Newari and Nepali home cooking — the stall to head for if you want choila, bara and the food people actually eat at a Newa feast." },
-    dietaryTags: ["Vegetarian options"], locationId: "food-trucks",
+    listingType: "food", categories: ["Newari kitchen"],
+    description: { en: "Newari food prepared and served from the festival food area." },
+    locationId: "food-trucks",
     confirmed: true, published: true
   },
   {
-    id: "nepmart", slug: "nepmart", name: "Nepmart Australia",
-    listingType: "food", categories: ["Nepali", "Groceries"],
-    description: { en: "Nepali groceries, snacks and pantry staples — including the ones that are hard to find anywhere else in Melbourne." },
-    locationId: "market-row", confirmed: true, published: true
+    id: "purbeli-food-truck", slug: "purbeli-food-truck", name: "Purbeli Food Truck",
+    listingType: "food", categories: ["Nepali food", "Food truck"],
+    description: { en: "Nepali food served from the festival food-truck area." },
+    locationId: "food-trucks", confirmed: true, published: true
+  },
+  {
+    id: "mandala-dine-in", slug: "mandala-dine-in", name: "Mandala Dine In",
+    listingType: "food", categories: ["Newari kitchen"],
+    description: { en: "Newari food prepared and served from the festival food area." },
+    locationId: "food-trucks", confirmed: true, published: true
   },
   {
     id: "mda-twista", slug: "mda-twista", name: "MDA Twista Potato",
     listingType: "food", categories: ["Snacks", "Vegetarian"],
-    description: { en: "Whole potatoes cut into a spiral, skewered and fried to order. Classic salt, chicken salt (vegetarian), peri peri, cheese, or salt and vinegar." },
-    dietaryTags: ["Vegetarian"], locationId: "food-trucks",
-    websiteUrl: "https://www.instagram.com/mdatwista/", confirmed: true, published: true
+    description: { en: "Twist potatoes served fresh from the food-truck area." },
+    locationId: "food-trucks", confirmed: true, published: true
   },
   {
     id: "twist-spot", slug: "twist-spot", name: "The Twist Spot",
     listingType: "food", categories: ["Snacks", "Vegetarian"],
-    description: { en: "Hot, crispy twisted potato spirals loaded with bold seasoning — chicken salt, peri peri or cheese. Made fresh while you wait." },
-    dietaryTags: ["Vegetarian"], locationId: "food-trucks",
-    websiteUrl: "https://thetwistspot.melbourne", confirmed: true, published: true
+    description: { en: "Twist potatoes served fresh from the food-truck area." },
+    locationId: "food-trucks", confirmed: true, published: true
   },
   {
-    id: "melbourne-da-adda", slug: "melbourne-da-adda", name: "Melbourne Da Adda",
-    listingType: "food", categories: ["Snacks", "Vegetarian"],
-    description: { en: "Spiral potatoes cooked to order and served hot, with a short menu and a fast queue." },
-    dietaryTags: ["Vegetarian"], locationId: "food-trucks",
-    websiteUrl: "https://www.facebook.com/melbournedaadda", confirmed: true, published: true
+    id: "evaryde-gelato", slug: "evaryde-gelato", name: "Evaryde Gelato",
+    listingType: "food", categories: ["Gelato", "Food truck", "Electricity requested"],
+    description: { en: "Gelato and ice cream served from the food-truck area." },
+    locationId: "food-trucks", confirmed: true, published: true
   },
   {
-    id: "magic-makeup-world", slug: "magic-makeup-world", name: "Magic Makeup World",
-    listingType: "market", categories: ["Family", "Arts & Crafts"],
-    description: { en: "Face painting and henna for children and adults, using child-safe hypoallergenic paints. Expect a queue after lunch." },
-    locationId: "market-row",
-    websiteUrl: "https://magicmakeupworld.com.au/", confirmed: true, published: true
+    id: "butta-studio", slug: "butta-studio", name: "Butta Studio",
+    listingType: "market", categories: ["Market stall"],
+    description: { en: "A confirmed festival market stall in the marquee row." },
+    locationId: "market-row", confirmed: true, published: true
+  },
+  {
+    id: "newari-family-attire", slug: "newari-family-attire", name: "Newari Family Attire",
+    listingType: "market", categories: ["Clothing", "Market stall"],
+    description: { en: "Newari attire available from the festival marquee row." },
+    locationId: "market-row", confirmed: true, published: true
+  },
+  {
+    id: "nep-mart", slug: "nep-mart", name: "Nep Mart",
+    listingType: "market", categories: ["Groceries", "Tea", "Market stall"],
+    description: { en: "Nepali groceries and tea available from the festival marquee row." },
+    locationId: "market-row", confirmed: true, published: true
   },
   {
     id: "ngv-desk", slug: "ngv-desk", name: "Newa Guthi Victoria",
@@ -483,7 +497,7 @@ export const listings: Listing[] = [
    the gate. Logos and tiers come from the 2026 sponsor pack.
    ================================================================== */
 
-type SponsorRow = [string, string, "Platinum" | "Gold" | "Silver", string];
+type SponsorRow = [string, string, "Platinum" | "Gold" | "Silver", string?];
 
 const sponsorRows: SponsorRow[] = [
   ["nab", "NAB", "Platinum", "platinum-nab.png"],
@@ -496,11 +510,22 @@ const sponsorRows: SponsorRow[] = [
   ["maximax", "MaxiMax Education & Migration Services", "Gold", "gold-maximax-education-migration-services.png"],
   ["sierra-homes", "Sierra Homes", "Gold", "gold-sierra-homes.png"],
   ["your-dream-home", "Your Dream Home Conveyancing", "Gold", "gold-your-dream-home-conveyancing.png"],
-  ["aven-consulting", "Aven Consulting Group", "Silver", "silver-aven-consulting-group.png"],
+  ["everest-home-loans", "Everest Home Loans", "Gold"],
+  ["solve-education", "Solve Education Consultancy", "Gold"],
+  ["maven-consultancy", "Maven Consultancy", "Silver"],
+  ["sunrise-energy", "Sunrise Energy", "Silver"],
   ["derrimut-butcher", "Derrimut Butcher", "Silver", "silver-derrimut-butcher.png"],
   ["sapphire-estate", "Sapphire Estate Agents", "Silver", "silver-sapphire-estate-agents.png"],
   ["st-aust-cares", "St Aust Cares", "Silver", "silver-st-aust-cares.png"],
-  ["supreme-mortgage", "Supreme Mortgage & Finance", "Silver", "silver-supreme-mortgage-finance.png"]
+  ["supreme-mortgage", "Supreme Mortgage & Finance", "Silver", "silver-supreme-mortgage-finance.png"],
+  ["apbiz-solutions", "APBiz Solutions", "Silver"],
+  ["colorate-prints", "Colorate Prints", "Silver"],
+  ["elite-curtains", "Elite Curtains and Blinds", "Silver"],
+  ["rs-painting", "RS Painting", "Silver"],
+  ["capkon-home-loans", "Capkon Home Loans", "Silver"],
+  ["mit", "Melbourne Institute of Technology", "Silver"],
+  ["preferred-consultancy", "Preferred Education & Migration Consultants", "Silver"],
+  ["central-australian-college", "Central Australian College", "Silver"]
 ];
 
 export const sponsors: Listing[] = sponsorRows.map(([id, name, tier, logo]) => ({
@@ -510,7 +535,7 @@ export const sponsors: Listing[] = sponsorRows.map(([id, name, tier, logo]) => (
   listingType: "sponsor" as const,
   categories: [tier],
   sponsorTier: tier,
-  logo: `/brand/sponsors/${logo}`,
+  logo: logo ? `/brand/sponsors/${logo}` : undefined,
   confirmed: true,
   published: true
 }));
