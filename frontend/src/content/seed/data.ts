@@ -428,55 +428,64 @@ export const listings: Listing[] = [
     listingType: "food", categories: ["Newari kitchen"],
     description: { en: "Newari food prepared and served from the festival food area." },
     locationId: "food-trucks",
+    logo: "/brand/vendors/pasa-ya-kitchen.png",
     confirmed: true, published: true
   },
   {
     id: "purbeli-food-truck", slug: "purbeli-food-truck", name: "Purbeli Food Truck",
     listingType: "food", categories: ["Nepali food", "Food truck"],
     description: { en: "Nepali food served from the festival food-truck area." },
-    locationId: "food-trucks", confirmed: true, published: true
+    locationId: "food-trucks", logo: "/brand/vendors/purbeli-food-truck.jpg",
+    confirmed: true, published: true
   },
   {
     id: "mandala-dine-in", slug: "mandala-dine-in", name: "Mandala Dine In",
     listingType: "food", categories: ["Newari kitchen"],
     description: { en: "Newari food prepared and served from the festival food area." },
-    locationId: "food-trucks", confirmed: true, published: true
+    locationId: "food-trucks", logo: "/brand/vendors/mandala-dine-in.jpg",
+    confirmed: true, published: true
   },
   {
     id: "mda-twista", slug: "mda-twista", name: "MDA Twista Potato",
     listingType: "food", categories: ["Snacks", "Vegetarian"],
     description: { en: "Twist potatoes served fresh from the food-truck area." },
-    locationId: "food-trucks", confirmed: true, published: true
+    locationId: "food-trucks", logo: "/brand/vendors/mda-twista-potato.jpg",
+    confirmed: true, published: true
   },
   {
     id: "twist-spot", slug: "twist-spot", name: "The Twist Spot",
     listingType: "food", categories: ["Snacks", "Vegetarian"],
     description: { en: "Twist potatoes served fresh from the food-truck area." },
-    locationId: "food-trucks", confirmed: true, published: true
+    locationId: "food-trucks", logo: "/brand/vendors/the-twist-spot.jpg",
+    confirmed: true, published: true
   },
   {
     id: "evaryde-gelato", slug: "evaryde-gelato", name: "Evaryde Gelato",
     listingType: "food", categories: ["Gelato", "Food truck", "Electricity requested"],
     description: { en: "Gelato and ice cream served from the food-truck area." },
-    locationId: "food-trucks", confirmed: true, published: true
+    locationId: "food-trucks", logo: "/brand/vendors/evaryde-gelato.jpg",
+    confirmed: true, published: true
   },
   {
     id: "butta-studio", slug: "butta-studio", name: "Butta Studio",
     listingType: "market", categories: ["Market stall"],
     description: { en: "A confirmed festival market stall in the marquee row." },
-    locationId: "market-row", confirmed: true, published: true
+    locationId: "market-row", logo: "/brand/vendors/butta-studio.jpg",
+    confirmed: true, published: true
   },
   {
     id: "newari-family-attire", slug: "newari-family-attire", name: "Newari Family Attire",
     listingType: "market", categories: ["Clothing", "Market stall"],
     description: { en: "Newari attire available from the festival marquee row." },
-    locationId: "market-row", confirmed: true, published: true
+    locationId: "market-row", logo: "/brand/vendors/newari-family-attire.jpg",
+    confirmed: true, published: true
   },
   {
     id: "nep-mart", slug: "nep-mart", name: "Nep Mart",
     listingType: "market", categories: ["Groceries", "Tea", "Market stall"],
     description: { en: "Nepali groceries and tea available from the festival marquee row." },
-    locationId: "market-row", confirmed: true, published: true
+    locationId: "market-row", logo: "/brand/vendors/nep-mart.jpg",
+    confirmed: true, published: true
   },
   {
     id: "ngv-desk", slug: "ngv-desk", name: "Newa Guthi Victoria",
