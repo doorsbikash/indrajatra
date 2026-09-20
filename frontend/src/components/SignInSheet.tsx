@@ -13,7 +13,7 @@ export function SignInSheet({
   onSignedIn: (profile: VisitorProfile) => void;
 }) {
   const [mode, setMode] = useState<"register" | "login">("register");
-  const [draft, setDraft] = useState<VisitorProfile>({ firstName: "", lastName: "", email: "", phone: "" });
+  const [draft, setDraft] = useState<VisitorProfile>({ firstName: "", lastName: "", email: "", phone: "", marketingConsent: false });
   const [challenge, setChallenge] = useState<AuthChallenge | null>(null);
   const [code, setCode] = useState("");
   const [error, setError] = useState("");
@@ -90,11 +90,18 @@ export function SignInSheet({
                 value={draft.email} onChange={(e) => setDraft({ ...draft, email: e.target.value })} />
             </label>
             {mode === "register" && (
-              <label className="field">
-                <span>Mobile</span>
-                <input required type="tel" autoComplete="tel" inputMode="tel"
-                  value={draft.phone} onChange={(e) => setDraft({ ...draft, phone: e.target.value })} />
-              </label>
+              <>
+                <label className="field">
+                  <span>Mobile</span>
+                  <input required type="tel" autoComplete="tel" inputMode="tel"
+                    value={draft.phone} onChange={(e) => setDraft({ ...draft, phone: e.target.value })} />
+                </label>
+                <label className="check-row">
+                  <input type="checkbox" checked={Boolean(draft.marketingConsent)}
+                    onChange={(e) => setDraft({ ...draft, marketingConsent: e.target.checked })} />
+                  <span>Send me occasional Newa Guthi festival and community updates.</span>
+                </label>
+              </>
             )}
             {error && <p className="form-error" role="alert">{error}</p>}
             <button className="btn btn--primary btn--block" disabled={busy}>
@@ -108,8 +115,8 @@ export function SignInSheet({
           <p className="privacy-note">
             <ShieldCheck size={15} />
             Your contact details are used to create and secure your festival pass. Saved events
-            and trail stamps stay on this device during staging. You can clear local festival data
-            any time from My Festival.
+            and trail stamps sync when you sign in. Marketing updates are optional, and you can
+            clear local festival data any time from My Festival.
           </p>
         </>
       ) : (

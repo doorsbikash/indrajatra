@@ -11,6 +11,8 @@ import {
 } from "../lib/live/liveStore";
 import { clock, startTicker } from "../lib/clock/clock";
 import type { FestivalData, Locale } from "../lib/types";
+import type { PassportState } from "../lib/storage/localFestival";
+import type { LiveState } from "../lib/live/liveStore";
 
 import { HomePage } from "../pages/Home";
 import { SchedulePage } from "../pages/Schedule";
@@ -47,6 +49,55 @@ export default function App() {
       .finally(() => setReady(true));
   }, []);
 
+  useEffect(() => {
+    liveStore.configureRemote(profile?.csrfToken ?? null, profile?.role === "organiser");
+  }, [profile]);
+
+  useEffect(() => {
+    if (!auth.usesApi) return;
+    let active = true;
+    const refresh = async () => {
+      try {
+        const response = await fetch("/api/live", { credentials: "include" });
+        if (!response.ok) return;
+        const payload = await response.json() as { state: LiveState | null };
+        if (active && payload.state) liveStore.hydrate(payload.state);
+      } catch {
+        // Keep the cached live state while offline.
+      }
+    };
+    void refresh();
+    const timer = window.setInterval(() => void refresh(), 15_000);
+    return () => { active = false; window.clearInterval(timer); };
+  }, []);
+
+  useEffect(() => {
+    if (!auth.usesApi || !profile?.csrfToken) return;
+    let syncing = false;
+    const save = async () => {
+      if (syncing) return;
+      syncing = true;
+      try {
+        await fetch("/api/passport", {
+          method: "PUT",
+          credentials: "include",
+          headers: { "Content-Type": "application/json", "X-CSRF-Token": profile.csrfToken as string },
+          body: JSON.stringify({ state: localFestival.passport() })
+        });
+      } finally {
+        syncing = false;
+      }
+    };
+    void fetch("/api/passport", { credentials: "include" })
+      .then(async (response) => response.ok ? response.json() as Promise<{ state: PassportState | null }> : null)
+      .then((payload) => {
+        if (payload?.state) localFestival.mergePassport(payload.state);
+        void save();
+      })
+      .catch(() => undefined);
+    return localFestival.subscribe(() => void save());
+  }, [profile?.email, profile?.csrfToken]);
+
   useEffect(() => liveStore.subscribe(setLive), []);
   useEffect(() => localFestival.subscribe(() => setVersion((v) => v + 1)), []);
   useEffect(() => clock.subscribe(() => setTick((v) => v + 1)), []);
@@ -64,6 +115,7 @@ export default function App() {
 
   const signOut = useCallback(async () => {
     await auth.logout();
+    liveStore.configureRemote(null, false);
     setProfile(null);
   }, []);
 

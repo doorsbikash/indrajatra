@@ -3,12 +3,16 @@ export type VisitorProfile = {
   lastName: string;
   email: string;
   phone: string;
+  marketingConsent?: boolean;
+  passSource?: "eventbrite" | "direct";
+  role?: "visitor" | "organiser";
+  csrfToken?: string | null;
 };
 
 export type AuthChallenge = {
   challengeId: string;
   email: string;
-  mode: "register" | "login";
+  mode: "register" | "login" | "attendee";
   demoCode?: string;
 };
 
@@ -76,7 +80,7 @@ const apiAuth = {
       method: "POST", credentials: "include", headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ challengeId: challenge.challengeId, code })
     });
-    if (!response.ok) throw new Error("We could not verify that code.");
+    if (!response.ok) throw new Error(await apiError(response, "We could not verify that code."));
     return response.json() as Promise<VisitorProfile>;
   },
   logout: async () => { await fetch("/api/auth/logout", { method: "POST", credentials: "include" }); }
@@ -84,13 +88,23 @@ const apiAuth = {
 
 async function postChallenge(url: string, body: unknown): Promise<AuthChallenge> {
   const response = await fetch(url, { method: "POST", credentials: "include", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
-  if (!response.ok) throw new Error("We could not send your sign-in code. Please try again.");
+  if (!response.ok) throw new Error(await apiError(response, "We could not send your sign-in code. Please try again."));
   return response.json() as Promise<AuthChallenge>;
+}
+
+async function apiError(response: Response, fallback: string): Promise<string> {
+  try {
+    const body = await response.json() as { error?: string };
+    return body.error || fallback;
+  } catch {
+    return fallback;
+  }
 }
 
 const useApi = (import.meta.env.VITE_AUTH_PROVIDER ?? import.meta.env.VITE_DATA_PROVIDER) === "api";
 
 export const auth = {
+  usesApi: useApi,
   current: async () => useApi ? apiAuth.current() : seedAuth.current(),
   requestRegistration: (profile: VisitorProfile) => useApi ? apiAuth.requestRegistration(profile) : seedAuth.requestRegistration(profile),
   requestLogin: (email: string) => useApi ? apiAuth.requestLogin(email) : seedAuth.requestLogin(email),

@@ -1,0 +1,38 @@
+ALTER TABLE visitor_profiles
+  ADD COLUMN IF NOT EXISTS pass_source VARCHAR(32) NOT NULL DEFAULT 'direct',
+  ADD COLUMN IF NOT EXISTS marketing_consent TINYINT(1) NOT NULL DEFAULT 0;
+
+CREATE TABLE IF NOT EXISTS attendee_entitlements (
+  email_hash CHAR(64) PRIMARY KEY,
+  source VARCHAR(32) NOT NULL DEFAULT 'eventbrite',
+  event_id VARCHAR(128) NOT NULL DEFAULT 'indra-jatra-2026',
+  imported_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  claimed_at DATETIME NULL,
+  KEY idx_attendee_event (event_id)
+) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS organiser_users (
+  visitor_id BIGINT UNSIGNED PRIMARY KEY,
+  role VARCHAR(32) NOT NULL DEFAULT 'organiser',
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  CONSTRAINT fk_organiser_visitor FOREIGN KEY (visitor_id)
+    REFERENCES visitor_profiles(id) ON DELETE CASCADE
+) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS live_state (
+  id VARCHAR(64) PRIMARY KEY,
+  payload LONGTEXT NOT NULL,
+  revision BIGINT UNSIGNED NOT NULL DEFAULT 1,
+  updated_by BIGINT UNSIGNED NULL,
+  updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  CONSTRAINT fk_live_state_visitor FOREIGN KEY (updated_by)
+    REFERENCES visitor_profiles(id) ON DELETE SET NULL
+) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS passport_state (
+  visitor_id BIGINT UNSIGNED PRIMARY KEY,
+  payload LONGTEXT NOT NULL,
+  updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  CONSTRAINT fk_passport_visitor FOREIGN KEY (visitor_id)
+    REFERENCES visitor_profiles(id) ON DELETE CASCADE
+) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;

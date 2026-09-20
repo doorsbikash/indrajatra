@@ -13,11 +13,8 @@
    browser profile reads here. Changes propagate instantly across tabs
    via BroadcastChannel, and across page loads via localStorage.
 
-   LIMIT: this is per-browser. Two organisers on two phones do not see
-   each other's changes. Use the JSON export/import to move a state
-   between devices, or move the store server-side — swap the read/write
-   pair for GET /api/live and POST /api/admin/live and nothing else in
-   the app changes.
+   In API mode the same state is mirrored to the server. localStorage
+   remains the fast local cache and offline fallback.
    ------------------------------------------------------------------ */
 
 import type {
@@ -62,6 +59,16 @@ export type DraftItem = {
   highlight?: boolean;
 };
 
+/** An announcement the organiser wrote on the day. */
+export type DraftAnnouncement = {
+  id: string;
+  title: string;
+  message: string;
+  severity: Announcement["severity"];
+  startsAt: string;
+  endsAt?: string;
+};
+
 export type LiveState = {
   schedule: Record<string, ScheduleOverride>;
   announcements: Record<string, boolean>;
@@ -69,6 +76,8 @@ export type LiveState = {
   added?: DraftItem[];
   /** Photo overrides: "hero", "trail:<id>", "sched:<id>" -> src. */
   media?: Record<string, string>;
+  /** Announcements written on the day. */
+  newAnnouncements?: DraftAnnouncement[];
   /** Visitor-facing tag overrides for stalls and food vendors. */
   listingCategories?: Record<string, string[]>;
   updatedAt: number;
@@ -82,6 +91,9 @@ const empty: LiveState = {
 
 let state: LiveState = read();
 const listeners = new Set<(s: LiveState) => void>();
+let remoteCsrfToken: string | null = null;
+let remoteEnabled = false;
+let remoteTimer: number | null = null;
 
 let channel: BroadcastChannel | null = null;
 if (typeof BroadcastChannel !== "undefined") {
@@ -122,6 +134,7 @@ function commit(next: LiveState) {
   }
   channel?.postMessage(state);
   listeners.forEach((fn) => fn(state));
+  scheduleRemoteWrite();
 }
 
 /** Commit only if the result still fits in browser storage. */
@@ -147,15 +160,43 @@ function commitChecked(next: LiveState): WriteResult {
   state = candidate;
   channel?.postMessage(state);
   listeners.forEach((fn) => fn(state));
+  scheduleRemoteWrite();
   return { ok: true };
 }
 
+function scheduleRemoteWrite() {
+  if (!remoteEnabled || !remoteCsrfToken || typeof window === "undefined") return;
+  if (remoteTimer !== null) window.clearTimeout(remoteTimer);
+  remoteTimer = window.setTimeout(() => {
+    remoteTimer = null;
+    void fetch("/api/admin/live", {
+      method: "PUT",
+      credentials: "include",
+      headers: { "Content-Type": "application/json", "X-CSRF-Token": remoteCsrfToken as string },
+      body: JSON.stringify({ state })
+    }).catch(() => undefined);
+  }, 250);
+}
+
 const added = () => state.added ?? [];
+const newNotices = () => state.newAnnouncements ?? [];
 const media = () => state.media ?? {};
 const isDraft = (id: string) => added().some((a) => a.id === id);
 
 export const liveStore = {
   get: () => state,
+
+  configureRemote(csrfToken: string | null, enabled: boolean) {
+    remoteCsrfToken = csrfToken;
+    remoteEnabled = enabled;
+  },
+
+  hydrate(next: LiveState) {
+    state = { ...empty, ...next };
+    try { localStorage.setItem(KEY, JSON.stringify(state)); } catch { /* offline cache is optional */ }
+    channel?.postMessage(state);
+    listeners.forEach((fn) => fn(state));
+  },
 
   subscribe(fn: (s: LiveState) => void) {
     listeners.add(fn);
@@ -209,6 +250,30 @@ export const liveStore = {
 
   setAnnouncement(id: string, published: boolean) {
     commit({ ...state, announcements: { ...state.announcements, [id]: published } });
+  },
+
+  /** Write a new announcement. It starts unpublished — nothing is pushed
+      to visitors until the organiser presses Publish on it. */
+  addAnnouncement(draft: Omit<DraftAnnouncement, "id"> & { id?: string }): string {
+    const id = draft.id ?? `notice-${Date.now().toString(36)}`;
+    commit({ ...state, newAnnouncements: [...newNotices(), { ...draft, id }] });
+    return id;
+  },
+
+  /** Remove an announcement the organiser wrote. Published ones are only
+      unpublished — the content in data.ts is never deleted from here. */
+  removeAnnouncement(id: string) {
+    const announcements = { ...state.announcements };
+    delete announcements[id];
+    commit({
+      ...state,
+      announcements,
+      newAnnouncements: newNotices().filter((a) => a.id !== id)
+    });
+  },
+
+  isOrganiserAnnouncement(id: string) {
+    return newNotices().some((a) => a.id === id);
   },
 
   /* ---------------- stalls ---------------- */
@@ -395,9 +460,19 @@ export function applyLive(items: ScheduleItem[], live: LiveState): ScheduleItem[
 }
 
 export function applyLiveAnnouncements(items: Announcement[], live: LiveState): Announcement[] {
-  return items.map((a) =>
+  const base = items.map((a) =>
     a.id in live.announcements ? { ...a, published: live.announcements[a.id] } : a
   );
+  const written = (live.newAnnouncements ?? []).map<Announcement>((draft) => ({
+    id: draft.id,
+    title: { en: draft.title },
+    message: { en: draft.message },
+    severity: draft.severity,
+    startsAt: draft.startsAt,
+    endsAt: draft.endsAt,
+    published: live.announcements[draft.id] ?? false
+  }));
+  return written.length ? [...base, ...written] : base;
 }
 
 /** Fold organiser tag changes onto visitor-facing stall listings. */

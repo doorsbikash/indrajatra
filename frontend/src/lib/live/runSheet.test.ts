@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { normaliseTime, parseRunSheet, slugify, toSeedRows, toTimeInput } from "./runSheet";
-import { applyLive, applyLiveListings, type LiveState } from "./liveStore";
+import { applyLive, applyLiveAnnouncements, applyLiveListings, type LiveState } from "./liveStore";
 import type { Listing, ScheduleItem } from "../types";
 
 const DAY = "2026-09-26";
@@ -186,5 +186,41 @@ describe("toSeedRows", () => {
   it("escapes quotes so the block still compiles", () => {
     const out = toSeedRows([item({ title: { en: 'The "big" one' } })]);
     expect(out).toContain('\\"big\\"');
+  });
+});
+
+
+describe("organiser-written announcements", () => {
+  const notice = {
+    id: "notice-1",
+    title: "Kumari Rath is running late",
+    message: "The chariot will now leave at 12:05.",
+    severity: "update" as const,
+    startsAt: `${DAY}T11:40:00+10:00`
+  };
+
+  it("appears in the list, unpublished until the organiser publishes it", () => {
+    const result = applyLiveAnnouncements([], state({ newAnnouncements: [notice] }));
+    expect(result).toHaveLength(1);
+    expect(result[0].published).toBe(false);
+    expect(result[0].title.en).toBe("Kumari Rath is running late");
+  });
+
+  it("publishes when the organiser flips it", () => {
+    const result = applyLiveAnnouncements([], state({
+      newAnnouncements: [notice],
+      announcements: { "notice-1": true }
+    }));
+    expect(result[0].published).toBe(true);
+  });
+
+  it("leaves the published announcements alone", () => {
+    const seeded = [{
+      id: "sun", title: { en: "Spring sun" }, message: { en: "Bring a hat." },
+      severity: "info" as const, startsAt: `${DAY}T09:30:00+10:00`, published: true
+    }];
+    const result = applyLiveAnnouncements(seeded, state({ newAnnouncements: [notice] }));
+    expect(result.map((a) => a.id)).toEqual(["sun", "notice-1"]);
+    expect(result[0].published).toBe(true);
   });
 });

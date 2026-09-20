@@ -45,6 +45,13 @@ function readMap(key: string): Record<string, string> {
 const listeners = new Set<() => void>();
 const emit = () => listeners.forEach((fn) => fn());
 
+export type PassportState = {
+  saved: string[];
+  discovered: string[];
+  discoveredAt: Record<string, string>;
+  lastLocation: string | null;
+};
+
 export const localFestival = {
   subscribe(fn: () => void) {
     listeners.add(fn);
@@ -121,6 +128,28 @@ export const localFestival = {
   setLocale(locale: Locale) {
     try {
       localStorage.setItem(K.locale, locale);
+    } catch {
+      /* ignore */
+    }
+    emit();
+  },
+
+  passport(): PassportState {
+    return {
+      saved: readList(K.saved),
+      discovered: readList(K.discovered),
+      discoveredAt: readMap(K.discoveredAt),
+      lastLocation: this.lastLocation()
+    };
+  },
+
+  mergePassport(remote: Partial<PassportState>) {
+    const discoveredAt = { ...readMap(K.discoveredAt), ...(remote.discoveredAt ?? {}) };
+    writeList(K.saved, [...readList(K.saved), ...(remote.saved ?? [])]);
+    writeList(K.discovered, [...readList(K.discovered), ...(remote.discovered ?? [])]);
+    try {
+      localStorage.setItem(K.discoveredAt, JSON.stringify(discoveredAt));
+      if (!this.lastLocation() && remote.lastLocation) localStorage.setItem(K.lastLocation, remote.lastLocation);
     } catch {
       /* ignore */
     }

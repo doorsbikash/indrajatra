@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import {
   Ban, CheckCheck, Clock, Image, ListOrdered, Megaphone, Play, Radio, Store,
-  RotateCcw, ShieldAlert, Undo2
+  RotateCcw, ShieldAlert, Trash2, Undo2
 } from "lucide-react";
 import { useApp } from "../app/AppContext";
 import { liveStore } from "../lib/live/liveStore";
@@ -10,6 +10,7 @@ import { clock, DEFAULT_PREVIEW } from "../lib/clock/clock";
 import { formatTime, itemState } from "../lib/dates/schedule";
 import { RunSheetEditor } from "../components/admin/RunSheetEditor";
 import { PhotoManager } from "../components/admin/PhotoManager";
+import { AnnouncementComposer } from "../components/admin/AnnouncementComposer";
 import { StallEditor } from "../components/admin/StallEditor";
 import { FESTIVAL_DAY } from "../content/seed/data";
 import { t } from "../lib/text";
@@ -24,7 +25,7 @@ const TABS: { id: Tab; label: string; icon: typeof Radio }[] = [
 ];
 
 export function AdminPage() {
-  const { data, schedule, announcements, now, locale, toast } = useApp();
+  const { data, schedule, announcements, now, locale, toast, profile, requireSignIn } = useApp();
   const [tab, setTab] = useState<Tab>("live");
   const [, force] = useState(0);
   useEffect(() => liveStore.subscribe(() => force((v) => v + 1)), []);
@@ -34,23 +35,40 @@ export function AdminPage() {
   const delayed = schedule.filter((i) => i.status === "delayed").length;
   const minutes = clock.minutesFromOpen();
 
+  if (!profile) {
+    return (
+      <main className="page">
+        <p className="eyebrow">Organiser console</p>
+        <h1>Sign in to continue</h1>
+        <p className="lead">Use an organiser email to manage the live programme, stalls and announcements.</p>
+        <button className="btn btn--primary" type="button" onClick={() => requireSignIn("Organiser sign in")}>Sign in</button>
+      </main>
+    );
+  }
+
+  if (profile.role !== "organiser") {
+    return (
+      <main className="page">
+        <p className="eyebrow">Organiser console</p>
+        <h1>Access restricted</h1>
+        <p className="lead">This festival pass does not have organiser access.</p>
+        <Link className="btn" to="/">Back to festival</Link>
+      </main>
+    );
+  }
+
   return (
     <main className="page">
       <p className="eyebrow">Organiser console</p>
       <h1>Run the day</h1>
       <p className="lead">
-        Changes here appear on every visitor's screen in this browser straight away. Use it from
-        the stage or the Media Station.
+        Changes here appear on visitor screens within seconds. Use it from the stage or the Media Station.
       </p>
 
       <div className="card card--notice">
         <p className="small" style={{ display: "flex", gap: 10, margin: 0 }}>
           <ShieldAlert size={17} style={{ flex: "0 0 auto", color: "var(--marigold-400)", marginTop: 2 }} />
-          <span>
-            Demo mode: no login, and every change is held in this browser only — two organisers
-            on two phones will not see each other. Before public launch this needs the PHP session
-            login, CSRF and an organiser role check, with the overrides stored server-side.
-          </span>
+          <span>Signed in as {profile.email}. Live changes are shared across organiser devices and visitor screens.</span>
         </p>
       </div>
 
@@ -216,10 +234,27 @@ export function AdminPage() {
                       >
                         {a.published ? "Unpublish" : "Publish"}
                       </button>
+                      {liveStore.isOrganiserAnnouncement(a.id) && (
+                        <button
+                          type="button"
+                          className="btn btn--sm"
+                          onClick={() => {
+                            if (!window.confirm(`Delete "${a.title.en}"? It is removed from the console entirely.`)) return;
+                            liveStore.removeAnnouncement(a.id);
+                            toast("Deleted");
+                          }}
+                        >
+                          <Trash2 size={14} />Delete
+                        </button>
+                      )}
                     </div>
                   </div>
                 </div>
               ))}
+            </div>
+
+            <div style={{ marginTop: "var(--s-4)" }}>
+              <AnnouncementComposer now={now} toast={toast} />
             </div>
           </section>
 
