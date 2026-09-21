@@ -12,7 +12,7 @@ export function SignInSheet({
   onClose: () => void;
   onSignedIn: (profile: VisitorProfile) => void;
 }) {
-  const [mode, setMode] = useState<"register" | "login">("register");
+  const [mode, setMode] = useState<"eventbrite" | "register" | "login">("eventbrite");
   const [draft, setDraft] = useState<VisitorProfile>({ firstName: "", lastName: "", email: "", phone: "", marketingConsent: false });
   const [challenge, setChallenge] = useState<AuthChallenge | null>(null);
   const [code, setCode] = useState("");
@@ -25,7 +25,11 @@ export function SignInSheet({
     setBusy(true);
     try {
       setChallenge(
-        mode === "register" ? await auth.requestRegistration(draft) : await auth.requestLogin(draft.email)
+        mode === "eventbrite"
+          ? await auth.requestEventbriteAccess(draft)
+          : mode === "register"
+            ? await auth.requestRegistration(draft)
+            : await auth.requestLogin(draft.email)
       );
     } catch (reasonError) {
       setError(reasonError instanceof Error ? reasonError.message : "Something went wrong. Try again.");
@@ -60,17 +64,20 @@ export function SignInSheet({
             </div>
           </div>
 
-          <div className="segmented" role="group" aria-label="Register or log in">
+          <div className="segmented segmented--three" role="group" aria-label="Activate or create a festival pass">
+            <button type="button" aria-pressed={mode === "eventbrite"} onClick={() => { setMode("eventbrite"); setError(""); }}>
+              Eventbrite guest
+            </button>
             <button type="button" aria-pressed={mode === "register"} onClick={() => { setMode("register"); setError(""); }}>
-              I'm new
+              New pass
             </button>
             <button type="button" aria-pressed={mode === "login"} onClick={() => { setMode("login"); setError(""); }}>
-              I have a pass
+              Sign in
             </button>
           </div>
 
           <form className="stack" onSubmit={submitIdentity}>
-            {mode === "register" && (
+            {mode !== "login" && (
               <div className="field--row">
                 <label className="field">
                   <span>First name</span>
@@ -103,9 +110,12 @@ export function SignInSheet({
                 </label>
               </>
             )}
+            {mode === "eventbrite" && (
+              <p className="small muted">Use the name and email entered on your Eventbrite booking. We will email you a six-digit verification code.</p>
+            )}
             {error && <p className="form-error" role="alert">{error}</p>}
             <button className="btn btn--primary btn--block" disabled={busy}>
-              {busy ? "Sending…" : <><Mail size={17} /> Send my code</>}
+              {busy ? "Sending…" : <><Mail size={17} /> {mode === "eventbrite" ? "Verify my Eventbrite pass" : "Send my code"}</>}
             </button>
             <button type="button" className="btn btn--quiet btn--block" onClick={onClose}>
               Not now — keep browsing

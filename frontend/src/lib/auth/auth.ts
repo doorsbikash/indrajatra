@@ -51,14 +51,20 @@ const seedAuth = {
     if (!readProfiles().some((profile) => profile.email === normalised)) throw new Error("No account found for that email. Register first in demo mode.");
     return { challengeId: btoa(JSON.stringify({ email: normalised, createdAt: Date.now() })), email: normalised, mode: "login", demoCode };
   },
+  requestEventbriteAccess: async (profile: Pick<VisitorProfile, "firstName" | "lastName" | "email">): Promise<AuthChallenge> => ({
+    challengeId: btoa(JSON.stringify({ profile: { ...profile, phone: "", email: normaliseEmail(profile.email), passSource: "eventbrite" }, createdAt: Date.now() })),
+    email: normaliseEmail(profile.email),
+    mode: "attendee",
+    demoCode
+  }),
   verify: async (challenge: AuthChallenge, code: string): Promise<VisitorProfile> => {
     if (code !== demoCode) throw new Error("That code is not correct. Use the demo code shown above.");
     const payload = JSON.parse(atob(challenge.challengeId)) as { profile?: VisitorProfile; email?: string; createdAt: number };
     if (Date.now() - payload.createdAt > 10 * 60 * 1000) throw new Error("That code has expired. Request a new one.");
     const profiles = readProfiles();
-    const profile = challenge.mode === "register" ? payload.profile : profiles.find((item) => item.email === payload.email);
+    const profile = challenge.mode === "register" || challenge.mode === "attendee" ? payload.profile : profiles.find((item) => item.email === payload.email);
     if (!profile) throw new Error("We could not find that visitor profile.");
-    if (challenge.mode === "register") {
+    if (challenge.mode === "register" || challenge.mode === "attendee") {
       const next = [...profiles.filter((item) => item.email !== profile.email), profile];
       localStorage.setItem(profilesKey, JSON.stringify(next));
     }
@@ -75,6 +81,7 @@ const apiAuth = {
   },
   requestRegistration: (profile: VisitorProfile) => postChallenge("/api/auth/register", profile),
   requestLogin: (email: string) => postChallenge("/api/auth/code", { email: normaliseEmail(email) }),
+  requestEventbriteAccess: (profile: Pick<VisitorProfile, "firstName" | "lastName" | "email">) => postChallenge("/api/auth/eventbrite", profile),
   verify: async (challenge: AuthChallenge, code: string): Promise<VisitorProfile> => {
     const response = await fetch("/api/auth/verify", {
       method: "POST", credentials: "include", headers: { "Content-Type": "application/json" },
@@ -110,6 +117,7 @@ export const auth = {
   current: async () => useApi ? apiAuth.current() : seedAuth.current(),
   requestRegistration: (profile: VisitorProfile) => useApi ? apiAuth.requestRegistration(profile) : seedAuth.requestRegistration(profile),
   requestLogin: (email: string) => useApi ? apiAuth.requestLogin(email) : seedAuth.requestLogin(email),
+  requestEventbriteAccess: (profile: Pick<VisitorProfile, "firstName" | "lastName" | "email">) => useApi ? apiAuth.requestEventbriteAccess(profile) : seedAuth.requestEventbriteAccess(profile),
   verify: (challenge: AuthChallenge, code: string) => useApi ? apiAuth.verify(challenge, code) : seedAuth.verify(challenge, code),
   logout: async () => { if (useApi) await apiAuth.logout(); else seedAuth.logout(); }
 };

@@ -64,20 +64,23 @@ while (($row = fgetcsv($handle)) !== false) {
     $email = mb_strtolower(value($row, $headers, ['email', 'emailaddress', 'attendeeemail', 'buyeremail']));
     $attendeeId = value($row, $headers, ['attendeeid', 'attendeeno', 'attendeenumber']);
     $barcode = value($row, $headers, ['barcode', 'barcodenumber', 'ticketbarcode', 'qrcode']);
-    if (!filter_var($email, FILTER_VALIDATE_EMAIL) || ($attendeeId === '' && $barcode === '')) {
+    $firstName = value($row, $headers, ['firstname', 'attendeefirstname']);
+    $lastName = value($row, $headers, ['surname', 'lastname', 'attendeelastname']);
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL) || $firstName === '' || $lastName === '') {
         $skipped++;
         continue;
     }
+    $sourceKey = $attendeeId !== '' ? $attendeeId : "identity:{$email}|{$firstName}|{$lastName}";
     $emailHash = secureHash($email, $secret);
     $saveAttendee->execute([
         'indra-jatra-2026',
         'eventbrite',
-        secureHash($attendeeId, $secret),
+        secureHash($sourceKey, $secret),
         secureHash($barcode, $secret),
         secureHash(value($row, $headers, ['orderno', 'ordernumber', 'orderid']), $secret),
         $emailHash,
-        value($row, $headers, ['firstname', 'attendeefirstname']),
-        value($row, $headers, ['surname', 'lastname', 'attendeelastname']),
+        $firstName,
+        $lastName,
         value($row, $headers, ['tickettype', 'ticketname', 'ticketclass', 'ticketclassname']),
     ]);
     $saveEntitlement->execute([$emailHash, 'eventbrite', 'indra-jatra-2026']);

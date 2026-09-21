@@ -35,6 +35,9 @@ final class Api
             if ($method === 'POST' && $path === '/api/auth/code') {
                 $this->requestLogin();
             }
+            if ($method === 'POST' && $path === '/api/auth/eventbrite') {
+                $this->requestEventbriteAccess();
+            }
             if ($method === 'POST' && $path === '/api/auth/verify') {
                 $this->verify();
             }
@@ -100,9 +103,28 @@ final class Api
             if (!$attendee->fetch()) {
                 $this->json(['error' => 'No festival pass was found for that email. You can still register for a free pass.'], 404);
             }
-            $this->createChallenge($email, 'attendee', null);
+            $this->json(['error' => 'Your Eventbrite booking is ready to activate. Choose Eventbrite guest and enter the name on your booking.'], 409);
         }
         $this->createChallenge($email, 'login', null);
+    }
+
+    private function requestEventbriteAccess(): never
+    {
+        $input = $this->body();
+        $profile = [
+            'firstName' => $this->requiredText($input, 'firstName', 120),
+            'lastName' => $this->requiredText($input, 'lastName', 120),
+            'email' => $this->email($input['email'] ?? null),
+        ];
+        $query = $this->db->prepare(
+            "SELECT id FROM event_attendees WHERE event_id = 'indra-jatra-2026' AND email_hash = ? "
+            . 'AND LOWER(TRIM(first_name)) = LOWER(?) AND LOWER(TRIM(last_name)) = LOWER(?) LIMIT 1'
+        );
+        $query->execute([$this->emailHash($profile['email']), trim($profile['firstName']), trim($profile['lastName'])]);
+        if (!$query->fetch()) {
+            $this->json(['error' => 'We could not match those details to the Eventbrite guest list. Check the spelling used on your booking.'], 404);
+        }
+        $this->createChallenge($profile['email'], 'attendee', $profile);
     }
 
     private function createChallenge(string $email, string $mode, ?array $profile): never
@@ -175,11 +197,12 @@ final class Api
             $source = $this->hasAttendeeEntitlement($profile['email']) ? 'eventbrite' : 'direct';
             $save->execute([$profile['firstName'], $profile['lastName'], $profile['email'], $profile['phone'], $source, $profile['marketingConsent'] ? 1 : 0]);
         } elseif ($challenge['mode'] === 'attendee') {
+            $attendeeProfile = json_decode((string) $challenge['registration_payload'], true, 512, JSON_THROW_ON_ERROR);
             $save = $this->db->prepare(
-                "INSERT INTO visitor_profiles (first_name, last_name, email, phone, pass_source) VALUES ('Festival guest', '', ?, '', 'eventbrite') "
-                . "ON DUPLICATE KEY UPDATE pass_source = 'eventbrite'"
+                "INSERT INTO visitor_profiles (first_name, last_name, email, phone, pass_source) VALUES (?, ?, ?, '', 'eventbrite') "
+                . "ON DUPLICATE KEY UPDATE first_name = VALUES(first_name), last_name = VALUES(last_name), pass_source = 'eventbrite'"
             );
-            $save->execute([$challenge['email']]);
+            $save->execute([$attendeeProfile['firstName'], $attendeeProfile['lastName'], $challenge['email']]);
             $claimed = $this->db->prepare('UPDATE attendee_entitlements SET claimed_at = UTC_TIMESTAMP() WHERE email_hash = ?');
             $claimed->execute([$this->emailHash((string) $challenge['email'])]);
         }
