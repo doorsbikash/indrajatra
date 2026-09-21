@@ -3,7 +3,7 @@ import type { Listing } from "../lib/types";
 
 const PAID_TIERS = ["Platinum", "Gold", "Silver"] as const;
 const PARTNER_TIERS = [
-  "Media Partners", "Photography Partner", "Community Supporters",
+  "Photography Partner", "Community Supporters",
   "Valued Contributor"
 ] as const;
 

@@ -518,7 +518,6 @@ type SponsorTier =
   | "Platinum"
   | "Gold"
   | "Silver"
-  | "Media Partners"
   | "Photography Partner"
   | "Community Supporters"
   | "Valued Contributor";
@@ -555,9 +554,6 @@ const sponsorRows: SponsorRow[] = [
   ["preferred-consultancy", "Preferred Education & Migration Consultants", "Silver"],
   ["central-australian-college", "Central Australian College", "Silver"],
 
-  ["better-from-nepal", "Better From Nepal", "Media Partners", "media-better-from-nepal.png"],
-  ["lukla-tv", "Lukla TV", "Media Partners", "media-lukla-tv.jpeg"],
-  ["nepal-edition", "Nepal Edition", "Media Partners", "media-nepal-edition.png"],
   ["nepali-mate", "Nepali Mate", "Photography Partner", "photography-nepali-mate.png"],
   ["dms", "DMS", "Photography Partner"],
 
