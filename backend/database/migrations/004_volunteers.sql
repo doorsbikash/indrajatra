@@ -1,0 +1,33 @@
+CREATE TABLE IF NOT EXISTS volunteer_registrations (
+  id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  public_id CHAR(32) NOT NULL UNIQUE,
+  first_name VARCHAR(120) NOT NULL,
+  last_name VARCHAR(120) NOT NULL,
+  email VARCHAR(254) NOT NULL,
+  phone VARCHAR(40) NOT NULL,
+  assistance_area VARCHAR(160) NOT NULL,
+  status VARCHAR(24) NOT NULL DEFAULT 'pending',
+  sash_issued TINYINT(1) NOT NULL DEFAULT 0,
+  badge_issued TINYINT(1) NOT NULL DEFAULT 0,
+  radio_issued TINYINT(1) NOT NULL DEFAULT 0,
+  other_items VARCHAR(500) NULL,
+  sash_returned TINYINT(1) NOT NULL DEFAULT 0,
+  badge_returned TINYINT(1) NOT NULL DEFAULT 0,
+  radio_returned TINYINT(1) NOT NULL DEFAULT 0,
+  other_items_returned TINYINT(1) NOT NULL DEFAULT 0,
+  approved_at DATETIME NULL,
+  checked_in_at DATETIME NULL,
+  signed_off_at DATETIME NULL,
+  approved_by BIGINT UNSIGNED NULL,
+  signed_off_by BIGINT UNSIGNED NULL,
+  requested_ip_hash CHAR(64) NOT NULL,
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  UNIQUE KEY uq_volunteer_email (email),
+  KEY idx_volunteer_status (status),
+  KEY idx_volunteer_area (assistance_area),
+  CONSTRAINT fk_volunteer_approved_by FOREIGN KEY (approved_by)
+    REFERENCES visitor_profiles(id) ON DELETE SET NULL,
+  CONSTRAINT fk_volunteer_signed_off_by FOREIGN KEY (signed_off_by)
+    REFERENCES visitor_profiles(id) ON DELETE SET NULL
+) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;

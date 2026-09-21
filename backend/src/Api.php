@@ -51,6 +51,15 @@ final class Api
             if ($method === 'PUT' && $path === '/api/passport') {
                 $this->savePassport();
             }
+            if ($method === 'POST' && $path === '/api/volunteers/register') {
+                $this->registerVolunteer();
+            }
+            if ($method === 'GET' && $path === '/api/admin/volunteers') {
+                $this->volunteers();
+            }
+            if ($method === 'PATCH' && preg_match('#^/api/admin/volunteers/(\d+)$#', $path, $matches)) {
+                $this->updateVolunteer((int) $matches[1]);
+            }
             $this->json(['error' => 'Not found'], 404);
         } catch (Throwable $error) {
             error_log($error->__toString());
@@ -307,6 +316,155 @@ final class Api
         );
         $save->execute([$visitorId, $payload]);
         $this->json(['ok' => true]);
+    }
+
+    private function registerVolunteer(): never
+    {
+        $input = $this->body();
+        $email = $this->email($input['email'] ?? null);
+        $ipHash = hash('sha256', ($_SERVER['REMOTE_ADDR'] ?? 'unknown') . '|' . $this->secret());
+        $recent = $this->db->prepare(
+            'SELECT COUNT(*) FROM volunteer_registrations WHERE requested_ip_hash = ? AND created_at >= (UTC_TIMESTAMP() - INTERVAL 15 MINUTE)'
+        );
+        $recent->execute([$ipHash]);
+        if ((int) $recent->fetchColumn() >= 5) {
+            $this->json(['error' => 'Too many registrations from this device. Please ask an organiser for help.'], 429);
+        }
+
+        $existing = $this->db->prepare('SELECT public_id, status FROM volunteer_registrations WHERE email = ? LIMIT 1');
+        $existing->execute([$email]);
+        $volunteer = $existing->fetch();
+        if ($volunteer) {
+            $this->json([
+                'ok' => true,
+                'reference' => $volunteer['public_id'],
+                'status' => $volunteer['status'],
+                'existing' => true,
+            ]);
+        }
+
+        $publicId = bin2hex(random_bytes(16));
+        $save = $this->db->prepare(
+            'INSERT INTO volunteer_registrations '
+            . '(public_id, first_name, last_name, email, phone, assistance_area, requested_ip_hash) '
+            . 'VALUES (?, ?, ?, ?, ?, ?, ?)'
+        );
+        $save->execute([
+            $publicId,
+            $this->requiredText($input, 'firstName', 120),
+            $this->requiredText($input, 'lastName', 120),
+            $email,
+            $this->requiredText($input, 'phone', 40),
+            $this->requiredText($input, 'assistanceArea', 160),
+            $ipHash,
+        ]);
+        $this->json(['ok' => true, 'reference' => $publicId, 'status' => 'pending'], 201);
+    }
+
+    private function volunteers(): never
+    {
+        $this->requireOrganiser();
+        $query = $this->db->query(
+            'SELECT id, public_id, first_name, last_name, email, phone, assistance_area, status, '
+            . 'sash_issued, badge_issued, radio_issued, other_items, sash_returned, badge_returned, '
+            . 'radio_returned, other_items_returned, approved_at, checked_in_at, signed_off_at, created_at, updated_at '
+            . 'FROM volunteer_registrations ORDER BY FIELD(status, "checked_in", "pending", "approved", "signed_off"), created_at ASC'
+        );
+        $this->json(['volunteers' => array_map([$this, 'publicVolunteer'], $query->fetchAll())]);
+    }
+
+    private function updateVolunteer(int $id): never
+    {
+        $organiserId = $this->requireOrganiser();
+        $this->requireCsrf();
+        $input = $this->body();
+        $action = $this->requiredText($input, 'action', 32);
+        $query = $this->db->prepare('SELECT * FROM volunteer_registrations WHERE id = ? LIMIT 1');
+        $query->execute([$id]);
+        $volunteer = $query->fetch();
+        if (!$volunteer) $this->json(['error' => 'Volunteer not found'], 404);
+
+        $before = json_encode($this->publicVolunteer($volunteer), JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR);
+        if ($action === 'approve') {
+            if ($volunteer['status'] !== 'pending') $this->json(['error' => 'Only pending volunteers can be approved'], 409);
+            $save = $this->db->prepare("UPDATE volunteer_registrations SET status = 'approved', approved_at = UTC_TIMESTAMP(), approved_by = ? WHERE id = ?");
+            $save->execute([$organiserId, $id]);
+        } elseif ($action === 'checkIn') {
+            if (!in_array($volunteer['status'], ['approved', 'checked_in'], true)) $this->json(['error' => 'Approve this volunteer before checking them in'], 409);
+            $otherItems = trim((string) ($input['otherItems'] ?? ''));
+            if (mb_strlen($otherItems) > 500) $this->json(['error' => 'Other items are too long'], 422);
+            $save = $this->db->prepare(
+                "UPDATE volunteer_registrations SET status = 'checked_in', checked_in_at = COALESCE(checked_in_at, UTC_TIMESTAMP()), "
+                . 'sash_issued = ?, badge_issued = ?, radio_issued = ?, other_items = ?, '
+                . 'sash_returned = 0, badge_returned = 0, radio_returned = 0, other_items_returned = 0 WHERE id = ?'
+            );
+            $save->execute([
+                !empty($input['sashIssued']) ? 1 : 0,
+                !empty($input['badgeIssued']) ? 1 : 0,
+                !empty($input['radioIssued']) ? 1 : 0,
+                $otherItems !== '' ? $otherItems : null,
+                $id,
+            ]);
+        } elseif ($action === 'returns') {
+            if ($volunteer['status'] !== 'checked_in') $this->json(['error' => 'This volunteer is not checked in'], 409);
+            $save = $this->db->prepare(
+                'UPDATE volunteer_registrations SET sash_returned = ?, badge_returned = ?, radio_returned = ?, other_items_returned = ? WHERE id = ?'
+            );
+            $save->execute([
+                !empty($input['sashReturned']) ? 1 : 0,
+                !empty($input['badgeReturned']) ? 1 : 0,
+                !empty($input['radioReturned']) ? 1 : 0,
+                !empty($input['otherItemsReturned']) ? 1 : 0,
+                $id,
+            ]);
+        } elseif ($action === 'signOff') {
+            if ($volunteer['status'] !== 'checked_in') $this->json(['error' => 'This volunteer is not checked in'], 409);
+            if (($volunteer['sash_issued'] && !$volunteer['sash_returned'])
+                || ($volunteer['badge_issued'] && !$volunteer['badge_returned'])
+                || ($volunteer['radio_issued'] && !$volunteer['radio_returned'])
+                || ($volunteer['other_items'] && !$volunteer['other_items_returned'])) {
+                $this->json(['error' => 'All issued items must be returned before sign-off'], 409);
+            }
+            $save = $this->db->prepare(
+                "UPDATE volunteer_registrations SET status = 'signed_off', signed_off_at = UTC_TIMESTAMP(), signed_off_by = ? WHERE id = ?"
+            );
+            $save->execute([$organiserId, $id]);
+        } else {
+            $this->json(['error' => 'Invalid volunteer action'], 422);
+        }
+
+        $query->execute([$id]);
+        $updated = $query->fetch();
+        $after = json_encode($this->publicVolunteer($updated), JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR);
+        $this->audit($organiserId, 'volunteer.' . $action, 'volunteer', (string) $id, $before, $after);
+        $this->json(['volunteer' => $this->publicVolunteer($updated)]);
+    }
+
+    private function publicVolunteer(array $row): array
+    {
+        return [
+            'id' => (int) $row['id'],
+            'reference' => $row['public_id'],
+            'firstName' => $row['first_name'],
+            'lastName' => $row['last_name'],
+            'email' => $row['email'],
+            'phone' => $row['phone'],
+            'assistanceArea' => $row['assistance_area'],
+            'status' => $row['status'],
+            'sashIssued' => (bool) $row['sash_issued'],
+            'badgeIssued' => (bool) $row['badge_issued'],
+            'radioIssued' => (bool) $row['radio_issued'],
+            'otherItems' => $row['other_items'] ?: '',
+            'sashReturned' => (bool) $row['sash_returned'],
+            'badgeReturned' => (bool) $row['badge_returned'],
+            'radioReturned' => (bool) $row['radio_returned'],
+            'otherItemsReturned' => (bool) $row['other_items_returned'],
+            'approvedAt' => $row['approved_at'],
+            'checkedInAt' => $row['checked_in_at'],
+            'signedOffAt' => $row['signed_off_at'],
+            'createdAt' => $row['created_at'],
+            'updatedAt' => $row['updated_at'],
+        ];
     }
 
     private function requireVisitor(): int

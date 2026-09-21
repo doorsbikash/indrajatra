@@ -25,6 +25,7 @@ import { MyFestivalPage } from "../pages/MyFestival";
 import { InfoPage } from "../pages/Info";
 import { MembershipPage } from "../pages/Membership";
 import { AdminPage } from "../pages/Admin";
+import { VolunteerRegisterPage } from "../pages/VolunteerRegister";
 import { NotFoundPage } from "../pages/NotFound";
 
 const organiserEnabled = import.meta.env.DEV || import.meta.env.VITE_ENABLE_ORGANISER === "true";
@@ -175,6 +176,7 @@ export default function App() {
             <Route path="/my" element={<MyFestivalPage />} />
             <Route path="/info" element={<InfoPage />} />
             <Route path="/membership" element={<MembershipPage />} />
+            <Route path="/volunteer" element={<VolunteerRegisterPage />} />
             {organiserEnabled && <Route path="/organiser" element={<AdminPage />} />}
             <Route path="*" element={<NotFoundPage />} />
           </Route>

@@ -105,9 +105,9 @@ export function MembershipPage() {
             Nothing here happens without volunteers.
           </p>
           <div className="row">
-            <a className="btn btn--sm btn--primary" href="mailto:info@newaguthi.org.au?subject=Volunteering">
+            <Link className="btn btn--sm btn--primary" to="/volunteer">
               Put my name down
-            </a>
+            </Link>
             {data.event.organiserUrl && (
               <a className="btn btn--sm" href={data.event.organiserUrl} target="_blank" rel="noreferrer">
                 <ExternalLink size={14} />newaguthi.org.au
