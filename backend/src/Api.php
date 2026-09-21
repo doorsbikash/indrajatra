@@ -6,6 +6,8 @@ namespace IndraJatra;
 use DateTimeImmutable;
 use DateTimeZone;
 use PDO;
+use PHPMailer\PHPMailer\Exception as MailException;
+use PHPMailer\PHPMailer\PHPMailer;
 use Throwable;
 
 final class Api
@@ -227,6 +229,11 @@ final class Api
         $name = getenv('IJ26_MAIL_FROM_NAME') ?: 'Indra Jatra Melbourne';
         $subject = 'Your Indra Jatra sign-in code';
         $message = "Your sign-in code is {$code}.\n\nIt expires in 10 minutes. If you did not request it, you can ignore this email.";
+        $smtpUser = trim((string) (getenv('IJ26_SMTP_USERNAME') ?: ''));
+        $smtpPassword = trim((string) (getenv('IJ26_SMTP_PASSWORD') ?: ''));
+        if ($smtpUser !== '' && $smtpPassword !== '') {
+            return $this->sendSmtp($smtpUser, $smtpPassword, $from, $name, $email, $subject, $message);
+        }
         $transactionalKey = trim((string) (getenv('IJ26_MAILCHIMP_TRANSACTIONAL_KEY') ?: ''));
         if ($transactionalKey !== '') {
             return $this->sendMailchimpTransactional($transactionalKey, $from, $name, $email, $subject, $message);
@@ -237,6 +244,42 @@ final class Api
             'Content-Type: text/plain; charset=UTF-8',
         ];
         return mail($email, $subject, $message, implode("\r\n", $headers));
+    }
+
+    private function sendSmtp(
+        string $username,
+        string $password,
+        string $from,
+        string $fromName,
+        string $to,
+        string $subject,
+        string $text
+    ): bool {
+        if (!class_exists(PHPMailer::class)) {
+            error_log('SMTP is configured but PHPMailer is not installed.');
+            return false;
+        }
+        $mail = new PHPMailer(true);
+        try {
+            $mail->isSMTP();
+            $mail->Host = getenv('IJ26_SMTP_HOST') ?: 'smtp.gmail.com';
+            $mail->Port = (int) (getenv('IJ26_SMTP_PORT') ?: 587);
+            $mail->SMTPAuth = true;
+            $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+            $mail->Username = $username;
+            $mail->Password = $password;
+            $mail->CharSet = PHPMailer::CHARSET_UTF8;
+            $mail->Timeout = 12;
+            $mail->setFrom($from, $fromName);
+            $mail->addAddress($to);
+            $mail->Subject = $subject;
+            $mail->Body = $text;
+            $mail->isHTML(false);
+            return $mail->send();
+        } catch (MailException $error) {
+            error_log('SMTP send failed: ' . $mail->ErrorInfo);
+            return false;
+        }
     }
 
     private function sendMailchimpTransactional(

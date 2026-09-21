@@ -20,8 +20,13 @@ if (is_readable($envFile)) {
     }
 }
 
-require_once $backendRoot . '/src/Database.php';
-require_once $backendRoot . '/src/Api.php';
+$autoload = $backendRoot . '/vendor/autoload.php';
+if (is_readable($autoload)) {
+    require_once $autoload;
+} else {
+    require_once $backendRoot . '/src/Database.php';
+    require_once $backendRoot . '/src/Api.php';
+}
 
 header('Content-Type: application/json; charset=utf-8');
 header('Cache-Control: no-store');
