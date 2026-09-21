@@ -521,7 +521,6 @@ type SponsorTier =
   | "Media Partners"
   | "Photography Partner"
   | "Community Supporters"
-  | "In Association With"
   | "Valued Contributor";
 
 type SponsorRow = [string, string, SponsorTier, string?];
@@ -560,14 +559,13 @@ const sponsorRows: SponsorRow[] = [
   ["lukla-tv", "Lukla TV", "Media Partners", "media-lukla-tv.jpeg"],
   ["nepal-edition", "Nepal Edition", "Media Partners", "media-nepal-edition.png"],
   ["nepali-mate", "Nepali Mate", "Photography Partner", "photography-nepali-mate.png"],
+  ["dms", "DMS", "Photography Partner"],
 
   ["nrna-victoria", "NRNA SCC Victoria", "Community Supporters"],
   ["nav", "Nepalese Association of Victoria", "Community Supporters"],
   ["nmc", "Nepali Community Centre", "Community Supporters", "supporter-nepali-community-centre.jpeg"],
   ["hume-city", "Hume City Council", "Community Supporters", "supporter-hume-city-council.jpeg"],
 
-  ["brishti-ganesh-temple", "Brishti Ganesh Temple", "In Association With", "partner-brishti-ganesh-temple.png"],
-  ["mha-guthi", "Mha Guthi", "In Association With", "partner-mha-guthi.png"],
   ["alliance-estate-agents", "Alliance Estate Agents", "Valued Contributor", "contributor-alliance-estate-agents.png"]
 ];
 
