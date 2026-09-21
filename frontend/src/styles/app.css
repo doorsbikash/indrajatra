@@ -365,7 +365,7 @@ h4 { font-size: var(--step-0); font-family: var(--font-sans); font-weight: 600; 
 }
 .bottom-nav__inner {
   width: min(100%, var(--page-max)); margin-inline: auto;
-  display: grid; grid-template-columns: repeat(5, 1fr);
+  display: grid; grid-template-columns: repeat(6, 1fr);
 }
 .bottom-nav a {
   position: relative;

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link, NavLink, Outlet, useLocation } from "react-router-dom";
-import { CalendarDays, Clock, Compass, Home, MapPinned, Sparkles, Star } from "lucide-react";
+import { CalendarDays, Clock, Compass, Home, MapPinned, Sparkles, Star, Store } from "lucide-react";
 import { useApp } from "./AppContext";
 import { clock } from "../lib/clock/clock";
 import { formatTime } from "../lib/dates/schedule";
@@ -11,6 +11,7 @@ const NAV = [
   { to: "/", icon: Home, label: "Home", end: true },
   { to: "/schedule", icon: CalendarDays, label: "What's on", end: false },
   { to: "/map", icon: MapPinned, label: "Map", end: false },
+  { to: "/directory", icon: Store, label: "Stalls", end: false },
   { to: "/explore", icon: Compass, label: "Trail", end: false },
   { to: "/my", icon: Star, label: "Mine", end: false }
 ] as const;
