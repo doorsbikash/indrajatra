@@ -101,7 +101,9 @@ async function apiError(response: Response, fallback: string): Promise<string> {
   }
 }
 
-const useApi = (import.meta.env.VITE_AUTH_PROVIDER ?? import.meta.env.VITE_DATA_PROVIDER) === "api";
+const configuredProvider = import.meta.env.VITE_AUTH_PROVIDER ?? import.meta.env.VITE_DATA_PROVIDER;
+// Production builds use the real auth API unless a seed build explicitly opts out.
+const useApi = configuredProvider ? configuredProvider === "api" : import.meta.env.PROD;
 
 export const auth = {
   usesApi: useApi,
