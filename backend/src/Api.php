@@ -227,12 +227,61 @@ final class Api
         $name = getenv('IJ26_MAIL_FROM_NAME') ?: 'Indra Jatra Melbourne';
         $subject = 'Your Indra Jatra sign-in code';
         $message = "Your sign-in code is {$code}.\n\nIt expires in 10 minutes. If you did not request it, you can ignore this email.";
+        $transactionalKey = trim((string) (getenv('IJ26_MAILCHIMP_TRANSACTIONAL_KEY') ?: ''));
+        if ($transactionalKey !== '') {
+            return $this->sendMailchimpTransactional($transactionalKey, $from, $name, $email, $subject, $message);
+        }
         $headers = [
             'From: ' . $name . ' <' . $from . '>',
             'Reply-To: ' . $from,
             'Content-Type: text/plain; charset=UTF-8',
         ];
         return mail($email, $subject, $message, implode("\r\n", $headers));
+    }
+
+    private function sendMailchimpTransactional(
+        string $key,
+        string $from,
+        string $fromName,
+        string $to,
+        string $subject,
+        string $text
+    ): bool {
+        if (!function_exists('curl_init')) {
+            error_log('Mailchimp Transactional requires the PHP cURL extension.');
+            return false;
+        }
+        $request = curl_init('https://mandrillapp.com/api/1.0/messages/send');
+        curl_setopt_array($request, [
+            CURLOPT_POST => true,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_CONNECTTIMEOUT => 5,
+            CURLOPT_TIMEOUT => 12,
+            CURLOPT_HTTPHEADER => ['Content-Type: application/json'],
+            CURLOPT_POSTFIELDS => json_encode([
+                'key' => $key,
+                'message' => [
+                    'from_email' => $from,
+                    'from_name' => $fromName,
+                    'subject' => $subject,
+                    'text' => $text,
+                    'to' => [['email' => $to, 'type' => 'to']],
+                    'auto_text' => true,
+                    'tags' => ['festival-sign-in'],
+                ],
+            ], JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR),
+        ]);
+        $response = curl_exec($request);
+        $status = curl_getinfo($request, CURLINFO_RESPONSE_CODE);
+        $error = curl_error($request);
+        curl_close($request);
+        if ($response === false || $status < 200 || $status >= 300) {
+            error_log('Mailchimp Transactional request failed: HTTP ' . $status . ($error ? ' ' . $error : ''));
+            return false;
+        }
+        $result = json_decode((string) $response, true);
+        $deliveryStatus = is_array($result) && isset($result[0]['status']) ? (string) $result[0]['status'] : '';
+        return in_array($deliveryStatus, ['sent', 'queued', 'scheduled'], true);
     }
 
     private function publicProfile(array $profile): array

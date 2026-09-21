@@ -28,8 +28,6 @@ import { AdminPage } from "../pages/Admin";
 import { VolunteerRegisterPage } from "../pages/VolunteerRegister";
 import { NotFoundPage } from "../pages/NotFound";
 
-const organiserEnabled = import.meta.env.DEV || import.meta.env.VITE_ENABLE_ORGANISER === "true";
-
 export default function App() {
   const [data, setData] = useState<FestivalData | null>(null);
   const [profile, setProfile] = useState<VisitorProfile | null>(null);
@@ -177,7 +175,7 @@ export default function App() {
             <Route path="/info" element={<InfoPage />} />
             <Route path="/membership" element={<MembershipPage />} />
             <Route path="/volunteer" element={<VolunteerRegisterPage />} />
-            {organiserEnabled && <Route path="/organiser" element={<AdminPage />} />}
+            <Route path="/organiser" element={<AdminPage />} />
             <Route path="*" element={<NotFoundPage />} />
           </Route>
         </Routes>
