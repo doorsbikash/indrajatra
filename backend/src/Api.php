@@ -62,6 +62,12 @@ final class Api
             if ($method === 'PATCH' && preg_match('#^/api/admin/volunteers/(\d+)$#', $path, $matches)) {
                 $this->updateVolunteer((int) $matches[1]);
             }
+            if ($method === 'GET' && $path === '/api/admin/check-ins') {
+                $this->checkInSummary();
+            }
+            if ($method === 'POST' && $path === '/api/admin/check-ins/scan') {
+                $this->scanAttendee();
+            }
             $this->json(['error' => 'Not found'], 404);
         } catch (Throwable $error) {
             error_log($error->__toString());
@@ -561,6 +567,104 @@ final class Api
             'signedOffAt' => $row['signed_off_at'],
             'createdAt' => $row['created_at'],
             'updatedAt' => $row['updated_at'],
+        ];
+    }
+
+    private function checkInSummary(): never
+    {
+        $this->requireOrganiser();
+        $counts = $this->db->query(
+            "SELECT COUNT(*) AS total, SUM(checked_in_at IS NOT NULL) AS checked_in FROM event_attendees WHERE event_id = 'indra-jatra-2026'"
+        )->fetch();
+        $recent = $this->db->query(
+            "SELECT id, first_name, last_name, ticket_type, checked_in_at FROM event_attendees "
+            . "WHERE event_id = 'indra-jatra-2026' AND checked_in_at IS NOT NULL ORDER BY checked_in_at DESC LIMIT 20"
+        )->fetchAll();
+        $total = (int) ($counts['total'] ?? 0);
+        $checkedIn = (int) ($counts['checked_in'] ?? 0);
+        $this->json([
+            'total' => $total,
+            'checkedIn' => $checkedIn,
+            'remaining' => max(0, $total - $checkedIn),
+            'recent' => array_map([$this, 'publicAttendee'], $recent),
+        ]);
+    }
+
+    private function scanAttendee(): never
+    {
+        $organiserId = $this->requireOrganiser();
+        $this->requireCsrf();
+        $input = $this->body();
+        $code = $this->requiredText($input, 'code', 2048);
+        $hashes = $this->ticketCandidateHashes($code);
+        $placeholders = implode(',', array_fill(0, count($hashes), '?'));
+        $parameters = [...$hashes, ...$hashes, ...$hashes];
+
+        $this->db->beginTransaction();
+        $query = $this->db->prepare(
+            "SELECT * FROM event_attendees WHERE ticket_code_hash IN ({$placeholders}) "
+            . "OR source_attendee_id_hash IN ({$placeholders}) OR order_number_hash IN ({$placeholders}) FOR UPDATE"
+        );
+        $query->execute($parameters);
+        $matches = $query->fetchAll();
+        if (!$matches) {
+            $this->db->rollBack();
+            $this->json(['error' => 'Ticket not found in the imported Eventbrite list.'], 404);
+        }
+        if (count($matches) > 1) {
+            $this->db->rollBack();
+            $this->json(['error' => 'This order contains multiple attendees. Scan the individual attendee ticket.'], 409);
+        }
+
+        $attendee = $matches[0];
+        if ($attendee['checked_in_at'] !== null) {
+            $this->db->commit();
+            $this->json(['status' => 'already_checked_in', 'attendee' => $this->publicAttendee($attendee)]);
+        }
+        $update = $this->db->prepare('UPDATE event_attendees SET checked_in_at = UTC_TIMESTAMP(), checked_in_by = ? WHERE id = ?');
+        $update->execute([$organiserId, $attendee['id']]);
+        $query = $this->db->prepare('SELECT * FROM event_attendees WHERE id = ? LIMIT 1');
+        $query->execute([$attendee['id']]);
+        $updated = $query->fetch();
+        $this->audit(
+            $organiserId,
+            'attendee.check_in',
+            'event_attendee',
+            (string) $attendee['id'],
+            null,
+            json_encode($this->publicAttendee($updated), JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR)
+        );
+        $this->db->commit();
+        $this->json(['status' => 'checked_in', 'attendee' => $this->publicAttendee($updated)]);
+    }
+
+    private function ticketCandidateHashes(string $value): array
+    {
+        $candidates = [trim($value), mb_strtolower(trim($value))];
+        $parts = parse_url(trim($value));
+        if (is_array($parts)) {
+            if (!empty($parts['path'])) $candidates[] = basename((string) $parts['path']);
+            if (!empty($parts['query'])) {
+                parse_str((string) $parts['query'], $query);
+                foreach (['barcode', 'code', 'attendee_id', 'attendeeId'] as $key) {
+                    if (!empty($query[$key]) && is_scalar($query[$key])) $candidates[] = trim((string) $query[$key]);
+                }
+            }
+        }
+        return array_values(array_unique(array_map(
+            fn(string $candidate): string => hash_hmac('sha256', mb_strtolower($candidate), $this->secret()),
+            array_filter($candidates, static fn(string $candidate): bool => $candidate !== '')
+        )));
+    }
+
+    private function publicAttendee(array $row): array
+    {
+        return [
+            'id' => (int) $row['id'],
+            'firstName' => $row['first_name'],
+            'lastName' => $row['last_name'],
+            'ticketType' => $row['ticket_type'],
+            'checkedInAt' => $row['checked_in_at'],
         ];
     }
 

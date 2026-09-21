@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import {
-  Ban, CheckCheck, Clock, Image, ListOrdered, Megaphone, Play, Radio, Store, Users,
+  Ban, CheckCheck, Clock, Image, ListOrdered, Megaphone, Play, QrCode, Radio, Store, Users,
   RotateCcw, ShieldAlert, Trash2, Undo2
 } from "lucide-react";
 import { useApp } from "../app/AppContext";
@@ -13,13 +13,15 @@ import { PhotoManager } from "../components/admin/PhotoManager";
 import { AnnouncementComposer } from "../components/admin/AnnouncementComposer";
 import { StallEditor } from "../components/admin/StallEditor";
 import { VolunteerManager } from "../components/admin/VolunteerManager";
+import { AttendeeCheckIn } from "../components/admin/AttendeeCheckIn";
 import { FESTIVAL_DAY } from "../content/seed/data";
 import { t } from "../lib/text";
 
-type Tab = "live" | "volunteers" | "runsheet" | "stalls" | "photos";
+type Tab = "live" | "checkin" | "volunteers" | "runsheet" | "stalls" | "photos";
 
 const TABS: { id: Tab; label: string; icon: typeof Radio }[] = [
   { id: "live", label: "Run the day", icon: Radio },
+  { id: "checkin", label: "Check-in", icon: QrCode },
   { id: "volunteers", label: "Volunteers", icon: Users },
   { id: "runsheet", label: "Run sheet", icon: ListOrdered },
   { id: "stalls", label: "Stalls", icon: Store },
@@ -103,6 +105,8 @@ export function AdminPage() {
       {tab === "stalls" && <StallEditor listings={data.listings} toast={toast} />}
 
       {tab === "volunteers" && <VolunteerManager csrfToken={profile.csrfToken || ""} toast={toast} />}
+
+      {tab === "checkin" && <AttendeeCheckIn csrfToken={profile.csrfToken || ""} />}
 
       {tab === "live" && (
         <>
