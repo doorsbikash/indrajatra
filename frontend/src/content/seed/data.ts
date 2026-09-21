@@ -468,6 +468,13 @@ export const listings: Listing[] = [
     confirmed: true, published: true
   },
   {
+    id: "9-meal-cafe", slug: "9-meal-cafe", name: "9 Meal Cafe",
+    listingType: "food", categories: ["Nepalese food"],
+    description: { en: "Authentic Nepalese food served from the festival food area." },
+    locationId: "food-trucks", logo: "/brand/vendors/9-meal-cafe.jpg",
+    confirmed: true, published: true
+  },
+  {
     id: "butta-studio", slug: "butta-studio", name: "Butta Studio",
     listingType: "market", categories: ["Market stall"],
     description: { en: "A confirmed festival market stall in the marquee row." },
