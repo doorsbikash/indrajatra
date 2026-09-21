@@ -19,6 +19,7 @@ export default defineConfig({
     react(),
     VitePWA({
       registerType: "autoUpdate",
+      injectRegister: null,
       includeAssets: [
         "offline.html",
         "icons/apple-touch-icon.png",
@@ -51,6 +52,8 @@ export default defineConfig({
         ]
       },
       workbox: {
+        skipWaiting: true,
+        clientsClaim: true,
         // Single-page app: unknown routes must resolve to the app shell, NOT
         // to offline.html — otherwise every deep link and hard refresh in an
         // installed PWA shows the offline page instead of the festival guide.

@@ -1,7 +1,18 @@
 import React from "react";
 import { createRoot } from "react-dom/client";
+import { registerSW } from "virtual:pwa-register";
 import App from "./app/App";
 import "./styles/app.css";
+
+const updateSW = registerSW({
+  immediate: true,
+  onNeedRefresh() {
+    void updateSW(true);
+  },
+  onRegisteredSW(_url, registration) {
+    window.setInterval(() => void registration?.update(), 60_000);
+  }
+});
 
 createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
