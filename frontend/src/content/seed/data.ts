@@ -514,7 +514,17 @@ export const listings: Listing[] = [
    the gate. Logos and tiers come from the 2026 sponsor pack.
    ================================================================== */
 
-type SponsorRow = [string, string, "Platinum" | "Gold" | "Silver", string?];
+type SponsorTier =
+  | "Platinum"
+  | "Gold"
+  | "Silver"
+  | "Media Partners"
+  | "Photography Partner"
+  | "Community Supporters"
+  | "In Association With"
+  | "Valued Contributor";
+
+type SponsorRow = [string, string, SponsorTier, string?];
 
 const sponsorRows: SponsorRow[] = [
   ["nab", "NAB", "Platinum", "platinum-nab.png"],
@@ -527,22 +537,38 @@ const sponsorRows: SponsorRow[] = [
   ["maximax", "MaxiMax Education & Migration Services", "Gold", "gold-maximax-education-migration-services.png"],
   ["sierra-homes", "Sierra Homes", "Gold", "gold-sierra-homes.png"],
   ["your-dream-home", "Your Dream Home Conveyancing", "Gold", "gold-your-dream-home-conveyancing.png"],
-  ["everest-home-loans", "Everest Home Loans", "Gold"],
-  ["solve-education", "Solve Education Consultancy", "Gold"],
+  ["everest-home-loans", "Everest Home Loans", "Silver", "silver-everest-home-loans.jpeg"],
+  ["solve-education", "Solve Education Consultancy", "Silver", "silver-solve-education.jpg"],
+  ["jeni-homes", "Jeni Homes", "Silver", "silver-jeni-homes.jpeg"],
   ["maven-consultancy", "Maven Consulting Group", "Silver", "silver-maven-consulting-group.png"],
-  ["sunrise-energy", "Sunrise Energy", "Silver"],
+  ["sunrise-energy", "Sunrise Saves Energy", "Silver", "silver-sunrise-saves-energy.jpg"],
   ["derrimut-butcher", "Derrimut Butcher", "Silver", "silver-derrimut-butcher.png"],
   ["sapphire-estate", "Sapphire Estate Agents", "Silver", "silver-sapphire-estate-agents.png"],
   ["st-aust-cares", "St Aust Cares", "Silver", "silver-st-aust-cares.png"],
   ["supreme-mortgage", "Supreme Mortgage & Finance", "Silver", "silver-supreme-mortgage-finance.png"],
   ["apbiz-solutions", "APBiz Solutions", "Silver"],
+  ["apb-partners", "APB Partners", "Silver", "silver-apb-partners.png"],
   ["colorate-prints", "Colorate Prints", "Silver"],
-  ["elite-curtains", "Elite Curtains and Blinds", "Silver"],
-  ["rs-painting", "RS Painting", "Silver"],
-  ["capkon-home-loans", "Capkon Home Loans", "Silver"],
-  ["mit", "Melbourne Institute of Technology", "Silver"],
+  ["elite-curtains", "Elite Curtains and Blinds", "Silver", "silver-elite-curtains-blinds.jpeg"],
+  ["rs-painting", "RS Painting & Maintenance", "Silver", "silver-rs-painting-maintenance.jpeg"],
+  ["capkon-home-loans", "Capkon Home Loans", "Silver", "silver-capkon-home-loans.jpeg"],
+  ["mit", "Melbourne Institute of Technology", "Silver", "silver-mit.png"],
   ["preferred-consultancy", "Preferred Education & Migration Consultants", "Silver"],
-  ["central-australian-college", "Central Australian College", "Silver"]
+  ["central-australian-college", "Central Australian College", "Silver"],
+
+  ["better-from-nepal", "Better From Nepal", "Media Partners", "media-better-from-nepal.png"],
+  ["lukla-tv", "Lukla TV", "Media Partners", "media-lukla-tv.jpeg"],
+  ["nepal-edition", "Nepal Edition", "Media Partners", "media-nepal-edition.png"],
+  ["nepali-mate", "Nepali Mate", "Photography Partner", "photography-nepali-mate.png"],
+
+  ["nrna-victoria", "NRNA SCC Victoria", "Community Supporters"],
+  ["nav", "Nepalese Association of Victoria", "Community Supporters"],
+  ["nmc", "Nepali Community Centre", "Community Supporters", "supporter-nepali-community-centre.jpeg"],
+  ["hume-city", "Hume City Council", "Community Supporters", "supporter-hume-city-council.jpeg"],
+
+  ["brishti-ganesh-temple", "Brishti Ganesh Temple", "In Association With", "partner-brishti-ganesh-temple.png"],
+  ["mha-guthi", "Mha Guthi", "In Association With", "partner-mha-guthi.png"],
+  ["alliance-estate-agents", "Alliance Estate Agents", "Valued Contributor", "contributor-alliance-estate-agents.png"]
 ];
 
 export const sponsors: Listing[] = sponsorRows.map(([id, name, tier, logo]) => ({
