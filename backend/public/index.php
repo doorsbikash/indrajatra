@@ -34,9 +34,12 @@ header('X-Content-Type-Options: nosniff');
 header('Referrer-Policy: same-origin');
 
 $secure = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off');
+$sessionLifetime = 60 * 60 * 24 * 30;
+ini_set('session.gc_maxlifetime', (string) $sessionLifetime);
+ini_set('session.cookie_lifetime', (string) $sessionLifetime);
 session_name('ij26_session');
 session_set_cookie_params([
-    'lifetime' => 60 * 60 * 24 * 14,
+    'lifetime' => $sessionLifetime,
     'path' => '/',
     'secure' => $secure,
     'httponly' => true,
