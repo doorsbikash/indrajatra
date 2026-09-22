@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link, NavLink, Outlet, useLocation } from "react-router-dom";
-import { CalendarDays, Clock, Compass, Home, MapPinned, Sparkles, Star, Store } from "lucide-react";
+import { CalendarDays, Clock, Compass, Home, MapPinned, ShieldCheck, Sparkles, Star, Store } from "lucide-react";
 import { useApp } from "./AppContext";
 import { clock } from "../lib/clock/clock";
 import { formatTime } from "../lib/dates/schedule";
@@ -47,13 +47,24 @@ export function Shell({ toast }: { toast: string | null }) {
               <strong className="brand__event">Indra Jatra 2026</strong>
             </span>
           </Link>
-          <Link
-            to="/my"
-            className={`avatar${profile ? "" : " avatar--guest"}`}
-            aria-label={profile ? `Signed in as ${profile.firstName}` : "My Festival"}
-          >
-            {profile ? `${profile.firstName[0] ?? ""}${profile.lastName[0] ?? ""}` : <Star size={16} />}
-          </Link>
+          {profile?.role === "organiser" ? (
+            <Link
+              to="/organiser"
+              className={`organiser-shortcut${pathname === "/organiser" ? " organiser-shortcut--active" : ""}`}
+              aria-label="Return to organiser console"
+            >
+              <ShieldCheck size={17} />
+              <span>Organiser</span>
+            </Link>
+          ) : (
+            <Link
+              to="/my"
+              className={`avatar${profile ? "" : " avatar--guest"}`}
+              aria-label={profile ? `Signed in as ${profile.firstName}` : "My Festival"}
+            >
+              {profile ? `${profile.firstName[0] ?? ""}${profile.lastName[0] ?? ""}` : <Star size={16} />}
+            </Link>
+          )}
         </div>
       </header>
 

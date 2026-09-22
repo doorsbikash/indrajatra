@@ -354,6 +354,14 @@ h4 { font-size: var(--step-0); font-family: var(--font-sans); font-weight: 600; 
 }
 .avatar--lg { width: 60px; height: 60px; font-size: var(--step-2); border-radius: var(--r-md); }
 .avatar--guest { background: transparent; color: var(--ink-soft); border: 1.5px solid var(--rule-strong); }
+.organiser-shortcut {
+  min-height: 38px; padding: 0 11px; flex: 0 0 auto;
+  display: inline-flex; align-items: center; justify-content: center; gap: 7px;
+  border: 1px solid var(--oxblood-200); border-radius: var(--r-sm);
+  background: var(--oxblood-50); color: var(--oxblood-700);
+  font-size: var(--step--2); font-weight: 700;
+}
+.organiser-shortcut--active { background: var(--oxblood-700); color: #fff; border-color: var(--oxblood-700); }
 
 .bottom-nav {
   position: fixed; inset: auto 0 0 0; z-index: 50;
