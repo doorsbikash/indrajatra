@@ -23,6 +23,8 @@ export default defineConfig({
       includeAssets: [
         "offline.html",
         "icons/apple-touch-icon.png",
+        "brand/ngv-logo.png",
+        "brand/ngv-mark.png",
         "images/festival-hero.jpg",
         "map/indra-jatra-2026-planned-site-map.jpeg"
       ],
@@ -59,10 +61,18 @@ export default defineConfig({
         // installed PWA shows the offline page instead of the festival guide.
         navigateFallback: "/index.html",
         navigateFallbackDenylist: [/^\/api\//],
-        globPatterns: ["**/*.{js,css,html,svg,png,jpg,jpeg,webp,woff2}"],
+        globPatterns: ["**/*.{js,css,html}"],
         maximumFileSizeToCacheInBytes: 4 * 1024 * 1024,
         cleanupOutdatedCaches: true,
         runtimeCaching: [
+          {
+            urlPattern: ({ request, url }) => request.destination === "font" && url.origin === self.location.origin,
+            handler: "CacheFirst",
+            options: {
+              cacheName: "ij26-fonts-local",
+              expiration: { maxEntries: 16, maxAgeSeconds: 60 * 60 * 24 * 365 }
+            }
+          },
           {
             urlPattern: ({ request }) => request.destination === "image",
             // Photos and logos are updated during event preparation. Prefer the
