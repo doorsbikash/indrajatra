@@ -69,8 +69,9 @@ export default function App() {
   useEffect(() => {
     if (!auth.usesApi) return;
     let active = true;
+    let timer: number | undefined;
     const refresh = async () => {
-      if (clock.isPreview()) return;
+      if (clock.isPreview() || document.visibilityState !== "visible") return;
       try {
         const response = await fetch("/api/live", { credentials: "include" });
         if (!response.ok) return;
@@ -80,9 +81,24 @@ export default function App() {
         // Keep the cached live state while offline.
       }
     };
+    const schedule = () => {
+      window.clearTimeout(timer);
+      timer = window.setTimeout(async () => {
+        await refresh();
+        if (active) schedule();
+      }, 45_000 + Math.random() * 30_000);
+    };
+    const onVisibility = () => {
+      if (document.visibilityState === "visible") void refresh();
+    };
     void refresh();
-    const timer = window.setInterval(() => void refresh(), 15_000);
-    return () => { active = false; window.clearInterval(timer); };
+    schedule();
+    document.addEventListener("visibilitychange", onVisibility);
+    return () => {
+      active = false;
+      window.clearTimeout(timer);
+      document.removeEventListener("visibilitychange", onVisibility);
+    };
   }, []);
 
   useEffect(() => {
