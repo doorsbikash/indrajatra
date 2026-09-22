@@ -45,6 +45,16 @@ export function MapPage() {
   const route = selected
     ? data.routes.find((r) => r.toLocationId === selected.id && r.fromLocationId === "guest-entry")
     : undefined;
+  const selectedStalls = selected?.id === "market-row"
+    ? data.listings
+        .filter((listing) => listing.published && listing.locationId === "market-row")
+        .map((listing) => {
+          const stallTag = listing.categories.find((category) => /^Stall \d+$/.test(category));
+          return { listing, number: stallTag ? Number(stallTag.slice(6)) : null };
+        })
+        .filter((row): row is { listing: (typeof data.listings)[number]; number: number } => row.number !== null)
+        .sort((a, b) => a.number - b.number)
+    : [];
 
   return (
     <main className="page">
@@ -111,6 +121,13 @@ export function MapPage() {
               <Accessibility size={15} style={{ flex: "0 0 auto", marginTop: 2 }} />
               <span>{t(selected.accessibilityNotes, locale)}</span>
             </p>
+          )}
+          {selectedStalls.length > 0 && (
+            <div className="map-stall-roster" aria-label="Confirmed market stall assignments">
+              {selectedStalls.map(({ listing, number }) => (
+                <span key={listing.id}><strong>{number}</strong>{listing.name}</span>
+              ))}
+            </div>
           )}
         </div>
       )}

@@ -798,6 +798,16 @@ h4 { font-size: var(--step-0); font-family: var(--font-sans); font-weight: 600; 
   border: 1px solid var(--rule-strong); box-shadow: var(--shadow-float);
   animation: slideUp var(--t-base) var(--ease-out);
 }
+.map-stall-roster {
+  display: grid; grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 6px 12px; margin-top: var(--s-3); padding-top: var(--s-3);
+  border-top: 1px solid var(--rule);
+}
+.map-stall-roster span {
+  display: grid; grid-template-columns: 24px minmax(0, 1fr); gap: 6px;
+  align-items: baseline; min-width: 0; font-size: var(--step--2); line-height: 1.35;
+}
+.map-stall-roster strong { font-family: var(--font-mono); color: var(--brand); }
 @keyframes slideUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
 
 .legend { display: flex; flex-wrap: wrap; gap: var(--s-2) var(--s-4); margin-top: var(--s-3); }

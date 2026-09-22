@@ -20,7 +20,14 @@ export function DirectoryPage() {
 
   const listings = data.listings
     .filter((l) => l.published && l.listingType !== "sponsor")
-    .filter((l) => filter === "all" || l.listingType === filter);
+    .filter((l) => filter === "all" || l.listingType === filter)
+    .sort((a, b) => {
+      const stallNumber = (categories: string[]) => {
+        const match = categories.find((category) => /^Stall \d+$/.test(category));
+        return match ? Number(match.slice(6)) : Number.POSITIVE_INFINITY;
+      };
+      return stallNumber(a.categories) - stallNumber(b.categories);
+    });
 
   return (
     <main className="page">

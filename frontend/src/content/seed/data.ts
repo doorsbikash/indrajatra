@@ -61,7 +61,7 @@ const locationRows: LocRow[] = [
     "The row of cultural displays along the eastern tree line: Ganesh Khath, Indra, Swet Bhairab and Samay Baji.",
     "A continuous firm path runs the length of the display line."],
   ["market-row", "Market Stalls 1–20", "market", 43, 14,
-    "Twenty 3m × 3m stalls: crafts, clothing, jewellery, community groups and information tables.",
+    "Twenty 3m × 3m stalls beside the lake. Each directory listing shows its confirmed stall number.",
     "Two metres of clear space is left between stall blocks so the aisle stays passable."],
   ["food-trucks", "Food Trucks", "food", 14, 28,
     "All hot food is served along the western edge. Newari and Nepali dishes, snacks and drinks.",
@@ -425,9 +425,9 @@ export const trailPoints: TrailPoint[] = trailRows.map((row, index) => ({
 export const listings: Listing[] = [
   {
     id: "pasa-ya-kitchen", slug: "pasa-ya-kitchen", name: "Pasa Ya Kitchen",
-    listingType: "food", categories: ["Newari kitchen"],
-    description: { en: "Newari food prepared and served from the festival food area." },
-    locationId: "food-trucks",
+    listingType: "food", categories: ["Stall 8", "Newari kitchen"],
+    description: { en: "Newari food served from stall 8 in the marquee row." },
+    locationId: "market-row",
     logo: "/brand/vendors/pasa-ya-kitchen.png",
     confirmed: true, published: true
   },
@@ -440,9 +440,9 @@ export const listings: Listing[] = [
   },
   {
     id: "mandala-dine-in", slug: "mandala-dine-in", name: "Mandala Dine In",
-    listingType: "food", categories: ["Newari kitchen"],
-    description: { en: "Newari food prepared and served from the festival food area." },
-    locationId: "food-trucks", logo: "/brand/vendors/mandala-dine-in.jpg",
+    listingType: "food", categories: ["Stall 2", "Newari kitchen"],
+    description: { en: "Newari food served from stall 2 in the marquee row." },
+    locationId: "market-row", logo: "/brand/vendors/mandala-dine-in.jpg",
     confirmed: true, published: true
   },
   {
@@ -469,14 +469,14 @@ export const listings: Listing[] = [
   },
   {
     id: "9-meal-cafe", slug: "9-meal-cafe", name: "9 Meal Cafe",
-    listingType: "food", categories: ["Nepalese food"],
-    description: { en: "Authentic Nepalese food served from the festival food area." },
-    locationId: "food-trucks", logo: "/brand/vendors/9-meal-cafe.jpg",
+    listingType: "food", categories: ["Stall 5", "Nepalese food"],
+    description: { en: "Authentic Nepalese food served from stall 5 in the marquee row." },
+    locationId: "market-row", logo: "/brand/vendors/9-meal-cafe.jpg",
     confirmed: true, published: true
   },
   {
     id: "butta-studio", slug: "butta-studio", name: "Butta Studio",
-    listingType: "market", categories: ["Market stall"],
+    listingType: "market", categories: ["Stall 7", "Market stall"],
     description: { en: "A confirmed festival market stall in the marquee row." },
     locationId: "market-row", logo: "/brand/vendors/butta-studio.jpg",
     confirmed: true, published: true
@@ -497,9 +497,87 @@ export const listings: Listing[] = [
   },
   {
     id: "ngv-desk", slug: "ngv-desk", name: "Newa Guthi Victoria",
-    listingType: "community", categories: ["Community", "Classes"],
+    listingType: "community", categories: ["Stall 1", "Community", "Classes"],
     description: { en: "Membership, weekly Dhimey, Bhusya Baja, Bansuri and Newa dance classes, and volunteering for next year's festival. Come and say hello." },
-    locationId: "anmc", confirmed: true, published: true
+    locationId: "market-row", confirmed: true, published: true
+  },
+  {
+    id: "hyuman", slug: "hyuman", name: "Hyuman",
+    listingType: "market", categories: ["Stall 3", "Market stall"],
+    description: { en: "A confirmed festival stall in the marquee row." },
+    locationId: "market-row", confirmed: true, published: true
+  },
+  {
+    id: "indreni", slug: "indreni", name: "Indreni",
+    listingType: "market", categories: ["Stall 4", "Market stall"],
+    description: { en: "A confirmed festival stall in the marquee row." },
+    locationId: "market-row", confirmed: true, published: true
+  },
+  {
+    id: "simran", slug: "simran", name: "Simran",
+    listingType: "market", categories: ["Stall 6", "Market stall"],
+    description: { en: "A confirmed festival stall in the marquee row." },
+    locationId: "market-row", confirmed: true, published: true
+  },
+  {
+    id: "eshan-it-stall", slug: "eshan-it-stall", name: "Eshan IT",
+    listingType: "market", categories: ["Stall 9", "Sponsor stall"],
+    description: { en: "Visit Eshan IT in the festival marquee row." },
+    locationId: "market-row", logo: "/brand/sponsors/gold-eshan-it.png",
+    confirmed: true, published: true
+  },
+  {
+    id: "aussie-window", slug: "aussie-window", name: "Aussie Window",
+    listingType: "market", categories: ["Stall 10", "Market stall"],
+    description: { en: "A confirmed festival stall in the marquee row." },
+    locationId: "market-row", confirmed: true, published: true
+  },
+  {
+    id: "aj-sweet-decor", slug: "aj-sweet-decor", name: "AJ Sweet Decor",
+    listingType: "market", categories: ["Stall 11", "Market stall"],
+    description: { en: "A confirmed festival stall in the marquee row." },
+    locationId: "market-row", confirmed: true, published: true
+  },
+  {
+    id: "napi", slug: "napi", name: "NAPI",
+    listingType: "market", categories: ["Stall 13", "Community stall"],
+    description: { en: "A confirmed festival stall in the marquee row." },
+    locationId: "market-row", confirmed: true, published: true
+  },
+  {
+    id: "grace-international-stall", slug: "grace-international-stall", name: "Grace International",
+    listingType: "market", categories: ["Stall 15", "Sponsor stall"],
+    description: { en: "Visit Grace International in the festival marquee row." },
+    locationId: "market-row", logo: "/brand/sponsors/gold-grace-international.png",
+    confirmed: true, published: true
+  },
+  {
+    id: "your-dream-home-stall", slug: "your-dream-home-stall", name: "Your Dream Home Conveyancing",
+    listingType: "market", categories: ["Stall 16", "Sponsor stall"],
+    description: { en: "Visit Your Dream Home Conveyancing in the festival marquee row." },
+    locationId: "market-row", logo: "/brand/sponsors/gold-your-dream-home-conveyancing.png",
+    confirmed: true, published: true
+  },
+  {
+    id: "expert-education-stall", slug: "expert-education-stall", name: "Expert Education | Visa",
+    listingType: "market", categories: ["Stall 17", "Sponsor stall"],
+    description: { en: "Visit Expert Education | Visa in the festival marquee row." },
+    locationId: "market-row", logo: "/brand/sponsors/gold-expert-education-visa.png",
+    confirmed: true, published: true
+  },
+  {
+    id: "maximax-stall", slug: "maximax-stall", name: "MaxiMax Education & Migration Services",
+    listingType: "market", categories: ["Stall 18", "Sponsor stall"],
+    description: { en: "Visit MaxiMax Education & Migration Services in the festival marquee row." },
+    locationId: "market-row", logo: "/brand/sponsors/gold-maximax-education-migration-services.png",
+    confirmed: true, published: true
+  },
+  {
+    id: "alliance-stall", slug: "alliance-stall", name: "Alliance Estate Agents",
+    listingType: "market", categories: ["Stall 20", "Sponsor stall"],
+    description: { en: "Visit Alliance Estate Agents in the festival marquee row." },
+    locationId: "market-row", logo: "/brand/sponsors/contributor-alliance-estate-agents.png",
+    confirmed: true, published: true
   },
   {
     id: "info-desk", slug: "info-desk", name: "Media Station — Information",
