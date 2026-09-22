@@ -4,8 +4,8 @@
   "version": "0.1.0",
   "type": "module",
   "scripts": {
-    "dev": "vite --host 0.0.0.0",
-    "build": "tsc -b && vite build",
+    "dev": "VITE_SITE_URL=\"${VITE_SITE_URL:-http://localhost:5173}\" VITE_ROBOTS=\"${VITE_ROBOTS:-noindex, nofollow, noarchive}\" vite --host 0.0.0.0",
+    "build": "tsc -b && VITE_SITE_URL=\"${VITE_SITE_URL:-http://localhost:5173}\" VITE_ROBOTS=\"${VITE_ROBOTS:-noindex, nofollow, noarchive}\" vite build",
     "preview": "vite preview --host 0.0.0.0",
     "typecheck": "tsc -b",
     "lint": "eslint .",

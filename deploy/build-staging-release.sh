@@ -6,7 +6,12 @@ RELEASE_ID="${1:-$(date -u +%Y%m%d%H%M%S)}"
 RELEASE_DIR="$ROOT_DIR/build/releases/$RELEASE_ID"
 
 cd "$ROOT_DIR"
-VITE_DATA_PROVIDER=seed VITE_AUTH_PROVIDER=api VITE_ENABLE_ORGANISER=true npm run build
+VITE_DATA_PROVIDER=seed \
+VITE_AUTH_PROVIDER=api \
+VITE_ENABLE_ORGANISER=true \
+VITE_ROBOTS="noindex, nofollow, noarchive" \
+VITE_SITE_URL="https://staging-indrajatra.newaguthi.org.au" \
+npm run build
 
 mkdir -p "$RELEASE_DIR/public/api" "$RELEASE_DIR/backend"
 rsync -a --delete frontend/dist/ "$RELEASE_DIR/public/"
