@@ -27,8 +27,10 @@ function readStored(): string | null {
   } catch {
     /* ignore */
   }
-  const now = Date.now();
-  return now >= OPEN && now <= CLOSE ? null : DEFAULT_PREVIEW;
+  if (typeof window !== "undefined" && new URLSearchParams(window.location.search).get("preview") === "1") {
+    return DEFAULT_PREVIEW;
+  }
+  return null;
 }
 
 function emit() {
@@ -63,12 +65,12 @@ export const clock = {
 
   /** Jump the preview clock to a given minute of festival day. */
   setPreviewMinutes(minutesFromOpen: number) {
-    const base = new Date(`${FESTIVAL_DAY}T10:00:00+10:00`).getTime();
+    const base = new Date(`${FESTIVAL_DAY}T09:00:00+10:00`).getTime();
     clock.setPreview(new Date(base + minutesFromOpen * 60_000).toISOString());
   },
 
   minutesFromOpen(): number {
-    const base = new Date(`${FESTIVAL_DAY}T10:00:00+10:00`).getTime();
+    const base = new Date(`${FESTIVAL_DAY}T09:00:00+10:00`).getTime();
     return Math.round((clock.now().getTime() - base) / 60_000);
   },
 

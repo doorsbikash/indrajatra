@@ -116,8 +116,8 @@ export function AdminPage() {
             <h2>Demo clock</h2>
             <div className="card">
               <p className="small muted">
-                Move the clock to rehearse the day. Visitors see a Preview banner whenever this is
-                not real time, and it switches to the real clock automatically on 26 September.
+                Move the clock to rehearse the day on this device. Rehearsal changes are not sent
+                to public visitor screens. Return to real time before making live changes.
               </p>
               <p className="row row--between" style={{ margin: "var(--s-3) 0 6px" }}>
                 <span className="event-card__time" style={{ fontSize: "var(--step-1)" }}>

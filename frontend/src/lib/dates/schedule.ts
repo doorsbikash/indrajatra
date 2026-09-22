@@ -75,6 +75,11 @@ export function countdownLabel(iso: string, now = new Date()): string {
   const minutes = Math.round((new Date(iso).getTime() - now.getTime()) / 60_000);
   if (minutes <= 0) return "moments";
   if (minutes < 60) return `${minutes} min`;
+  if (minutes >= 1440) {
+    const days = Math.floor(minutes / 1440);
+    const hours = Math.floor((minutes % 1440) / 60);
+    return hours ? `${days} day${days === 1 ? "" : "s"} ${hours} hr` : `${days} day${days === 1 ? "" : "s"}`;
+  }
   const hours = Math.floor(minutes / 60);
   const rest = minutes % 60;
   return rest ? `${hours} hr ${rest} min` : `${hours} hr`;

@@ -106,6 +106,8 @@ describe("event status and countdowns", () => {
     expect(countdownLabel(at("12:30"), new Date(at("12:00")))).toBe("30 min");
     expect(countdownLabel(at("14:15"), new Date(at("12:00")))).toBe("2 hr 15 min");
     expect(countdownLabel(at("11:00"), new Date(at("12:00")))).toBe("moments");
+    expect(countdownLabel(at("12:00"), new Date(`${day}T10:30:00+10:00`))).toBe("1 hr 30 min");
+    expect(countdownLabel(at("12:00"), new Date(`2026-09-22T10:30:00+10:00`))).toBe("4 days 1 hr");
   });
 
   it("breaks the countdown into days, hours and minutes", () => {

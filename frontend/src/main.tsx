@@ -7,10 +7,10 @@ import "./styles/app.css";
 const updateSW = registerSW({
   immediate: true,
   onNeedRefresh() {
-    void updateSW(true);
+    void updateSW(true).catch(() => undefined);
   },
   onRegisteredSW(_url, registration) {
-    window.setInterval(() => void registration?.update(), 60_000);
+    window.setInterval(() => void registration?.update().catch(() => undefined), 60_000);
   }
 });
 

@@ -38,9 +38,10 @@ export default function App() {
   const [tick, setTick] = useState(0);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
   const [signInReason, setSignInReason] = useState<string | null>(null);
+  const previewIso = clock.previewIso();
 
   useEffect(() => {
-    void Promise.all([getRepository().getData(), auth.current()])
+    void Promise.all([getRepository().getData(), auth.current().catch(() => null)])
       .then(([festival, visitor]) => {
         setData(festival);
         setProfile(visitor);
@@ -49,13 +50,27 @@ export default function App() {
   }, []);
 
   useEffect(() => {
-    liveStore.configureRemote(profile?.csrfToken ?? null, profile?.role === "organiser");
-  }, [profile]);
+    let active = true;
+    liveStore.configureRemote(null, false);
+    if (!auth.usesApi || profile?.role !== "organiser" || !profile.csrfToken || clock.isPreview()) {
+      return () => { active = false; };
+    }
+    void fetch("/api/live", { credentials: "include" })
+      .then(async (response) => response.ok ? response.json() as Promise<{ state: LiveState | null }> : null)
+      .then((payload) => {
+        if (!active) return;
+        if (payload?.state) liveStore.hydrate(payload.state);
+        liveStore.configureRemote(profile.csrfToken ?? null, true);
+      })
+      .catch(() => undefined);
+    return () => { active = false; };
+  }, [profile, previewIso]);
 
   useEffect(() => {
     if (!auth.usesApi) return;
     let active = true;
     const refresh = async () => {
+      if (clock.isPreview()) return;
       try {
         const response = await fetch("/api/live", { credentials: "include" });
         if (!response.ok) return;

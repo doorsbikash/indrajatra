@@ -8,10 +8,18 @@ RewriteRule ^map/?$ index.html [L]
 RewriteCond %{REQUEST_FILENAME} -f [OR]
 RewriteCond %{REQUEST_FILENAME} -d
 RewriteRule ^ - [L]
-RewriteRule ^ index.html [L]
+RewriteRule ^(schedule|explore|directory|my|info|membership|volunteer|organiser)/?$ index.html [L]
+RewriteRule ^(trail|scan)/[^/]+/?$ index.html [L]
+RewriteRule ^ - [R=404,L]
 
 <IfModule mod_headers.c>
   Header set X-Content-Type-Options "nosniff"
   Header set Referrer-Policy "strict-origin-when-cross-origin"
   Header set Permissions-Policy "geolocation=(), microphone=(), camera=()"
+  Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains"
+  <FilesMatch "^(sw\.js|registerSW\.js)$">
+    Header set Cache-Control "no-cache, no-store, must-revalidate"
+    Header set Pragma "no-cache"
+    Header set Expires "0"
+  </FilesMatch>
 </IfModule>
