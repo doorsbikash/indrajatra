@@ -96,7 +96,8 @@ describe("liveStore", () => {
 
 describe("event status and countdowns", () => {
   it("reports the festival as upcoming, live, then finished", () => {
-    expect(eventStatus(seedData.event, new Date(at("09:00")))).toBe("upcoming");
+    expect(eventStatus(seedData.event, new Date(at("08:59")))).toBe("upcoming");
+    expect(eventStatus(seedData.event, new Date(at("09:00")))).toBe("live");
     expect(eventStatus(seedData.event, new Date(at("12:00")))).toBe("live");
     expect(eventStatus(seedData.event, new Date(at("17:00")))).toBe("finished");
   });

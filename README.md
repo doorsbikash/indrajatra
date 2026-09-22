@@ -2,7 +2,7 @@
 
 The visitor companion app for the festival, and the organiser console used to run the day.
 
-**Saturday 26 September 2026 · 10:00 am – 4:00 pm
+**Saturday 26 September 2026 · 9:00 am – 4:10 pm
 Australian Nepalese Multicultural Centre, 100 Duncans Ln, Diggers Rest VIC 3427 · Free entry**
 
 Presented by Newa Guthi Victoria.

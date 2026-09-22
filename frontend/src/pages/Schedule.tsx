@@ -50,7 +50,7 @@ export function SchedulePage() {
 
   return (
     <main className="page">
-      <p className="eyebrow">Saturday 26 September · 10am–4pm</p>
+      <p className="eyebrow">Saturday 26 September · 9am–4:10pm</p>
       <h1>Programme</h1>
       <p className="lead">
         {liveIndex >= 0

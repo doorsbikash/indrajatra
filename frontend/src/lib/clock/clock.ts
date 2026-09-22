@@ -11,7 +11,7 @@
 import { FESTIVAL_DAY } from "../../content/seed/data";
 
 const KEY = "ij26.preview.iso";
-const OPEN = new Date(`${FESTIVAL_DAY}T09:30:00+10:00`).getTime();
+const OPEN = new Date(`${FESTIVAL_DAY}T08:30:00+10:00`).getTime();
 const CLOSE = new Date(`${FESTIVAL_DAY}T16:30:00+10:00`).getTime();
 
 /** Default simulated moment: mid-morning, with a chariot on the move. */
