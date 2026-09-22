@@ -59,6 +59,18 @@ final class Api
             if ($method === 'POST' && $path === '/api/volunteers/register') {
                 $this->registerVolunteer();
             }
+            if ($method === 'GET' && $path === '/api/organiser-request') {
+                $this->organiserRequest();
+            }
+            if ($method === 'POST' && $path === '/api/organiser-request') {
+                $this->requestOrganiserAccess();
+            }
+            if ($method === 'GET' && $path === '/api/admin/organiser-requests') {
+                $this->organiserRequests();
+            }
+            if ($method === 'PATCH' && preg_match('#^/api/admin/organiser-requests/(\d+)$#', $path, $matches)) {
+                $this->updateOrganiserRequest((int) $matches[1]);
+            }
             if ($method === 'GET' && $path === '/api/admin/volunteers') {
                 $this->volunteers();
             }
@@ -485,6 +497,102 @@ final class Api
             $ipHash,
         ]);
         $this->json(['ok' => true, 'reference' => $publicId, 'status' => 'pending'], 201);
+    }
+
+    private function organiserRequest(): never
+    {
+        $visitorId = $this->requireVisitor();
+        $query = $this->db->prepare(
+            'SELECT id, assistance_area, message, status, reviewed_at, created_at, updated_at '
+            . 'FROM organiser_requests WHERE visitor_id = ? LIMIT 1'
+        );
+        $query->execute([$visitorId]);
+        $request = $query->fetch();
+        $this->json(['request' => $request ? $this->publicOrganiserRequest($request) : null]);
+    }
+
+    private function requestOrganiserAccess(): never
+    {
+        $visitorId = $this->requireVisitor();
+        $this->requireCsrf();
+        $role = $this->db->prepare('SELECT 1 FROM organiser_users WHERE visitor_id = ? LIMIT 1');
+        $role->execute([$visitorId]);
+        if ($role->fetchColumn()) $this->json(['error' => 'You already have organiser access.'], 409);
+
+        $input = $this->body();
+        $area = $this->requiredText($input, 'assistanceArea', 160);
+        $message = trim((string) ($input['message'] ?? ''));
+        if (mb_strlen($message) > 500) $this->json(['error' => 'Message is too long.'], 422);
+        $save = $this->db->prepare(
+            "INSERT INTO organiser_requests (visitor_id, assistance_area, message, status) VALUES (?, ?, ?, 'pending') "
+            . "ON DUPLICATE KEY UPDATE assistance_area = VALUES(assistance_area), message = VALUES(message), "
+            . "status = 'pending', reviewed_by = NULL, reviewed_at = NULL"
+        );
+        $save->execute([$visitorId, $area, $message !== '' ? $message : null]);
+        $this->organiserRequest();
+    }
+
+    private function organiserRequests(): never
+    {
+        $this->requireOrganiser();
+        $query = $this->db->query(
+            'SELECT r.id, r.assistance_area, r.message, r.status, r.reviewed_at, r.created_at, r.updated_at, '
+            . 'v.first_name, v.last_name, v.email, v.phone '
+            . 'FROM organiser_requests r JOIN visitor_profiles v ON v.id = r.visitor_id '
+            . 'ORDER BY FIELD(r.status, "pending", "approved", "rejected"), r.created_at DESC'
+        );
+        $this->json(['requests' => array_map([$this, 'publicOrganiserRequest'], $query->fetchAll())]);
+    }
+
+    private function updateOrganiserRequest(int $id): never
+    {
+        $organiserId = $this->requireOrganiser();
+        $this->requireCsrf();
+        $action = $this->requiredText($this->body(), 'action', 16);
+        if (!in_array($action, ['approve', 'reject'], true)) $this->json(['error' => 'Invalid request action.'], 422);
+        $query = $this->db->prepare('SELECT * FROM organiser_requests WHERE id = ? LIMIT 1');
+        $query->execute([$id]);
+        $request = $query->fetch();
+        if (!$request) $this->json(['error' => 'Access request not found.'], 404);
+        if ($request['status'] !== 'pending') $this->json(['error' => 'This request has already been reviewed.'], 409);
+
+        $this->db->beginTransaction();
+        $status = $action === 'approve' ? 'approved' : 'rejected';
+        $save = $this->db->prepare('UPDATE organiser_requests SET status = ?, reviewed_by = ?, reviewed_at = UTC_TIMESTAMP() WHERE id = ?');
+        $save->execute([$status, $organiserId, $id]);
+        if ($action === 'approve') {
+            $grant = $this->db->prepare(
+                "INSERT INTO organiser_users (visitor_id, role) VALUES (?, 'organiser') ON DUPLICATE KEY UPDATE role = VALUES(role)"
+            );
+            $grant->execute([$request['visitor_id']]);
+        }
+        $this->audit($organiserId, 'organiser_request.' . $action, 'organiser_request', (string) $id, null, $status);
+        $this->db->commit();
+
+        $query = $this->db->prepare(
+            'SELECT r.id, r.assistance_area, r.message, r.status, r.reviewed_at, r.created_at, r.updated_at, '
+            . 'v.first_name, v.last_name, v.email, v.phone FROM organiser_requests r '
+            . 'JOIN visitor_profiles v ON v.id = r.visitor_id WHERE r.id = ? LIMIT 1'
+        );
+        $query->execute([$id]);
+        $this->json(['request' => $this->publicOrganiserRequest($query->fetch())]);
+    }
+
+    private function publicOrganiserRequest(array $row): array
+    {
+        return [
+            'id' => (int) $row['id'],
+            'firstName' => $row['first_name'] ?? null,
+            'lastName' => $row['last_name'] ?? null,
+            'email' => $row['email'] ?? null,
+            'phone' => $row['phone'] ?? null,
+            'assistanceArea' => $row['assistance_area'],
+            'message' => $row['message'] ?? '',
+            'status' => $row['status'],
+            'reviewedAt' => $row['reviewed_at'],
+            'createdAt' => $row['created_at'],
+            'updatedAt' => $row['updated_at'],
+        ];
     }
 
     private function volunteers(): never

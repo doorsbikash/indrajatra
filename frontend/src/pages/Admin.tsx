@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import {
-  Ban, CheckCheck, Clock, Image, ListOrdered, Megaphone, Play, Radio, Store, Users,
+  Ban, CheckCheck, Clock, Image, ListOrdered, Megaphone, Play, Radio, ShieldCheck, Store, Users,
   RotateCcw, ShieldAlert, Trash2, Undo2
 } from "lucide-react";
 import { useApp } from "../app/AppContext";
@@ -13,13 +13,16 @@ import { PhotoManager } from "../components/admin/PhotoManager";
 import { AnnouncementComposer } from "../components/admin/AnnouncementComposer";
 import { StallEditor } from "../components/admin/StallEditor";
 import { VolunteerManager } from "../components/admin/VolunteerManager";
+import { OrganiserAccessRequest } from "../components/admin/OrganiserAccessRequest";
+import { OrganiserRequestManager } from "../components/admin/OrganiserRequestManager";
 import { FESTIVAL_DAY } from "../content/seed/data";
 import { t } from "../lib/text";
 
-type Tab = "live" | "volunteers" | "runsheet" | "stalls" | "photos";
+type Tab = "live" | "access" | "volunteers" | "runsheet" | "stalls" | "photos";
 
 const TABS: { id: Tab; label: string; icon: typeof Radio }[] = [
   { id: "live", label: "Run the day", icon: Radio },
+  { id: "access", label: "Access requests", icon: ShieldCheck },
   { id: "volunteers", label: "Volunteers", icon: Users },
   { id: "runsheet", label: "Run sheet", icon: ListOrdered },
   { id: "stalls", label: "Stalls", icon: Store },
@@ -49,14 +52,7 @@ export function AdminPage() {
   }
 
   if (profile.role !== "organiser") {
-    return (
-      <main className="page">
-        <p className="eyebrow">Organiser console</p>
-        <h1>Access restricted</h1>
-        <p className="lead">This festival pass does not have organiser access.</p>
-        <Link className="btn" to="/">Back to festival</Link>
-      </main>
-    );
+    return <main className="page"><OrganiserAccessRequest csrfToken={profile.csrfToken || ""} /><Link className="btn btn--quiet" to="/">Back to festival</Link></main>;
   }
 
   return (
@@ -103,6 +99,8 @@ export function AdminPage() {
       {tab === "stalls" && <StallEditor listings={data.listings} toast={toast} />}
 
       {tab === "volunteers" && <VolunteerManager csrfToken={profile.csrfToken || ""} toast={toast} />}
+
+      {tab === "access" && <OrganiserRequestManager csrfToken={profile.csrfToken || ""} toast={toast} />}
 
       {tab === "live" && (
         <>
