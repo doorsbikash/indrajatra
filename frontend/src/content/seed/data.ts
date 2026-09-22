@@ -502,7 +502,7 @@ export const listings: Listing[] = [
     locationId: "market-row", confirmed: true, published: true
   },
   {
-    id: "hyuman", slug: "hyuman", name: "Hyuman",
+    id: "human", slug: "human", name: "HUman",
     listingType: "market", categories: ["Stall 3", "Market stall"],
     description: { en: "A confirmed festival stall in the marquee row." },
     locationId: "market-row", confirmed: true, published: true
