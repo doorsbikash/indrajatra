@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import { AppContext, type AppState } from "./AppContext";
 import { Shell } from "./Shell";
 import { SignInSheet } from "../components/SignInSheet";
@@ -207,6 +207,7 @@ export default function App() {
             <Route path="/membership" element={<MembershipPage />} />
             <Route path="/volunteer" element={<VolunteerRegisterPage />} />
             <Route path="/organiser" element={<AdminPage />} />
+            <Route path="/oraganiser" element={<Navigate to="/organiser" replace />} />
             <Route path="*" element={<NotFoundPage />} />
           </Route>
         </Routes>

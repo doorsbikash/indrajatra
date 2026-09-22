@@ -2,6 +2,7 @@ RewriteEngine On
 RewriteCond %{HTTPS} !=on
 RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
 
+RewriteRule ^oraganiser/?$ /organiser [R=301,L]
 RewriteRule ^api/ - [L]
 # `/map` is an application route but `/map/` is also an asset directory.
 RewriteRule ^map/?$ index.html [L]
