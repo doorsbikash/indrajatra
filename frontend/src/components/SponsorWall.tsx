@@ -3,9 +3,16 @@ import type { Listing } from "../lib/types";
 
 const PAID_TIERS = ["Platinum", "Gold", "Silver"] as const;
 const PARTNER_TIERS = [
-  "Photography Partner", "Community Supporters",
+  "Photography Partner", "Media Partner", "Community Supporters",
   "Valued Contributor"
 ] as const;
+
+/* Studio logos are all light artwork on black, so their tier gets the dark
+   tile. Anything else needing it is listed by slug. */
+const DARK_TIERS = new Set<string>(["Photography Partner"]);
+const DARK_SLUGS = new Set<string>(["elite-curtains"]);
+const needsDarkTile = (s: Listing) =>
+  DARK_TIERS.has(s.sponsorTier ?? "") || DARK_SLUGS.has(s.slug);
 
 /**
  * The sponsor wall, grouped by tier. Used on the home screen (where the
@@ -27,7 +34,7 @@ export function SponsorWall({ compact = false }: { compact?: boolean }) {
             <p className="tier-label">{tier}</p>
             <div className={`sponsor-grid sponsor-grid--${tier.toLowerCase().replace(/[^a-z]+/g, "-")}`}>
               {inTier.map((sponsor) => (
-                <div className={`sponsor-tile${sponsor.slug === "elite-curtains" ? " sponsor-tile--dark" : ""}`} key={sponsor.id} title={sponsor.name}>
+                <div className={`sponsor-tile${needsDarkTile(sponsor) ? " sponsor-tile--dark" : ""}`} key={sponsor.id} title={sponsor.name}>
                   {sponsor.logo ? (
                     <img src={sponsor.logo} alt={sponsor.name} loading="lazy" decoding="async" />
                   ) : (

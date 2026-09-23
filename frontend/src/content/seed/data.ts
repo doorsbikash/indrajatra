@@ -636,6 +636,7 @@ type SponsorTier =
   | "Gold"
   | "Silver"
   | "Photography Partner"
+  | "Media Partner"
   | "Community Supporters"
   | "Valued Contributor";
 
@@ -669,8 +670,21 @@ const sponsorRows: SponsorRow[] = [
   ["mit", "Melbourne Institute of Technology", "Silver", "silver-mit.png"],
   ["preferred-consultancy", "Preferred Education & Migration Consultants", "Silver", "silver-preferred-education.png"],
 
-  ["nepali-mate", "Nepali Mate", "Photography Partner", "photography-nepali-mate.png"],
-  ["dms", "DMS", "Photography Partner"],
+  ["nepali-mate", "nepaliMate", "Photography Partner", "photography-nepali-mate.png"],
+  ["sanish-photography", "Sanish Photography", "Photography Partner", "photography-sanish-photography.png"],
+  ["de-lens-aura", "De Lens Aura Studio", "Photography Partner", "photography-de-lens-aura-studio.png"],
+  ["dms", "DMS Production", "Photography Partner", "photography-dms-production.png"],
+  ["buniverse", "BUniverse", "Photography Partner", "photography-buniverse.png"],
+
+  ["sbs-south-asian", "SBS South Asian", "Media Partner", "media-sbs-south-asian.png"],
+  ["nepal-edition", "Online News Nepal Edition", "Media Partner", "media-nepal-edition.png"],
+  ["routine-of-australia", "Routine of Australia", "Media Partner"],
+  ["himal-times", "HimalTimes", "Media Partner", "media-himal-times.png"],
+  ["kbc-khabar", "KBC Khabar", "Media Partner", "media-kbc-khabar.png"],
+  ["samudayaka-kura", "Samudayaka Kura", "Media Partner", "media-samudayaka-kura.png"],
+  ["better-from-nepal", "Better From Nepal", "Media Partner", "media-better-from-nepal.png"],
+  ["lukla-tv", "Lukla TV", "Media Partner", "media-lukla-tv.jpeg"],
+  ["connect-nepali", "Connect Nepali", "Media Partner", "media-connect-nepali.png"],
 
   ["nrna-victoria", "NRNA SCC Victoria", "Community Supporters", "supporter-nrna-victoria.jpg"],
   ["nav", "Nepalese Association of Victoria", "Community Supporters", "supporter-nav-victoria.png"],
