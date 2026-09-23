@@ -1077,7 +1077,7 @@ final class Api
             $clearRevocation = $this->db->prepare('DELETE FROM organiser_revocations WHERE visitor_id = ?');
             $clearRevocation->execute([$visitorId]);
             $save = $this->db->prepare(
-                "INSERT INTO organiser_users (visitor_id, role) VALUES (?, 'master') ON DUPLICATE KEY UPDATE role = VALUES(role)"
+                "INSERT INTO organiser_users (visitor_id, role) VALUES (?, 'organiser') ON DUPLICATE KEY UPDATE role = VALUES(role)"
             );
             $save->execute([$visitorId]);
             return;
