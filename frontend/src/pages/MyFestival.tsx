@@ -61,7 +61,7 @@ export function MyFestivalPage() {
             <h2>Yenya Explorer 2026</h2>
             <p>
               You found all {data.trailPoints.length} stops on the Yenya Digital Cultural Trail.
-              Show this at the Newa Guthi Victoria desk in the ANMC building.
+              Show this at the Newa Guthi Victoria desk at stall 1.
             </p>
           </div>
         </section>

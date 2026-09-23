@@ -40,7 +40,7 @@ const locationRows: LocRow[] = [
     "The main stage in front of the ANMC building. Everything on the program that is announced, performed or spoken happens here.",
     "Level grass with a firm path along the front. A seated viewing area with a clear line of sight is kept to the left of the stage."],
   ["anmc", "ANMC Building", "community", 50, 59,
-    "The Australian Nepalese Multicultural Centre — indoor space, the Newa Guthi Victoria desk, and shelter if the weather turns.",
+    "The Australian Nepalese Multicultural Centre. The temples and the gods are inside, and the puja and rituals are carried out here.",
     "Step-free entry. The accessible toilet is inside, on the left as you enter."],
   ["ganesh-rath", "Ganesh Rath", "culture", 68, 45,
     "The Ganesh chariot, built new for 2026. It waits here before the procession and returns here afterwards.",
@@ -415,7 +415,7 @@ const trailRows: TrailRow[] = [
       "A guthi is a Newa social institution — a trust, a roster and an obligation rolled into one. Traditionally, a guthi owned land, and the income from that land paid for a specific duty: maintaining a temple, running a festival, carrying out funeral rites, repairing a courtyard. Membership was inherited. If it was your family's turn, you turned up.\n\nIt is how the Kathmandu Valley kept hundreds of festivals running for centuries without a government arts budget. No guthi, no festival.\n\nNewa Guthi Victoria was established in 2024 and launched at Nhu Daya Bhintuna. It has no land. What it has instead is a membership, a weekly class timetable, and a group of people who keep saying yes — which turns out to be the part that actually mattered all along.",
     why:
       "Every performance, chariot, costume and plate of food at this festival exists because a guthi organised it. Understanding the guthi is understanding why a volunteer community can do what it does.",
-    lookFor: "The Newa Guthi Victoria desk in the ANMC building. Ask about membership, the weekly classes, or volunteering for next year.",
+    lookFor: "The Newa Guthi Victoria desk at stall 1 in the marquee row. Ask about membership, the weekly classes, or volunteering for next year.",
     related: ["samay-baji", "yenya-story"]
   },
   {
@@ -484,14 +484,14 @@ export const listings: Listing[] = [
   },
   {
     id: "mda-twista", slug: "mda-twista", name: "MDA Twista Potato",
-    listingType: "food", categories: ["Truck 1", "Snacks", "Vegetarian"],
+    listingType: "food", categories: ["Truck 4", "Snacks", "Vegetarian"],
     description: { en: "Twist potatoes served fresh from the food-truck area." },
     locationId: "food-trucks", logo: "/brand/vendors/mda-twista-potato.jpg",
     confirmed: true, published: true
   },
   {
     id: "twist-spot", slug: "twist-spot", name: "The Twist Spot",
-    listingType: "food", categories: ["Truck 4", "Snacks", "Vegetarian"],
+    listingType: "food", categories: ["Truck 1", "Snacks", "Vegetarian"],
     description: { en: "Twist potatoes served fresh from the food-truck area." },
     locationId: "food-trucks", logo: "/brand/vendors/the-twist-spot.jpg",
     confirmed: true, published: true
@@ -576,42 +576,42 @@ export const listings: Listing[] = [
   {
     id: "nab-stall", slug: "nab-stall", name: "NAB",
     listingType: "market", categories: ["Stall 14", "Sponsor stall", "BYO gazebo"],
-    description: { en: "Visit NAB at stall 14. NAB will bring its own gazebo for this space." },
+    description: { en: "Visit NAB's gazebo space." },
     locationId: "market-row", logo: "/brand/sponsors/platinum-nab.png",
     confirmed: true, published: true
   },
   {
     id: "grace-international-stall", slug: "grace-international-stall", name: "Grace International",
     listingType: "market", categories: ["Stall 15", "Sponsor stall"],
-    description: { en: "Visit Grace International in the festival marquee row." },
+    description: { en: "Visit Grace International's gazebo space." },
     locationId: "market-row", logo: "/brand/sponsors/gold-grace-international.png",
     confirmed: true, published: true
   },
   {
     id: "your-dream-home-stall", slug: "your-dream-home-stall", name: "Your Dream Home Conveyancing",
     listingType: "market", categories: ["Stall 16", "Sponsor stall"],
-    description: { en: "Visit Your Dream Home Conveyancing in the festival marquee row." },
+    description: { en: "Visit Your Dream Home Conveyancing's gazebo space." },
     locationId: "market-row", logo: "/brand/sponsors/gold-your-dream-home-conveyancing.png",
     confirmed: true, published: true
   },
   {
     id: "expert-education-stall", slug: "expert-education-stall", name: "Expert Education | Visa",
     listingType: "market", categories: ["Stall 17", "Sponsor stall"],
-    description: { en: "Visit Expert Education | Visa in the festival marquee row." },
+    description: { en: "Visit Expert Education's gazebo space." },
     locationId: "market-row", logo: "/brand/sponsors/gold-expert-education-visa.png",
     confirmed: true, published: true
   },
   {
     id: "maximax-stall", slug: "maximax-stall", name: "MaxiMax Education & Migration Services",
     listingType: "market", categories: ["Stall 18", "Sponsor stall"],
-    description: { en: "Visit MaxiMax Education & Migration Services in the festival marquee row." },
+    description: { en: "Visit MaxiMax's gazebo space." },
     locationId: "market-row", logo: "/brand/sponsors/gold-maximax-education-migration-services.png",
     confirmed: true, published: true
   },
   {
     id: "alliance-stall", slug: "alliance-stall", name: "Alliance Estate Agents",
     listingType: "market", categories: ["Stall 19", "Sponsor stall"],
-    description: { en: "Visit Alliance Estate Agents in the festival marquee row." },
+    description: { en: "Visit Alliance Estate Agents' gazebo space." },
     locationId: "market-row", logo: "/brand/sponsors/contributor-alliance-estate-agents.png",
     confirmed: true, published: true
   },
@@ -779,8 +779,8 @@ export const infoCards: InfoCard[] = [
   {
     id: "quiet", icon: "quiet",
     title: { en: "Quiet space" },
-    body: { en: "The ANMC building is the quietest place on site — indoors, away from the speakers, with somewhere to sit. Use it for a break, for feeding, or if the crowd and the drums get to be too much. Ask any volunteer in a hi-vis vest and they will walk you there." },
-    locationId: "anmc"
+    body: { en: "If the crowd or the drums get to be too much, go to the Media Station in the centre of the site. A quiet place to sit and hearing assistance are both available on request — ask any volunteer in a hi-vis vest and they will walk you there." },
+    locationId: "media-station"
   },
   {
     id: "water", icon: "water",
@@ -804,7 +804,7 @@ export const faqs: FaqItem[] = [
   { id: "cash", q: { en: "Do stalls take card?" },
     a: { en: "Most do, but mobile reception at Diggers Rest can be patchy. Bringing some cash is a good idea." } },
   { id: "volunteer", q: { en: "How do I help next year?" },
-    a: { en: "Talk to the Newa Guthi Victoria desk in the ANMC building, or email info@newaguthi.org.au. Volunteers, performers and committee members are all needed." } }
+    a: { en: "Talk to the Newa Guthi Victoria desk at stall 1 in the marquee row, or email info@newaguthi.org.au. Volunteers, performers and committee members are all needed." } }
 ];
 
 /* ==================================================================

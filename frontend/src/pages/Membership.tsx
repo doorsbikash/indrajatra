@@ -36,7 +36,7 @@ export function MembershipPage() {
           </h2>
           <p className="passport__sub">
             {complete
-              ? `All ${total} stops found. Show this screen at the Newa Guthi Victoria desk in the ANMC building to claim your festival membership offer.`
+              ? `All ${total} stops found. Show this screen at the Newa Guthi Victoria desk at stall 1 to claim your festival membership offer.`
               : `${discovered} of ${total} stops found. Complete the Yenya Cultural Trail today and your festival membership offer unlocks here.`}
           </p>
           {complete ? (

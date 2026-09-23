@@ -1576,3 +1576,17 @@ h4 { font-size: var(--step-0); font-family: var(--font-sans); font-weight: 600; 
 .stall-grid--trucks { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 @media (min-width: 560px) { .stall-grid--trucks { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
 .stall-tile--food strong { color: var(--saffron-700); }
+
+/* A single Platinum sponsor should sit centred, not stretched across the row.
+   The .sponsor-grid rules inside the 560px media query come later in the file
+   and match with equal specificity, so this needs both class names to win. */
+.sponsor-grid.sponsor-grid--platinum {
+  grid-template-columns: minmax(0, 340px);
+  justify-content: center;
+}
+.sponsor-wall--compact .sponsor-grid.sponsor-grid--platinum {
+  grid-template-columns: minmax(0, 260px);
+}
+
+.sponsor-wall__more { margin-top: var(--s-5); }
+.sponsor-wall__more .is-flipped { transform: rotate(180deg); }
