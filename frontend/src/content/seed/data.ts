@@ -526,7 +526,7 @@ export const listings: Listing[] = [
     confirmed: true, published: true
   },
   {
-    id: "newari-family-attire", slug: "newari-family-attire", name: "Newari Family Attire",
+    id: "newari-family-attire", slug: "newari-family-attire", name: "Newar Family Attire Ausralia",
     listingType: "market", categories: ["Stall 6", "Clothing", "Market stall"],
     description: { en: "Newari attire available from stall 6 in the festival marquee row." },
     locationId: "market-row", logo: "/brand/vendors/newari-family-attire.jpg",
