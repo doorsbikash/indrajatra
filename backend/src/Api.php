@@ -56,6 +56,12 @@ final class Api
             if ($method === 'PUT' && $path === '/api/passport') {
                 $this->savePassport();
             }
+            if ($method === 'GET' && $path === '/api/membership-reward') {
+                $this->membershipReward();
+            }
+            if ($method === 'POST' && $path === '/api/membership-reward') {
+                $this->claimMembershipReward();
+            }
             if ($method === 'POST' && $path === '/api/volunteers/register') {
                 $this->registerVolunteer();
             }
@@ -272,10 +278,17 @@ final class Api
 
     private function sendCode(string $email, string $code): bool
     {
+        return $this->sendEmail(
+            $email,
+            'Your Indra Jatra sign-in code',
+            "Your sign-in code is {$code}.\n\nIt expires in 10 minutes. If you did not request it, you can ignore this email."
+        );
+    }
+
+    private function sendEmail(string $email, string $subject, string $message): bool
+    {
         $from = getenv('IJ26_MAIL_FROM') ?: 'no-reply@newaguthi.org.au';
         $name = getenv('IJ26_MAIL_FROM_NAME') ?: 'Indra Jatra Melbourne';
-        $subject = 'Your Indra Jatra sign-in code';
-        $message = "Your sign-in code is {$code}.\n\nIt expires in 10 minutes. If you did not request it, you can ignore this email.";
         $smtpHost = trim((string) (getenv('IJ26_SMTP_HOST') ?: ''));
         $smtpAuth = (getenv('IJ26_SMTP_AUTH') ?: '1') !== '0';
         $smtpUser = trim((string) (getenv('IJ26_SMTP_USERNAME') ?: ''));
@@ -460,6 +473,92 @@ final class Api
         );
         $save->execute([$visitorId, $payload]);
         $this->json(['ok' => true]);
+    }
+
+    private function membershipReward(): never
+    {
+        $visitorId = $this->requireVisitor();
+        $query = $this->db->prepare(
+            'SELECT reward_code, discount_percent, status, issued_at, email_sent_at, '
+            . 'application_received_at, payment_requested_at, paid_at, activated_at '
+            . 'FROM membership_rewards WHERE visitor_id = ? LIMIT 1'
+        );
+        $query->execute([$visitorId]);
+        $reward = $query->fetch();
+        $this->json(['reward' => $reward ? $this->publicMembershipReward($reward) : null]);
+    }
+
+    private function claimMembershipReward(): never
+    {
+        $visitorId = $this->requireVisitor();
+        $this->requireCsrf();
+        $passport = $this->db->prepare('SELECT payload FROM passport_state WHERE visitor_id = ? LIMIT 1');
+        $passport->execute([$visitorId]);
+        $payload = $passport->fetchColumn();
+        $state = $payload ? json_decode((string) $payload, true) : null;
+        $discovered = is_array($state) && isset($state['discovered']) && is_array($state['discovered'])
+            ? array_values(array_unique(array_map('strval', $state['discovered'])))
+            : [];
+        $required = array_map(static fn(int $number): string => 'trail-' . $number, range(1, 12));
+        if (array_diff($required, $discovered) !== []) {
+            $this->json(['error' => 'Complete all 12 trail stops before claiming this offer.'], 422);
+        }
+
+        $profile = $this->db->prepare('SELECT first_name, email FROM visitor_profiles WHERE id = ? LIMIT 1');
+        $profile->execute([$visitorId]);
+        $visitor = $profile->fetch();
+        if (!$visitor) $this->json(['error' => 'Visitor profile not found.'], 404);
+
+        $existing = $this->db->prepare('SELECT * FROM membership_rewards WHERE visitor_id = ? LIMIT 1');
+        $existing->execute([$visitorId]);
+        $reward = $existing->fetch();
+        if (!$reward) {
+            do {
+                $code = 'IJ26-' . strtoupper(bin2hex(random_bytes(4)));
+                $duplicate = $this->db->prepare('SELECT 1 FROM membership_rewards WHERE reward_code = ? LIMIT 1');
+                $duplicate->execute([$code]);
+            } while ($duplicate->fetchColumn());
+            $save = $this->db->prepare(
+                "INSERT INTO membership_rewards (visitor_id, reward_code, discount_percent, status) VALUES (?, ?, 25, 'issued')"
+            );
+            $save->execute([$visitorId, $code]);
+            $existing->execute([$visitorId]);
+            $reward = $existing->fetch();
+        }
+
+        if (!$reward['email_sent_at']) {
+            $membershipUrl = 'https://newaguthi.org.au/become-a-member/?reward=' . rawurlencode((string) $reward['reward_code']);
+            $message = "Hi {$visitor['first_name']},\n\n"
+                . "Congratulations on completing all 12 stops of the Yenya Cultural Trail.\n\n"
+                . "Your 25% Newa Guthi Victoria membership offer code is: {$reward['reward_code']}\n\n"
+                . "Complete the membership application here:\n{$membershipUrl}\n\n"
+                . "Our team will contact you about payment and your trail certificate after receiving the form.\n\n"
+                . "Newa Guthi Victoria";
+            if (!$this->sendEmail((string) $visitor['email'], 'Your Yenya Trail membership reward', $message)) {
+                $this->json(['error' => 'Your reward was saved, but the email could not be sent. Please try again.'], 503);
+            }
+            $sent = $this->db->prepare('UPDATE membership_rewards SET email_sent_at = UTC_TIMESTAMP() WHERE visitor_id = ?');
+            $sent->execute([$visitorId]);
+            $existing->execute([$visitorId]);
+            $reward = $existing->fetch();
+        }
+
+        $this->json(['reward' => $this->publicMembershipReward($reward)]);
+    }
+
+    private function publicMembershipReward(array $reward): array
+    {
+        return [
+            'code' => $reward['reward_code'],
+            'discountPercent' => (int) $reward['discount_percent'],
+            'status' => $reward['status'],
+            'issuedAt' => $reward['issued_at'],
+            'emailSentAt' => $reward['email_sent_at'],
+            'applicationReceivedAt' => $reward['application_received_at'],
+            'paymentRequestedAt' => $reward['payment_requested_at'],
+            'paidAt' => $reward['paid_at'],
+            'activatedAt' => $reward['activated_at'],
+        ];
     }
 
     private function registerVolunteer(): never

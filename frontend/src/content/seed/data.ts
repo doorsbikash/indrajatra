@@ -860,7 +860,7 @@ export const seedData: FestivalData = {
     organiser: "Newa Guthi Victoria",
     brandName: "Newa Guthi Victoria",
     organiserUrl: "https://newaguthi.org.au",
-    membershipUrl: "https://newaguthi.org.au/membership",
+    membershipUrl: "https://newaguthi.org.au/become-a-member/",
     newsletterUrl: "https://newaguthi.org.au",
     contactPhone: "+61402556696",
     contactEmail: "info@newaguthi.org.au",

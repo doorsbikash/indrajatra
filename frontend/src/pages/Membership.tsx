@@ -1,8 +1,11 @@
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { Drum, ExternalLink, HandHeart, Music2, Sparkles, Users } from "lucide-react";
+import { Check, Drum, ExternalLink, HandHeart, Mail, Music2, Sparkles, Users } from "lucide-react";
 import { useApp } from "../app/AppContext";
 import { localFestival } from "../lib/storage/localFestival";
 import { trackEvent } from "../lib/analytics/track";
+import { auth } from "../lib/auth/auth";
+import { claimMembershipReward, getMembershipReward, type MembershipReward } from "../lib/membership/reward";
 
 const CLASSES = [
   { icon: Drum, name: "Dhimay", detail: "The two-headed processional drum. Children and adults, all levels." },
@@ -12,11 +15,43 @@ const CLASSES = [
 ];
 
 export function MembershipPage() {
-  const { data, profile, requireSignIn, version } = useApp();
+  const { data, profile, requireSignIn, toast, version } = useApp();
+  const [reward, setReward] = useState<MembershipReward | null>(null);
+  const [claiming, setClaiming] = useState(false);
   void version;
   const discovered = localFestival.discovered().length;
   const total = data.trailPoints.length;
   const complete = discovered >= total && total > 0;
+
+  useEffect(() => {
+    if (!complete || !profile || !auth.usesApi) return;
+    void getMembershipReward().then(setReward);
+  }, [complete, profile]);
+
+  async function claimReward() {
+    if (!requireSignIn("Claim your festival membership offer")) return;
+    if (!profile) return;
+    if (!auth.usesApi) {
+      setReward({ code: "IJ26-DEMO25", discountPercent: 25, status: "issued", issuedAt: new Date().toISOString() });
+      toast("Demo reward unlocked");
+      return;
+    }
+    if (!profile.csrfToken) {
+      toast("Please sign in again before claiming your offer");
+      return;
+    }
+    setClaiming(true);
+    try {
+      const issued = await claimMembershipReward(profile.csrfToken, localFestival.passport());
+      setReward(issued);
+      trackEvent("membership_clicked");
+      toast("Your 25% offer has been emailed");
+    } catch (error) {
+      toast(error instanceof Error ? error.message : "We could not email your reward");
+    } finally {
+      setClaiming(false);
+    }
+  }
 
   return (
     <main className="page">
@@ -36,20 +71,31 @@ export function MembershipPage() {
           </h2>
           <p className="passport__sub">
             {complete
-              ? `All ${total} stops found. Show this screen at the Newa Guthi Victoria desk at stall 1 to claim your festival membership offer.`
+              ? `All ${total} stops found. Claim a recorded 25% membership offer and receive the details by email.`
               : `${discovered} of ${total} stops found. Complete the Yenya Cultural Trail today and your festival membership offer unlocks here.`}
           </p>
-          {complete ? (
+          {complete && reward ? (
+            <div>
+              <p className="pill" style={{ background: "var(--marigold-400)", color: "var(--oxblood-900)", marginBottom: 12 }}>
+                <Check size={14} />25% offer issued
+              </p>
+              <p className="passport__sub" style={{ marginBottom: 12 }}>Your code: <strong>{reward.code}</strong></p>
+              <a className="btn btn--gold btn--block" href={`${data.event.membershipUrl}?reward=${encodeURIComponent(reward.code)}`} target="_blank" rel="noreferrer">
+                <ExternalLink size={17} />Complete membership form
+              </a>
+              <p className="tiny" style={{ color: "rgba(255,255,255,.72)", marginTop: 10 }}>
+                Our team will contact you about payment and your trail certificate after receiving the form.
+              </p>
+            </div>
+          ) : complete ? (
             <button
               type="button"
               className="btn btn--gold btn--block"
-              onClick={() => {
-                if (!requireSignIn("Claim your festival membership offer")) return;
-                trackEvent("membership_clicked");
-                window.open(data.event.membershipUrl, "_blank", "noopener");
-              }}
+              disabled={claiming}
+              onClick={() => void claimReward()}
             >
-              <Sparkles size={17} />Claim my offer
+              {claiming ? <Mail size={17} /> : <Sparkles size={17} />}
+              {claiming ? "Sending your offer…" : "Email my 25% offer"}
             </button>
           ) : (
             <Link className="btn btn--light btn--block" to="/explore">Continue the trail</Link>
