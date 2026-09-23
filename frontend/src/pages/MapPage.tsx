@@ -40,7 +40,8 @@ const TRUCKS = { x: 112, y: 259, w: 83, h: 380 };
 const TRUCK_H = TRUCKS.h / 4;
 
 const stallBox = (n: number) => ({ x: STRIP.x + STRIP.w - n * STALL_W, y: STRIP.y, w: STALL_W, h: STRIP.h });
-const truckBox = (n: number) => ({ x: TRUCKS.x, y: TRUCKS.y + (n - 1) * TRUCK_H, w: TRUCKS.w, h: TRUCK_H });
+// Food truck bays are numbered from the bottom of the map upwards.
+const truckBox = (n: number) => ({ x: TRUCKS.x, y: TRUCKS.y + (4 - n) * TRUCK_H, w: TRUCKS.w, h: TRUCK_H });
 const px = (v: number, total: number) => `${(v / total) * 100}%`;
 const toneOf = (listing?: Listing) =>
   !listing ? "is-empty" : listing.listingType === "food" ? "is-food" : "is-stall";
