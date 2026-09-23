@@ -8,7 +8,7 @@ import { localFestival } from "../lib/storage/localFestival";
 import { downloadItinerary } from "../lib/calendar/ics";
 
 export function MyFestivalPage() {
-  const { data, schedule, profile, signOut, toast, locale, requireSignIn, version } = useApp();
+  const { data, schedule, profile, signOut, toast, requireSignIn, version } = useApp();
   void version;
 
   const savedIds = localFestival.saved();
@@ -103,34 +103,12 @@ export function MyFestivalPage() {
       </section>
 
       <section className="section">
-        <h2>Your language</h2>
-        <div className="segmented" role="group" aria-label="Language">
-          {(["en", "ne", "new"] as const).map((code) => (
-            <button
-              key={code}
-              type="button"
-              aria-pressed={locale === code}
-              onClick={() => { if (code === "en") localFestival.setLocale(code); }}
-              disabled={code !== "en"}
-              title={code === "en" ? undefined : "Nepali and Nepal Bhasa translations are in progress"}
-              style={{ gridColumn: "auto" }}
-            >
-              {code === "en" ? "English" : code === "ne" ? "नेपाली" : "नेपाल भाषा"}
-            </button>
-          ))}
-        </div>
-        <p className="tiny muted" style={{ marginTop: 8 }}>
-          Nepali and Nepal Bhasa translations are being prepared with the cultural committee.
-        </p>
-      </section>
-
-      <section className="section">
         <h2>Your privacy</h2>
         <div className="card">
           <p className="small" style={{ display: "flex", gap: 10 }}>
             <ShieldCheck size={17} style={{ flex: "0 0 auto", color: "var(--clay-600)", marginTop: 2 }} />
             <span className="muted">
-              Your saved items, trail stamps and language choice live in this browser only.
+              Your saved items and trail stamps live in this browser only.
               They are never uploaded and never shared. Clearing them below removes them for good.
             </span>
           </p>
