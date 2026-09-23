@@ -542,10 +542,11 @@ export const listings: Listing[] = [
     locationId: "market-row", logo: "/brand/ngv-logo.png", confirmed: true, published: true
   },
   {
-    id: "nepthic", slug: "nepthic", name: "Nepthic",
+    id: "nepthic", slug: "nepthic", name: "Nepthic Logic",
     listingType: "market", categories: ["Stall 3", "Market stall"],
-    description: { en: "A confirmed festival stall in the marquee row." },
-    locationId: "market-row", confirmed: true, published: true
+    description: { en: "Visit Nepthic Logic at stall 3 in the festival marquee row." },
+    locationId: "market-row", logo: "/brand/vendors/nepthic-logic.png",
+    confirmed: true, published: true
   },
   {
     id: "eshan-it-stall", slug: "eshan-it-stall", name: "Eshan IT",
@@ -562,16 +563,18 @@ export const listings: Listing[] = [
     confirmed: true, published: true
   },
   {
-    id: "aj-sweet-decor", slug: "aj-sweet-decor", name: "AJ Sweet Decor",
+    id: "meme-sweet-decorations", slug: "meme-sweet-decorations", name: "Meme Sweet Decorations",
     listingType: "market", categories: ["Stall 11", "Market stall"],
-    description: { en: "A confirmed festival stall in the marquee row." },
-    locationId: "market-row", confirmed: true, published: true
+    description: { en: "Visit Meme Sweet Decorations at stall 11 in the festival marquee row." },
+    locationId: "market-row", logo: "/brand/vendors/meme-sweet-decorations.png",
+    confirmed: true, published: true
   },
   {
     id: "aherb", slug: "aherb", name: "Aherb",
     listingType: "market", categories: ["Stall 12", "Market stall"],
     description: { en: "Visit Aherb at stall 12 in the festival marquee row." },
-    locationId: "market-row", confirmed: true, published: true
+    locationId: "market-row", logo: "/brand/vendors/aherb.jpeg",
+    confirmed: true, published: true
   },
   {
     id: "nab-stall", slug: "nab-stall", name: "NAB",
