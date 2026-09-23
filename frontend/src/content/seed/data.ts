@@ -702,7 +702,9 @@ const sponsorRows: SponsorRow[] = [
   ["nmc", "Nepali Community Centre", "Community Supporters", "supporter-nepali-community-centre.jpeg"],
   ["hume-city", "Hume City Council", "Community Supporters", "supporter-hume-city-council.jpeg"],
 
-  ["alliance-estate-agents", "Alliance Estate Agents", "Valued Contributor", "contributor-alliance-estate-agents.png"]
+  ["alliance-estate-agents", "Alliance Estate Agents", "Valued Contributor", "contributor-alliance-estate-agents.png"],
+  ["neapaus-dance-studio", "Neapaus Dance Studio", "Valued Contributor", "contributor-neapaus-dance-studio.png"],
+  ["vic-piling", "Vic Piling", "Valued Contributor", "contributor-vic-piling.jpg"]
 ];
 
 export const sponsors: Listing[] = sponsorRows.map(([id, name, tier, logo]) => ({
