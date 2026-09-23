@@ -70,7 +70,12 @@ while (($row = fgetcsv($handle)) !== false) {
         $skipped++;
         continue;
     }
-    $sourceKey = $attendeeId !== '' ? $attendeeId : "identity:{$email}|{$firstName}|{$lastName}";
+    // Eventbrite's standard attendee export does not always include an attendee ID.
+    // A barcode identifies the individual ticket; using email/name here would collapse
+    // family or group bookings into a single attendee row.
+    $sourceKey = $attendeeId !== ''
+        ? $attendeeId
+        : ($barcode !== '' ? "barcode:{$barcode}" : "identity:{$email}|{$firstName}|{$lastName}");
     $emailHash = secureHash($email, $secret);
     $saveAttendee->execute([
         'indra-jatra-2026',
