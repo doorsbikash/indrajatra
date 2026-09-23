@@ -65,7 +65,7 @@ export function SponsorWall({ compact = false }: { compact?: boolean }) {
           onClick={() => setExpanded((open) => !open)}
         >
           <ChevronDown size={15} className={expanded ? "is-flipped" : undefined} />
-          {expanded ? "Show fewer" : `Show all ${partnerCount} partners & supporters`}
+          {expanded ? "Show fewer" : "Show more partners & supporters"}
         </button>
       )}
     </div>
