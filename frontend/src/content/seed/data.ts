@@ -653,7 +653,7 @@ const sponsorRows: SponsorRow[] = [
   ["sierra-homes", "Sierra Homes", "Gold", "gold-sierra-homes.png"],
   ["your-dream-home", "Your Dream Home Conveyancing", "Gold", "gold-your-dream-home-conveyancing.png"],
   ["solve-education", "Solve Education Consultancy", "Gold", "silver-solve-education.jpg"],
-  ["everest-home-loans", "Everest Home Loans", "Gold", "silver-everest-home-loans.jpeg"],
+  ["everest-home-loans", "Everest Home Loans", "Silver", "silver-everest-home-loans.jpeg"],
   ["jeni-homes", "Jeni Homes", "Silver", "silver-jeni-homes.jpeg"],
   ["maven-consultancy", "Maven Consulting Group", "Silver", "silver-maven-consulting-group.png"],
   ["sunrise-energy", "Sunrise Saves Energy", "Silver", "silver-sunrise-saves-energy.jpg"],
@@ -668,13 +668,12 @@ const sponsorRows: SponsorRow[] = [
   ["capkon-home-loans", "Capkon Home Loans", "Silver", "silver-capkon-home-loans.jpeg"],
   ["mit", "Melbourne Institute of Technology", "Silver", "silver-mit.png"],
   ["preferred-consultancy", "Preferred Education & Migration Consultants", "Silver", "silver-preferred-education.png"],
-  ["central-australian-college", "Central Australian College", "Silver", "silver-central-australian-college.png"],
 
   ["nepali-mate", "Nepali Mate", "Photography Partner", "photography-nepali-mate.png"],
   ["dms", "DMS", "Photography Partner"],
 
-  ["nrna-victoria", "NRNA SCC Victoria", "Community Supporters"],
-  ["nav", "Nepalese Association of Victoria", "Community Supporters"],
+  ["nrna-victoria", "NRNA SCC Victoria", "Community Supporters", "supporter-nrna-victoria.jpg"],
+  ["nav", "Nepalese Association of Victoria", "Community Supporters", "supporter-nav-victoria.png"],
   ["nmc", "Nepali Community Centre", "Community Supporters", "supporter-nepali-community-centre.jpeg"],
   ["hume-city", "Hume City Council", "Community Supporters", "supporter-hume-city-council.jpeg"],
 
