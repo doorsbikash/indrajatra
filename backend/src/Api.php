@@ -411,6 +411,7 @@ final class Api
             'passSource' => $profile['pass_source'] ?? 'direct',
             'marketingConsent' => !empty($profile['marketing_consent']),
             'role' => $role,
+            'isMaster' => mb_strtolower((string) $profile['email']) === $this->masterOrganiserEmail(),
             'csrfToken' => $_SESSION['csrf'] ?? null,
         ];
     }

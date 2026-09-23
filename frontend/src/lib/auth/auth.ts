@@ -6,6 +6,7 @@ export type VisitorProfile = {
   marketingConsent?: boolean;
   passSource?: "eventbrite" | "direct";
   role?: "visitor" | "organiser";
+  isMaster?: boolean;
   csrfToken?: string | null;
 };
 

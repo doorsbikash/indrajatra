@@ -1,10 +1,10 @@
 import { useMemo, useRef, useState } from "react";
 import {
-  ClipboardPaste, Copy, Download, EyeOff, Plus, RotateCcw, Star, Trash2, Undo2, Upload
+  ClipboardPaste, Download, EyeOff, Plus, Star, Trash2, Undo2, Upload
 } from "lucide-react";
 import { DebouncedInput } from "./DebouncedInput";
 import { liveStore, type DraftItem } from "../../lib/live/liveStore";
-import { parseRunSheet, slugify, toIso, toSeedRows, toTimeInput } from "../../lib/live/runSheet";
+import { parseRunSheet, slugify, toIso, toTimeInput } from "../../lib/live/runSheet";
 import { scheduleCategories } from "../../content/seed/data";
 import type { Location, ScheduleItem } from "../../lib/types";
 
@@ -19,13 +19,13 @@ type Props = {
   published: ScheduleItem[];
   locations: Location[];
   day: string;
+  canManageBackups: boolean;
   toast: (message: string) => void;
 };
 
-export function RunSheetEditor({ schedule, published, locations, day, toast }: Props) {
+export function RunSheetEditor({ schedule, published, locations, day, canManageBackups, toast }: Props) {
   const [paste, setPaste] = useState("");
   const [preview, setPreview] = useState<ReturnType<typeof parseRunSheet> | null>(null);
-  const [snippet, setSnippet] = useState("");
   const fileInput = useRef<HTMLInputElement>(null);
 
   const live = liveStore.get();
@@ -95,19 +95,11 @@ export function RunSheetEditor({ schedule, published, locations, day, toast }: P
   }
 
   function restore(file: File) {
+    if (!window.confirm("Restore this emergency backup? It will replace the current live run sheet, photos and announcements for every organiser and visitor.")) return;
     void file.text().then((raw) => {
       const result = liveStore.importJson(raw);
       toast(result.ok ? "Organiser state restored" : result.reason ?? "Could not read that file");
     });
-  }
-
-  function copySnippet() {
-    const text = toSeedRows(schedule);
-    setSnippet(text);
-    void navigator.clipboard?.writeText(text).then(
-      () => toast("Copied — paste it over scheduleRows in data.ts"),
-      () => toast("Copy failed — select the text below instead")
-    );
   }
 
   return (
@@ -313,20 +305,21 @@ export function RunSheetEditor({ schedule, published, locations, day, toast }: P
         </section>
       )}
 
-      <section className="section">
-        <h2>Back up and publish</h2>
-        <div className="stack">
+      {canManageBackups && (
+        <section className="section">
+          <h2>Emergency backup</h2>
           <div className="card">
-            <h3>Move today's changes to another phone</h3>
+            <h3>Protect today's live changes</h3>
             <p className="small muted">
-              Everything on this screen — run sheet, photos, announcements — travels in one file.
+              Download a recovery file containing the run sheet, photos and announcements. Restore
+              it only if the live organiser state is lost or damaged.
             </p>
             <div className="row" style={{ marginTop: 12 }}>
               <button type="button" className="btn btn--sm" onClick={download}>
-                <Download size={14} />Download backup
+                <Download size={14} />Download emergency backup
               </button>
               <button type="button" className="btn btn--sm" onClick={() => fileInput.current?.click()}>
-                <Upload size={14} />Restore from file
+                <Upload size={14} />Restore emergency backup
               </button>
               <input
                 ref={fileInput}
@@ -337,39 +330,8 @@ export function RunSheetEditor({ schedule, published, locations, day, toast }: P
               />
             </div>
           </div>
-
-          <div className="card">
-            <h3>Make it permanent</h3>
-            <p className="small muted">
-              Copies the current programme as the <code>scheduleRows</code> block from
-              <code> src/content/seed/data.ts</code>. Paste it over the existing block, run
-              <code> npm run validate:content</code>, and it ships with the next build.
-            </p>
-            <div className="row" style={{ marginTop: 12 }}>
-              <button type="button" className="btn btn--sm" onClick={copySnippet}>
-                <Copy size={14} />Copy data.ts block
-              </button>
-              <button
-                type="button"
-                className="btn btn--sm btn--danger"
-                onClick={() => {
-                  if (!window.confirm("Discard every run sheet edit and go back to the published programme? Photos and announcements are kept.")) return;
-                  liveStore.clearEdits();
-                  toast("Run sheet reset");
-                }}
-              >
-                <RotateCcw size={14} />Discard run sheet changes
-              </button>
-            </div>
-            {snippet && (
-              <label className="field" style={{ marginTop: "var(--s-3)" }}>
-                <span>Ready to paste</span>
-                <textarea readOnly value={snippet} rows={8} aria-label="data.ts block" />
-              </label>
-            )}
-          </div>
-        </div>
-      </section>
+        </section>
+      )}
     </>
   );
 }

@@ -98,6 +98,7 @@ export function AdminPage() {
           published={data.schedule}
           locations={data.locations}
           day={FESTIVAL_DAY}
+          canManageBackups={Boolean(profile.isMaster)}
           toast={toast}
         />
       )}
