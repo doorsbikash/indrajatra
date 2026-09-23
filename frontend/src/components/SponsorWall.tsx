@@ -4,6 +4,7 @@ import { useApp } from "../app/AppContext";
 import type { Listing } from "../lib/types";
 
 const PAID_TIERS = ["Platinum", "Gold", "Silver"] as const;
+const ASSOCIATION_TIERS = ["In Association With"] as const;
 const PARTNER_TIERS = [
   "Photography Partner", "Media Partner", "Community Supporters",
   "Valued Contributor"
@@ -32,7 +33,9 @@ export function SponsorWall({ compact = false }: { compact?: boolean }) {
   const inTier = (tier: string) => sponsors.filter((s: Listing) => s.sponsorTier === tier);
   const partnerCount = PARTNER_TIERS.reduce((total, tier) => total + inTier(tier).length, 0);
   const showPartners = !compact || expanded;
-  const tiers = showPartners ? [...PAID_TIERS, ...PARTNER_TIERS] : PAID_TIERS;
+  const tiers = showPartners
+    ? [...PAID_TIERS, ...ASSOCIATION_TIERS, ...PARTNER_TIERS]
+    : [...PAID_TIERS, ...ASSOCIATION_TIERS];
 
   return (
     <div className={`sponsor-wall${compact ? " sponsor-wall--compact" : ""}`}>

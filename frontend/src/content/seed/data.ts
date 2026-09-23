@@ -639,6 +639,7 @@ type SponsorTier =
   | "Platinum"
   | "Gold"
   | "Silver"
+  | "In Association With"
   | "Photography Partner"
   | "Media Partner"
   | "Community Supporters"
@@ -673,6 +674,12 @@ const sponsorRows: SponsorRow[] = [
   ["capkon-home-loans", "Capkon Home Loans", "Silver", "silver-capkon-home-loans.jpeg"],
   ["mit", "Melbourne Institute of Technology", "Silver", "silver-mit.png"],
   ["preferred-consultancy", "Preferred Education & Migration Consultants", "Silver", "silver-preferred-education.png"],
+
+  ["association-01", "Association partner 1", "In Association With", "association-01.png"],
+  ["association-02", "Nourish Nation Foundation", "In Association With", "association-02.jpeg"],
+  ["association-03", "Association partner 3", "In Association With", "association-03.png"],
+  ["association-04", "Association partner 4", "In Association With", "association-04.png"],
+  ["association-05", "Association partner 5", "In Association With", "association-05.png"],
 
   ["nepali-mate", "nepaliMate", "Photography Partner", "photography-nepali-mate.png"],
   ["sanish-photography", "Sanish Photography", "Photography Partner", "photography-sanish-photography.png"],
