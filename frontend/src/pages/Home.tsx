@@ -8,6 +8,7 @@ import { EventCard } from "../components/EventCard";
 import { Passport } from "../components/Passport";
 import { Announcements } from "../components/Announcements";
 import { SponsorWall } from "../components/SponsorWall";
+import { InstallAppPrompt } from "../components/InstallAppPrompt";
 import { SectionHead } from "../components/ui";
 import { t } from "../lib/text";
 import {
@@ -66,6 +67,8 @@ export function HomePage() {
       <div style={{ marginTop: "var(--s-5)" }}>
         <Announcements />
       </div>
+
+      <InstallAppPrompt />
 
       {(nowItems.length > 0 || nextItem) && (
         <section className="section">
