@@ -62,6 +62,9 @@ final class Api
             if ($method === 'POST' && $path === '/api/membership-reward') {
                 $this->claimMembershipReward();
             }
+            if ($method === 'POST' && $path === '/api/integrations/membership-application') {
+                $this->integrationMembershipApplication();
+            }
             if ($method === 'POST' && $path === '/api/volunteers/register') {
                 $this->registerVolunteer();
             }
@@ -561,6 +564,63 @@ final class Api
         ];
     }
 
+    private function integrationMembershipApplication(): never
+    {
+        $this->requireIntegrationKey();
+        $input = $this->body();
+        $action = trim((string) ($input['action'] ?? 'verify'));
+        $code = strtoupper($this->requiredText($input, 'code', 32));
+        if (!preg_match('/^IJ26-[A-F0-9]{8}$/', $code)) {
+            $this->json(['error' => 'Reward code not found'], 404);
+        }
+
+        $query = $this->db->prepare(
+            'SELECT mr.id, mr.visitor_id, mr.reward_code, mr.discount_percent, mr.status, '
+            . 'mr.application_received_at, vp.email '
+            . 'FROM membership_rewards mr '
+            . 'INNER JOIN visitor_profiles vp ON vp.id = mr.visitor_id '
+            . 'WHERE mr.reward_code = ? LIMIT 1'
+        );
+        $query->execute([$code]);
+        $reward = $query->fetch();
+        if (!$reward) {
+            $this->json(['error' => 'Reward code not found'], 404);
+        }
+
+        if ($action === 'verify') {
+            $this->json([
+                'verified' => true,
+                'code' => $reward['reward_code'],
+                'discountPercent' => (int) $reward['discount_percent'],
+                'status' => $reward['status'],
+            ]);
+        }
+        if ($action !== 'submit') {
+            $this->json(['error' => 'Invalid integration action'], 422);
+        }
+
+        $email = $this->email($input['email'] ?? null);
+        $submissionId = $this->requiredText($input, 'submissionId', 64);
+        if (!hash_equals(mb_strtolower((string) $reward['email']), $email)) {
+            $this->json(['error' => 'The reward code does not match this email address'], 422);
+        }
+
+        $update = $this->db->prepare(
+            "UPDATE membership_rewards SET status = 'application_received', "
+            . 'application_received_at = COALESCE(application_received_at, UTC_TIMESTAMP()), '
+            . 'application_submission_id = ?, application_email = ? WHERE id = ?'
+        );
+        $update->execute([$submissionId, $email, $reward['id']]);
+
+        $this->json([
+            'verified' => true,
+            'code' => $reward['reward_code'],
+            'discountPercent' => (int) $reward['discount_percent'],
+            'status' => 'application_received',
+            'submissionId' => $submissionId,
+        ]);
+    }
+
     private function registerVolunteer(): never
     {
         $input = $this->body();
@@ -982,6 +1042,15 @@ final class Api
         $expected = $_SESSION['csrf'] ?? '';
         if ($provided === '' || $expected === '' || !hash_equals((string) $expected, (string) $provided)) {
             $this->json(['error' => 'Invalid security token'], 403);
+        }
+    }
+
+    private function requireIntegrationKey(): void
+    {
+        $provided = trim((string) ($_SERVER['HTTP_X_NGV_INTEGRATION_KEY'] ?? ''));
+        $expected = trim((string) (getenv('IJ26_INTEGRATION_KEY') ?: ''));
+        if ($provided === '' || strlen($expected) < 32 || !hash_equals($expected, $provided)) {
+            $this->json(['error' => 'Integration access denied'], 403);
         }
     }
 
