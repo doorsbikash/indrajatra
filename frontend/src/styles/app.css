@@ -1051,6 +1051,12 @@ h4 { font-size: var(--step-0); font-family: var(--font-sans); font-weight: 600; 
 .admin-row--cancelled { border-left-color: var(--oxblood-700); }
 .admin-row__ctrls { display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--s-2); }
 @media (min-width: 560px) { .admin-row__ctrls { grid-template-columns: repeat(4, 1fr); } }
+.organiser-current { display: grid; gap: var(--s-3); margin-top: var(--s-5); }
+.organiser-current > h3 { margin: 0; }
+.organiser-user-row {
+  grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: var(--s-3);
+}
+.organiser-user-row p { margin: 3px 0 0; overflow-wrap: anywhere; }
 .next-decision {
   display: grid; gap: var(--s-3); margin-top: var(--s-3); padding-top: var(--s-3);
   border-top: 1px solid var(--rule-strong);

@@ -71,6 +71,12 @@ final class Api
             if ($method === 'PATCH' && preg_match('#^/api/admin/organiser-requests/(\d+)$#', $path, $matches)) {
                 $this->updateOrganiserRequest((int) $matches[1]);
             }
+            if ($method === 'GET' && $path === '/api/admin/organisers') {
+                $this->organisers();
+            }
+            if ($method === 'DELETE' && preg_match('#^/api/admin/organisers/(\d+)$#', $path, $matches)) {
+                $this->removeOrganiser((int) $matches[1]);
+            }
             if ($method === 'GET' && $path === '/api/admin/volunteers') {
                 $this->volunteers();
             }
@@ -565,6 +571,8 @@ final class Api
                 "INSERT INTO organiser_users (visitor_id, role) VALUES (?, 'organiser') ON DUPLICATE KEY UPDATE role = VALUES(role)"
             );
             $grant->execute([$request['visitor_id']]);
+            $clearRevocation = $this->db->prepare('DELETE FROM organiser_revocations WHERE visitor_id = ?');
+            $clearRevocation->execute([$request['visitor_id']]);
         }
         $this->audit($organiserId, 'organiser_request.' . $action, 'organiser_request', (string) $id, null, $status);
         $this->db->commit();
@@ -576,6 +584,60 @@ final class Api
         );
         $query->execute([$id]);
         $this->json(['request' => $this->publicOrganiserRequest($query->fetch())]);
+    }
+
+    private function organisers(): never
+    {
+        $organiserId = $this->requireOrganiser();
+        $query = $this->db->query(
+            'SELECT o.visitor_id, o.role, o.created_at, v.first_name, v.last_name, v.email, v.phone '
+            . 'FROM organiser_users o JOIN visitor_profiles v ON v.id = o.visitor_id '
+            . 'ORDER BY v.first_name, v.last_name, v.email'
+        );
+        $organisers = array_map(static fn(array $row): array => [
+            'id' => (int) $row['visitor_id'],
+            'firstName' => $row['first_name'],
+            'lastName' => $row['last_name'],
+            'email' => $row['email'],
+            'phone' => $row['phone'],
+            'role' => $row['role'],
+            'createdAt' => $row['created_at'],
+            'isCurrent' => (int) $row['visitor_id'] === $organiserId,
+        ], $query->fetchAll());
+        $this->json(['organisers' => $organisers]);
+    }
+
+    private function removeOrganiser(int $visitorId): never
+    {
+        $organiserId = $this->requireOrganiser();
+        $this->requireCsrf();
+        if ($visitorId === $organiserId) {
+            $this->json(['error' => 'You cannot remove your own organiser access.'], 409);
+        }
+
+        $target = $this->db->prepare(
+            'SELECT v.email FROM organiser_users o JOIN visitor_profiles v ON v.id = o.visitor_id '
+            . 'WHERE o.visitor_id = ? LIMIT 1'
+        );
+        $target->execute([$visitorId]);
+        $targetRow = $target->fetch();
+        if (!$targetRow) $this->json(['error' => 'Organiser not found.'], 404);
+
+        $count = (int) $this->db->query('SELECT COUNT(*) FROM organiser_users')->fetchColumn();
+        if ($count <= 1) $this->json(['error' => 'The final organiser cannot be removed.'], 409);
+
+        $this->db->beginTransaction();
+        $revoke = $this->db->prepare(
+            'INSERT INTO organiser_revocations (visitor_id, revoked_by) VALUES (?, ?) '
+            . 'ON DUPLICATE KEY UPDATE revoked_by = VALUES(revoked_by), revoked_at = CURRENT_TIMESTAMP'
+        );
+        $revoke->execute([$visitorId, $organiserId]);
+        $remove = $this->db->prepare('DELETE FROM organiser_users WHERE visitor_id = ?');
+        $remove->execute([$visitorId]);
+        $this->audit($organiserId, 'organiser.remove', 'visitor_profile', (string) $visitorId, $targetRow['email'], null);
+        $this->db->commit();
+
+        $this->json(['ok' => true]);
     }
 
     private function publicOrganiserRequest(array $row): array
@@ -843,6 +905,9 @@ final class Api
             explode(',', (string) (getenv('IJ26_ORGANISER_EMAILS') ?: ''))
         ));
         if (!in_array(mb_strtolower($email), $configured, true)) return;
+        $revoked = $this->db->prepare('SELECT 1 FROM organiser_revocations WHERE visitor_id = ? LIMIT 1');
+        $revoked->execute([$visitorId]);
+        if ($revoked->fetchColumn()) return;
         $save = $this->db->prepare(
             "INSERT INTO organiser_users (visitor_id, role) VALUES (?, 'organiser') ON DUPLICATE KEY UPDATE role = VALUES(role)"
         );
