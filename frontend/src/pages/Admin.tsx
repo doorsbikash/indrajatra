@@ -30,7 +30,7 @@ const TABS: { id: Tab; label: string; icon: typeof Radio }[] = [
 ];
 
 export function AdminPage() {
-  const { data, schedule, announcements, now, locale, toast, profile, requireSignIn } = useApp();
+  const { data, organiserSchedule: schedule, announcements, now, locale, toast, profile, requireSignIn } = useApp();
   const [tab, setTab] = useState<Tab>("live");
   const [nextDecision, setNextDecision] = useState<{ afterId: string; nextId: string } | null>(null);
   const [, force] = useState(0);
@@ -188,6 +188,11 @@ export function AdminPage() {
                         <p className="tiny muted" style={{ margin: "3px 0 0" }}>
                           {state}{item.delayMinutes ? ` · +${item.delayMinutes} min` : ""} · {item.updatedBy}
                         </p>
+                        {item.revealOnStart && !item.effectiveStart && (
+                          <p className="tiny" style={{ margin: "4px 0 0", color: "var(--maroon-700)" }}>
+                            Hidden from visitors until Start
+                          </p>
+                        )}
                       </div>
                     </div>
                     <div className="admin-row__ctrls">

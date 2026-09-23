@@ -51,6 +51,8 @@ export type ScheduleItem = {
   relatedTrailPointIds?: string[];
   image?: MediaRef;
   highlight?: boolean;
+  /** Keep this item out of visitor views until an organiser starts it. */
+  revealOnStart?: boolean;
   published: boolean;
   updatedAt: string;
   updatedBy?: string;

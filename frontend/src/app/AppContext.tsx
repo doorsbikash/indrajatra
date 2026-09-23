@@ -6,6 +6,8 @@ export type AppState = {
   data: FestivalData;
   /** Programme with organiser overrides folded in. */
   schedule: ScheduleItem[];
+  /** Full programme used only inside the organiser console. */
+  organiserSchedule: ScheduleItem[];
   announcements: Announcement[];
   now: Date;
   locale: Locale;

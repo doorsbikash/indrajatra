@@ -121,6 +121,12 @@ export const locations: Location[] = locationRows.map(([id, name, type, mapX, ma
 
 type SchedRow = [string, string, string, string, string, string, string[], boolean?];
 
+const FORMAL_PROGRAMME_REVEAL_IDS = new Set([
+  "festival-overview", "kids-dhimay", "president-welcome", "chief-guest-address",
+  "mass-dhimay", "nirajan-gauli", "roshena-campbell", "josh-bull", "john-lister",
+  "tilak-pokhrel", "mahadev-dhanuk", "sudip-shrestha", "sponsor-acknowledgement"
+]);
+
 const scheduleRows: SchedRow[] = [
   ["arrival-registration", "Participant arrival and registration", "09:00", "09:05", "guest-entry",
     "Welcome tikaa, red and white kapang balla, and traditional music at the entrance.",
@@ -219,6 +225,7 @@ export const schedule: ScheduleItem[] = scheduleRows.map(
     locationId,
     categoryIds,
     highlight: Boolean(highlight),
+    revealOnStart: FORMAL_PROGRAMME_REVEAL_IDS.has(id),
     published: true,
     updatedAt: at("08:00"),
     updatedBy: "Newa Guthi Victoria"

@@ -1,6 +1,6 @@
 import { useMemo, useRef, useState } from "react";
 import {
-  ClipboardPaste, Copy, Download, Plus, RotateCcw, Star, Trash2, Undo2, Upload
+  ClipboardPaste, Copy, Download, EyeOff, Plus, RotateCcw, Star, Trash2, Undo2, Upload
 } from "lucide-react";
 import { DebouncedInput } from "./DebouncedInput";
 import { liveStore, type DraftItem } from "../../lib/live/liveStore";
@@ -38,7 +38,7 @@ export function RunSheetEditor({ schedule, published, locations, day, toast }: P
     return Boolean(
       o && (o.title !== undefined || o.scheduledStart !== undefined ||
         o.scheduledEnd !== undefined || o.locationId !== undefined ||
-        o.categoryIds !== undefined || o.summary !== undefined)
+        o.categoryIds !== undefined || o.summary !== undefined || o.revealOnStart !== undefined)
     );
   };
   const isAdded = (id: string) => (live.added ?? []).some((a) => a.id === id);
@@ -281,6 +281,15 @@ export function RunSheetEditor({ schedule, published, locations, day, toast }: P
                 onClick={() => liveStore.editItem(item.id, { highlight: !item.highlight })}
               >
                 <Star size={14} />Highlight of the day
+              </button>
+              <button
+                type="button"
+                className="chip"
+                style={{ marginTop: "var(--s-3)" }}
+                aria-pressed={Boolean(item.revealOnStart)}
+                onClick={() => liveStore.editItem(item.id, { revealOnStart: !item.revealOnStart })}
+              >
+                <EyeOff size={14} />Hide from visitors until Start
               </button>
               </details>
             </div>

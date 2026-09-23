@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { normaliseTime, parseRunSheet, slugify, toSeedRows, toTimeInput } from "./runSheet";
-import { applyLive, applyLiveAnnouncements, applyLiveListings, type LiveState } from "./liveStore";
+import { applyLive, applyLiveAnnouncements, applyLiveListings, applyVisitorVisibility, type LiveState } from "./liveStore";
 import type { Listing, ScheduleItem } from "../types";
 
 const DAY = "2026-09-26";
@@ -153,6 +153,32 @@ describe("applyLive with organiser edits", () => {
     const original = item();
     const [result] = applyLive([original], state());
     expect(result).toBe(original);
+  });
+});
+
+describe("applyVisitorVisibility", () => {
+  const guarded = () => item({ id: "guest-address", slug: "guest-address", revealOnStart: true });
+
+  it("shows one neutral formal programme entry before guarded items start", () => {
+    const result = applyVisitorVisibility([guarded()], state());
+    expect(result.map((entry) => entry.id)).toEqual(["formal-programme-placeholder"]);
+    expect(result[0].title.en).toBe("Formal programme");
+  });
+
+  it("reveals an item after the organiser starts it", () => {
+    const live = state({
+      schedule: { "guest-address": { status: "live", effectiveStart: `${DAY}T12:31:00+10:00` } }
+    });
+    const result = applyVisitorVisibility([guarded()], live);
+    expect(result.map((entry) => entry.id)).toEqual(["guest-address"]);
+  });
+
+  it("does not reveal an item merely because it was delayed", () => {
+    const live = state({
+      schedule: { "guest-address": { status: "delayed", effectiveStart: `${DAY}T12:40:00+10:00` } }
+    });
+    expect(applyVisitorVisibility([guarded()], live).map((entry) => entry.id))
+      .toEqual(["formal-programme-placeholder"]);
   });
 });
 

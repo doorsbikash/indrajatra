@@ -7,7 +7,7 @@ import { getRepository } from "../lib/repositories/repository";
 import { auth, type VisitorProfile } from "../lib/auth/auth";
 import { localFestival } from "../lib/storage/localFestival";
 import {
-  applyLive, applyLiveAnnouncements, applyLiveListings, applyLiveMedia, liveStore
+  applyLive, applyLiveAnnouncements, applyLiveListings, applyLiveMedia, applyVisitorVisibility, liveStore
 } from "../lib/live/liveStore";
 import { clock, startTicker } from "../lib/clock/clock";
 import type { FestivalData, Locale } from "../lib/types";
@@ -165,9 +165,11 @@ export default function App() {
     // Organiser photo swaps are folded in before anything reads the content.
     const mediaView = applyLiveMedia(data, live);
     const view = { ...mediaView, listings: applyLiveListings(mediaView.listings, live) };
+    const organiserSchedule = applyLive(view.schedule, live);
     return {
       data: view,
-      schedule: applyLive(view.schedule, live),
+      schedule: applyVisitorVisibility(organiserSchedule, live),
+      organiserSchedule,
       announcements: applyLiveAnnouncements(view.announcements, live),
       now: clock.now(),
       locale,

@@ -36,6 +36,7 @@ export type EditablePatch = {
   locationId?: string;
   categoryIds?: string[];
   highlight?: boolean;
+  revealOnStart?: boolean;
 };
 
 export type ScheduleOverride = EditablePatch & {
@@ -57,6 +58,7 @@ export type DraftItem = {
   locationId: string;
   categoryIds: string[];
   highlight?: boolean;
+  revealOnStart?: boolean;
 };
 
 /** An announcement the organiser wrote on the day. */
@@ -411,6 +413,7 @@ function withOverride(item: ScheduleItem, o: ScheduleOverride | undefined, image
     locationId: patch.locationId ?? item.locationId,
     categoryIds: patch.categoryIds ?? item.categoryIds,
     highlight: patch.highlight ?? item.highlight,
+    revealOnStart: patch.revealOnStart ?? item.revealOnStart,
     status: patch.status ?? item.status,
     effectiveStart: patch.effectiveStart ?? item.effectiveStart,
     effectiveEnd: patch.effectiveEnd ?? item.effectiveEnd,
@@ -437,6 +440,7 @@ function draftToItem(draft: DraftItem, live: LiveState): ScheduleItem {
     locationId: draft.locationId,
     categoryIds: draft.categoryIds,
     highlight: Boolean(draft.highlight),
+    revealOnStart: Boolean(draft.revealOnStart),
     image: image ? { src: image, alt: { en: draft.title } } : undefined,
     published: true,
     updatedAt: new Date(live.updatedAt || Date.now()).toISOString(),
@@ -456,6 +460,44 @@ export function applyLive(items: ScheduleItem[], live: LiveState): ScheduleItem[
     (a, b) =>
       new Date(a.effectiveStart || a.scheduledStart).getTime() -
       new Date(b.effectiveStart || b.scheduledStart).getTime()
+  );
+}
+
+/** Replace unrevealed event-day items with one neutral visitor entry. */
+export function applyVisitorVisibility(items: ScheduleItem[], live: LiveState): ScheduleItem[] {
+  const guarded = items.filter((item) => item.revealOnStart);
+  const revealed = (item: ScheduleItem) => {
+    const override = live.schedule?.[item.id];
+    return Boolean(
+      override?.effectiveStart &&
+      (override.status === "live" || override.status === "completed" || override.status === "cancelled")
+    );
+  };
+  const hidden = guarded.filter((item) => !revealed(item));
+  if (!hidden.length) return items;
+
+  const visible = items.filter((item) => !item.revealOnStart || revealed(item));
+  const starts = guarded.map((item) => new Date(item.scheduledStart).getTime());
+  const ends = guarded.map((item) => new Date(item.scheduledEnd ?? item.scheduledStart).getTime());
+  const start = new Date(Math.min(...starts)).toISOString();
+  const end = new Date(Math.max(...ends)).toISOString();
+  const placeholder: ScheduleItem = {
+    id: "formal-programme-placeholder",
+    slug: "formal-programme-placeholder",
+    title: { en: "Formal programme" },
+    summary: { en: "Guest addresses and formal proceedings continue on the main stage. The running order will update live." },
+    scheduledStart: start,
+    scheduledEnd: end,
+    status: "scheduled",
+    locationId: guarded[0]?.locationId ?? "main-stage",
+    categoryIds: ["main-stage", "community"],
+    published: true,
+    updatedAt: new Date(live.updatedAt || Date.now()).toISOString(),
+    updatedBy: "Newa Guthi Victoria"
+  };
+
+  return [...visible, placeholder].sort(
+    (a, b) => new Date(a.effectiveStart || a.scheduledStart).getTime() - new Date(b.effectiveStart || b.scheduledStart).getTime()
   );
 }
 
