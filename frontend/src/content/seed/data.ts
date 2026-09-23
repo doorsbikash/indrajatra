@@ -566,7 +566,7 @@ export const listings: Listing[] = [
     id: "meme-sweet-decorations", slug: "meme-sweet-decorations", name: "Meme Sweet Decorations",
     listingType: "market", categories: ["Stall 11", "Market stall"],
     description: { en: "Visit Meme Sweet Decorations at stall 11 in the festival marquee row." },
-    locationId: "market-row", logo: "/brand/vendors/meme-sweet-decorations.png",
+    locationId: "market-row", logo: "/brand/vendors/sweet-decorations.png",
     confirmed: true, published: true
   },
   {
