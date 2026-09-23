@@ -98,7 +98,10 @@ const locationRows: LocRow[] = [
     "Grass surface and a longer walk. If you need a shorter walk, tell a marshal at the vehicle entry."],
   ["meet-point", "Meet-Up Point", "amenity", 80, 56,
     "By the tennis court, next to the guest entry. The agreed place to meet if your group gets separated.",
-    "Clearly signed, sheltered, and visible from the entry."]
+    "Clearly signed, sheltered, and visible from the entry."],
+  ["garden-toilet", "Garden Toilet", "amenity", 80, 72,
+    "Additional toilet beside the garden and VIP guest waiting area.",
+    "Portable toilet on level ground. Use the ANMC toilet for full wheelchair access."]
 ];
 
 export const locations: Location[] = locationRows.map(([id, name, type, mapX, mapY, description, access]) => ({
@@ -520,15 +523,15 @@ export const listings: Listing[] = [
   },
   {
     id: "newari-family-attire", slug: "newari-family-attire", name: "Newari Family Attire",
-    listingType: "market", categories: ["Clothing", "Market stall"],
-    description: { en: "Newari attire available from the festival marquee row." },
+    listingType: "market", categories: ["Stall 6", "Clothing", "Market stall"],
+    description: { en: "Newari attire available from stall 6 in the festival marquee row." },
     locationId: "market-row", logo: "/brand/vendors/newari-family-attire.jpg",
     confirmed: true, published: true
   },
   {
-    id: "nep-mart", slug: "nep-mart", name: "Nep Mart",
-    listingType: "market", categories: ["Groceries", "Tea", "Market stall"],
-    description: { en: "Nepali groceries and tea available from the festival marquee row." },
+    id: "nep-mart", slug: "nep-mart", name: "Nepmart (Indreni Sunshine)",
+    listingType: "market", categories: ["Stall 4", "Groceries", "Tea", "Market stall"],
+    description: { en: "Nepali groceries and tea available from stall 4 in the festival marquee row." },
     locationId: "market-row", logo: "/brand/vendors/nep-mart.jpg",
     confirmed: true, published: true
   },
@@ -536,23 +539,11 @@ export const listings: Listing[] = [
     id: "ngv-desk", slug: "ngv-desk", name: "Newa Guthi Victoria",
     listingType: "community", categories: ["Stall 1", "Community", "Classes"],
     description: { en: "Membership, weekly Dhimey, Bhusya Baja, Bansuri and Newa dance classes, and volunteering for next year's festival. Come and say hello." },
-    locationId: "market-row", confirmed: true, published: true
+    locationId: "market-row", logo: "/brand/ngv-logo.png", confirmed: true, published: true
   },
   {
-    id: "human", slug: "human", name: "HUman",
+    id: "nepthic", slug: "nepthic", name: "Nepthic",
     listingType: "market", categories: ["Stall 3", "Market stall"],
-    description: { en: "A confirmed festival stall in the marquee row." },
-    locationId: "market-row", confirmed: true, published: true
-  },
-  {
-    id: "indreni", slug: "indreni", name: "Indreni",
-    listingType: "market", categories: ["Stall 4", "Market stall"],
-    description: { en: "A confirmed festival stall in the marquee row." },
-    locationId: "market-row", confirmed: true, published: true
-  },
-  {
-    id: "simran", slug: "simran", name: "Simran",
-    listingType: "market", categories: ["Stall 6", "Market stall"],
     description: { en: "A confirmed festival stall in the marquee row." },
     locationId: "market-row", confirmed: true, published: true
   },
@@ -564,10 +555,11 @@ export const listings: Listing[] = [
     confirmed: true, published: true
   },
   {
-    id: "aussie-window", slug: "aussie-window", name: "Aussie Window",
+    id: "accent-windows", slug: "accent-windows", name: "Accent Windows",
     listingType: "market", categories: ["Stall 10", "Market stall"],
-    description: { en: "A confirmed festival stall in the marquee row." },
-    locationId: "market-row", confirmed: true, published: true
+    description: { en: "Accent Aluminium Windows & Doors at stall 10 in the festival marquee row." },
+    locationId: "market-row", logo: "/brand/vendors/accent-windows.webp",
+    confirmed: true, published: true
   },
   {
     id: "aj-sweet-decor", slug: "aj-sweet-decor", name: "AJ Sweet Decor",
@@ -576,10 +568,17 @@ export const listings: Listing[] = [
     locationId: "market-row", confirmed: true, published: true
   },
   {
-    id: "napi", slug: "napi", name: "NAPI",
-    listingType: "market", categories: ["Stall 13", "Community stall"],
-    description: { en: "A confirmed festival stall in the marquee row." },
+    id: "aherb", slug: "aherb", name: "Aherb",
+    listingType: "market", categories: ["Stall 12", "Market stall"],
+    description: { en: "Visit Aherb at stall 12 in the festival marquee row." },
     locationId: "market-row", confirmed: true, published: true
+  },
+  {
+    id: "nab-stall", slug: "nab-stall", name: "NAB",
+    listingType: "market", categories: ["Stall 13", "Sponsor stall"],
+    description: { en: "Visit NAB at stall 13 in the festival marquee row." },
+    locationId: "market-row", logo: "/brand/sponsors/platinum-nab.png",
+    confirmed: true, published: true
   },
   {
     id: "grace-international-stall", slug: "grace-international-stall", name: "Grace International",
