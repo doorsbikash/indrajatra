@@ -107,10 +107,37 @@ export function RunSheetEditor({ schedule, published, locations, day, canManageB
       <div className="card card--sunk">
         <p className="small muted" style={{ margin: 0 }}>
           Every change is live on the visitor screens the moment you make it, and it survives a
-          refresh. To make today's run sheet permanent, use <em>Copy data.ts block</em> at the
-          bottom of this tab.
+          refresh. Use the protected recovery controls below only if you need an event-day backup.
         </p>
       </div>
+
+      {canManageBackups && (
+        <section className="section">
+          <h2>Emergency backup</h2>
+          <div className="card">
+            <h3>Protect today's live changes</h3>
+            <p className="small muted">
+              Download a recovery file containing the run sheet, photos and announcements. Restore
+              it only if the live organiser state is lost or damaged.
+            </p>
+            <div className="row" style={{ marginTop: 12 }}>
+              <button type="button" className="btn btn--sm" onClick={download}>
+                <Download size={14} />Download emergency backup
+              </button>
+              <button type="button" className="btn btn--sm" onClick={() => fileInput.current?.click()}>
+                <Upload size={14} />Restore emergency backup
+              </button>
+              <input
+                ref={fileInput}
+                type="file"
+                accept="application/json,.json"
+                hidden
+                onChange={(e) => { const f = e.target.files?.[0]; if (f) restore(f); e.target.value = ""; }}
+              />
+            </div>
+          </div>
+        </section>
+      )}
 
       <section className="section">
         <h2>Paste the committee run sheet</h2>
@@ -305,33 +332,6 @@ export function RunSheetEditor({ schedule, published, locations, day, canManageB
         </section>
       )}
 
-      {canManageBackups && (
-        <section className="section">
-          <h2>Emergency backup</h2>
-          <div className="card">
-            <h3>Protect today's live changes</h3>
-            <p className="small muted">
-              Download a recovery file containing the run sheet, photos and announcements. Restore
-              it only if the live organiser state is lost or damaged.
-            </p>
-            <div className="row" style={{ marginTop: 12 }}>
-              <button type="button" className="btn btn--sm" onClick={download}>
-                <Download size={14} />Download emergency backup
-              </button>
-              <button type="button" className="btn btn--sm" onClick={() => fileInput.current?.click()}>
-                <Upload size={14} />Restore emergency backup
-              </button>
-              <input
-                ref={fileInput}
-                type="file"
-                accept="application/json,.json"
-                hidden
-                onChange={(e) => { const f = e.target.files?.[0]; if (f) restore(f); e.target.value = ""; }}
-              />
-            </div>
-          </div>
-        </section>
-      )}
     </>
   );
 }
