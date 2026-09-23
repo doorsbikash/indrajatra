@@ -748,6 +748,7 @@ final class Api
     private function organisers(): never
     {
         $organiserId = $this->requireOrganiser();
+        $masterEmail = $this->masterOrganiserEmail();
         $query = $this->db->query(
             'SELECT o.visitor_id, o.role, o.created_at, v.first_name, v.last_name, v.email, v.phone '
             . 'FROM organiser_users o JOIN visitor_profiles v ON v.id = o.visitor_id '
@@ -762,6 +763,7 @@ final class Api
             'role' => $row['role'],
             'createdAt' => $row['created_at'],
             'isCurrent' => (int) $row['visitor_id'] === $organiserId,
+            'isProtected' => mb_strtolower((string) $row['email']) === $masterEmail,
         ], $query->fetchAll());
         $this->json(['organisers' => $organisers]);
     }
@@ -781,6 +783,9 @@ final class Api
         $target->execute([$visitorId]);
         $targetRow = $target->fetch();
         if (!$targetRow) $this->json(['error' => 'Organiser not found.'], 404);
+        if (mb_strtolower((string) $targetRow['email']) === $this->masterOrganiserEmail()) {
+            $this->json(['error' => 'The master organiser cannot be removed.'], 409);
+        }
 
         $count = (int) $this->db->query('SELECT COUNT(*) FROM organiser_users')->fetchColumn();
         if ($count <= 1) $this->json(['error' => 'The final organiser cannot be removed.'], 409);
@@ -1068,6 +1073,15 @@ final class Api
 
     private function ensureConfiguredOrganiser(int $visitorId, string $email): void
     {
+        if (mb_strtolower($email) === $this->masterOrganiserEmail()) {
+            $clearRevocation = $this->db->prepare('DELETE FROM organiser_revocations WHERE visitor_id = ?');
+            $clearRevocation->execute([$visitorId]);
+            $save = $this->db->prepare(
+                "INSERT INTO organiser_users (visitor_id, role) VALUES (?, 'master') ON DUPLICATE KEY UPDATE role = VALUES(role)"
+            );
+            $save->execute([$visitorId]);
+            return;
+        }
         $configured = array_filter(array_map(
             static fn(string $value): string => mb_strtolower(trim($value)),
             explode(',', (string) (getenv('IJ26_ORGANISER_EMAILS') ?: ''))
@@ -1080,6 +1094,11 @@ final class Api
             "INSERT INTO organiser_users (visitor_id, role) VALUES (?, 'organiser') ON DUPLICATE KEY UPDATE role = VALUES(role)"
         );
         $save->execute([$visitorId]);
+    }
+
+    private function masterOrganiserEmail(): string
+    {
+        return mb_strtolower(trim((string) (getenv('IJ26_MASTER_ORGANISER_EMAIL') ?: 'doors.bikash@gmail.com')));
     }
 
     private function audit(int $actorId, string $action, string $entityType, string $entityId, mixed $previous, mixed $next): void

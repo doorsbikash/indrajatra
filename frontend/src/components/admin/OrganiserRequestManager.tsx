@@ -66,14 +66,18 @@ export function OrganiserRequestManager({ csrfToken, toast }: { csrfToken: strin
           const name = `${organiser.firstName} ${organiser.lastName}`.trim() || organiser.email;
           return <div className="admin-row organiser-user-row" key={organiser.id}>
             <div><strong>{name}</strong><p className="small muted">{organiser.email}{organiser.isCurrent ? " · You" : ""}</p></div>
-            <button
-              type="button"
-              className="btn btn--icon btn--sm btn--danger"
-              title={organiser.isCurrent ? "You cannot remove your own access" : `Remove ${name}'s organiser access`}
-              aria-label={organiser.isCurrent ? "You cannot remove your own organiser access" : `Remove organiser access for ${name}`}
-              disabled={organiser.isCurrent || busy === `organiser-${organiser.id}`}
-              onClick={() => void revoke(organiser)}
-            ><Trash2 size={16} /></button>
+            {organiser.isProtected ? (
+              <span className="pill pill--jade"><ShieldCheck size={13} />Master</span>
+            ) : (
+              <button
+                type="button"
+                className="btn btn--icon btn--sm btn--danger"
+                title={organiser.isCurrent ? "You cannot remove your own access" : `Remove ${name}'s organiser access`}
+                aria-label={organiser.isCurrent ? "You cannot remove your own organiser access" : `Remove organiser access for ${name}`}
+                disabled={organiser.isCurrent || busy === `organiser-${organiser.id}`}
+                onClick={() => void revoke(organiser)}
+              ><Trash2 size={16} /></button>
+            )}
           </div>;
         })}
       </div>
