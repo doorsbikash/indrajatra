@@ -560,9 +560,9 @@ export const listings: Listing[] = [
     confirmed: true, published: true
   },
   {
-    id: "meme-sweet-decorations", slug: "meme-sweet-decorations", name: "AJ Sweet Decor",
+    id: "meme-sweet-decorations", slug: "meme-sweet-decorations", name: "Meme Sweet Decorations",
     listingType: "market", categories: ["Stall 11", "Market stall"],
-    description: { en: "Visit AJ Sweet Decor at stall 11 in the festival marquee row." },
+    description: { en: "Visit Meme Sweet Decorations at stall 11 in the festival marquee row." },
     locationId: "market-row", logo: "/brand/vendors/stall-11-logo.png",
     confirmed: true, published: true
   },
