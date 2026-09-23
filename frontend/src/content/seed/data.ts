@@ -491,14 +491,14 @@ export const listings: Listing[] = [
   },
   {
     id: "mda-twista", slug: "mda-twista", name: "MDA Twista Potato",
-    listingType: "food", categories: ["Truck 4", "Snacks", "Vegetarian"],
+    listingType: "food", categories: ["Truck 1", "Snacks", "Vegetarian"],
     description: { en: "Twist potatoes served fresh from the food-truck area." },
     locationId: "food-trucks", logo: "/brand/vendors/mda-twista-potato.jpg",
     confirmed: true, published: true
   },
   {
     id: "twist-spot", slug: "twist-spot", name: "The Twist Spot",
-    listingType: "food", categories: ["Truck 1", "Snacks", "Vegetarian"],
+    listingType: "food", categories: ["Truck 4", "Snacks", "Vegetarian"],
     description: { en: "Twist potatoes served fresh from the food-truck area." },
     locationId: "food-trucks", logo: "/brand/vendors/the-twist-spot.jpg",
     confirmed: true, published: true
