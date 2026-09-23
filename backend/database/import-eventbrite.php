@@ -65,7 +65,7 @@ while (($row = fgetcsv($handle)) !== false) {
     $attendeeId = value($row, $headers, ['attendeeid', 'attendeeno', 'attendeenumber']);
     $barcode = value($row, $headers, ['barcode', 'barcodenumber', 'ticketbarcode', 'qrcode']);
     $firstName = value($row, $headers, ['firstname', 'attendeefirstname']);
-    $lastName = value($row, $headers, ['surname', 'lastname', 'attendeelastname']);
+    $lastName = value($row, $headers, ['surname', 'lastname', 'attendeelastname', 'attendeesurname']);
     if (!filter_var($email, FILTER_VALIDATE_EMAIL) || $firstName === '' || $lastName === '') {
         $skipped++;
         continue;
