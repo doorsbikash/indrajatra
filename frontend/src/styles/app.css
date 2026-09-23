@@ -1000,6 +1000,11 @@ h4 { font-size: var(--step-0); font-family: var(--font-sans); font-weight: 600; 
 .admin-row--cancelled { border-left-color: var(--oxblood-700); }
 .admin-row__ctrls { display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--s-2); }
 @media (min-width: 560px) { .admin-row__ctrls { grid-template-columns: repeat(4, 1fr); } }
+.next-decision {
+  display: grid; gap: var(--s-3); margin-top: var(--s-3); padding-top: var(--s-3);
+  border-top: 1px solid var(--rule-strong);
+}
+.next-decision p { margin: 4px 0 0; }
 
 .stat-row {
   display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px;

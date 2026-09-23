@@ -32,7 +32,9 @@ const TABS: { id: Tab; label: string; icon: typeof Radio }[] = [
 export function AdminPage() {
   const { data, schedule, announcements, now, locale, toast, profile, requireSignIn } = useApp();
   const [tab, setTab] = useState<Tab>("live");
+  const [nextDecision, setNextDecision] = useState<{ afterId: string; nextId: string } | null>(null);
   const [, force] = useState(0);
+  const isReadOnlyStaging = window.location.hostname.startsWith("staging-");
   useEffect(() => liveStore.subscribe(() => force((v) => v + 1)), []);
 
   const live = schedule.filter((i) => itemState(i, now) === "live").length;
@@ -60,13 +62,19 @@ export function AdminPage() {
       <p className="eyebrow">Organiser console</p>
       <h1>Run the day</h1>
       <p className="lead">
-        Changes here appear on visitor screens within seconds. Use it from the stage or the Media Station.
+        {isReadOnlyStaging
+          ? "Staging is for rehearsal and feedback. Changes stay on this device and do not affect the live event."
+          : "Changes here appear on visitor screens within seconds. Use it from the stage or the Media Station."}
       </p>
 
       <div className="card card--notice">
         <p className="small" style={{ display: "flex", gap: 10, margin: 0 }}>
           <ShieldAlert size={17} style={{ flex: "0 0 auto", color: "var(--marigold-400)", marginTop: 2 }} />
-          <span>Signed in as {profile.email}. Live changes are shared across organiser devices and visitor screens.</span>
+          <span>
+            Signed in as {profile.email}. {isReadOnlyStaging
+              ? "This is read-only staging; use the live app for event-day changes."
+              : "Live changes are shared across organiser devices and visitor screens."}
+          </span>
         </p>
       </div>
 
@@ -164,8 +172,11 @@ export function AdminPage() {
             </div>
 
             <div className="stack">
-              {schedule.map((item) => {
+              {schedule.map((item, index) => {
                 const state = itemState(item, now);
+                const decisionItem = nextDecision?.afterId === item.id
+                  ? schedule.find((candidate) => candidate.id === nextDecision.nextId)
+                  : undefined;
                 return (
                   <div key={item.id} className={`admin-row admin-row--${state}`}>
                     <div className="row row--between" style={{ flexWrap: "nowrap", gap: 12, alignItems: "flex-start" }}>
@@ -189,7 +200,15 @@ export function AdminPage() {
                         <Clock size={14} />+10 min
                       </button>
                       <button type="button" className="btn btn--sm"
-                        onClick={() => { liveStore.setStatus(item.id, "completed", now); toast("Marked complete"); }}>
+                        onClick={() => {
+                          liveStore.setStatus(item.id, "completed", now);
+                          const next = schedule.slice(index + 1).find((candidate) => {
+                            const nextState = itemState(candidate, now);
+                            return nextState !== "completed" && nextState !== "cancelled";
+                          });
+                          setNextDecision(next ? { afterId: item.id, nextId: next.id } : null);
+                          toast(next ? "Marked complete — choose what happens next" : "Marked complete");
+                        }}>
                         <CheckCheck size={14} />Done
                       </button>
                       <button type="button" className="btn btn--sm btn--danger"
@@ -201,6 +220,38 @@ export function AdminPage() {
                         <Ban size={14} />Cancel
                       </button>
                     </div>
+                    {decisionItem && (
+                      <div className="next-decision" role="status">
+                        <div>
+                          <strong>Next: {t(decisionItem.title, locale)}</strong>
+                          <p className="small muted">
+                            Scheduled for {formatTime(decisionItem.scheduledStart)}. Nothing has changed yet.
+                          </p>
+                        </div>
+                        <div className="admin-row__ctrls">
+                          <button type="button" className="btn btn--sm btn--jade" onClick={() => {
+                            liveStore.setStatus(decisionItem.id, "live", clock.now());
+                            setNextDecision(null);
+                            toast(`${decisionItem.title.en} is live`);
+                          }}>
+                            <Play size={14} />Start now
+                          </button>
+                          <button type="button" className="btn btn--sm" onClick={() => {
+                            setNextDecision(null);
+                            toast("Next event kept at its scheduled time");
+                          }}>
+                            <Clock size={14} />Keep scheduled
+                          </button>
+                          <button type="button" className="btn btn--sm" onClick={() => {
+                            liveStore.delay(decisionItem.id, 10, decisionItem);
+                            setNextDecision(null);
+                            toast("Next event pushed back 10 minutes");
+                          }}>
+                            <Clock size={14} />Delay +10
+                          </button>
+                        </div>
+                      </div>
+                    )}
                   </div>
                 );
               })}

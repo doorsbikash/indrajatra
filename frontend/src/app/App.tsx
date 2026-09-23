@@ -39,6 +39,7 @@ export default function App() {
   const [toastMessage, setToastMessage] = useState<string | null>(null);
   const [signInReason, setSignInReason] = useState<string | null>(null);
   const previewIso = clock.previewIso();
+  const isReadOnlyStaging = window.location.hostname.startsWith("staging-");
 
   useEffect(() => {
     void Promise.all([getRepository().getData(), auth.current().catch(() => null)])
@@ -52,7 +53,7 @@ export default function App() {
   useEffect(() => {
     let active = true;
     liveStore.configureRemote(null, false);
-    if (!auth.usesApi || profile?.role !== "organiser" || !profile.csrfToken || clock.isPreview()) {
+    if (isReadOnlyStaging || !auth.usesApi || profile?.role !== "organiser" || !profile.csrfToken || clock.isPreview()) {
       return () => { active = false; };
     }
     void fetch("/api/live", { credentials: "include" })
@@ -64,7 +65,7 @@ export default function App() {
       })
       .catch(() => undefined);
     return () => { active = false; };
-  }, [profile, previewIso]);
+  }, [profile, previewIso, isReadOnlyStaging]);
 
   useEffect(() => {
     if (!auth.usesApi) return;

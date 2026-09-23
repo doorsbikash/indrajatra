@@ -94,6 +94,9 @@ if ($method === 'GET' && $path === '/api/live') {
 if ($method === 'GET' && $path === '/api/auth/session' && empty($_COOKIE['ij26_session'])) {
     $respond(['error' => 'Not signed in'], 401);
 }
+if (getenv('IJ26_READ_ONLY') === '1' && $method !== 'GET') {
+    $respond(['error' => 'Staging is read-only. Use the live app for event-day changes.'], 423);
+}
 
 $secure = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off');
 $sessionLifetime = 60 * 60 * 24 * 30;
