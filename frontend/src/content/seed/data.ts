@@ -60,10 +60,10 @@ const locationRows: LocRow[] = [
   ["cultural-line", "Cultural Display Line", "culture", 74, 37,
     "The row of cultural displays along the eastern tree line: Ganesh Khath, Indra, Swet Bhairab and Samay Baji.",
     "A continuous firm path runs the length of the display line."],
-  ["market-row", "Market Stalls 1–20", "market", 43, 14,
+  ["market-row", "Market Stalls 1–20", "market", 49, 13.7,
     "Twenty 3m × 3m stalls beside the lake. Each directory listing shows its confirmed stall number.",
     "Two metres of clear space is left between stall blocks so the aisle stays passable."],
-  ["food-trucks", "Food Trucks", "food", 14, 28,
+  ["food-trucks", "Food Trucks", "food", 12.4, 27.3,
     "All hot food is served along the western edge. Newari and Nepali dishes, snacks and drinks.",
     "Queue areas are on level ground. Ask any vendor for help carrying an order to a seat."],
   ["media-station", "Media Station", "amenity", 40, 35,
@@ -81,9 +81,6 @@ const locationRows: LocRow[] = [
   ["extra-toilets", "Extra Toilets", "amenity", 25, 58,
     "Additional toilets, west of the main block — usually the shorter queue.",
     "Portable units on level ground. Use the ANMC toilet for full wheelchair access."],
-  ["garden", "Garden / Quiet Space", "amenity", 80, 69,
-    "A shaded, calmer corner away from the speakers. Good for a break, for feeding, or if the crowd gets too much.",
-    "Grass with a firm path to the edge. Seating available."],
   ["lake", "Lake", "amenity", 48, 6,
     "The lake marks the northern boundary of the site. There is no access beyond this point.",
     "Unfenced water. Please keep children within arm's reach along this edge."],
@@ -99,8 +96,8 @@ const locationRows: LocRow[] = [
   ["meet-point", "Meet-Up Point", "amenity", 80, 56,
     "By the tennis court, next to the guest entry. The agreed place to meet if your group gets separated.",
     "Clearly signed, sheltered, and visible from the entry."],
-  ["garden-toilet", "Garden Toilet", "amenity", 80, 72,
-    "Additional toilet beside the garden and VIP guest waiting area.",
+  ["garden-toilet", "Toilet — Tennis Court", "amenity", 80, 68.5,
+    "Additional toilet beside the tennis court and the VIP guest waiting / meet-up point.",
     "Portable toilet on level ground. Use the ANMC toilet for full wheelchair access."]
 ];
 
@@ -473,7 +470,7 @@ export const listings: Listing[] = [
   },
   {
     id: "purbeli-food-truck", slug: "purbeli-food-truck", name: "Purbeli Food Truck",
-    listingType: "food", categories: ["Nepali food", "Food truck"],
+    listingType: "food", categories: ["Truck 2", "Nepali food", "Food truck"],
     description: { en: "Nepali food served from the festival food-truck area." },
     locationId: "food-trucks", logo: "/brand/vendors/purbeli-food-truck.jpg",
     confirmed: true, published: true
@@ -487,21 +484,21 @@ export const listings: Listing[] = [
   },
   {
     id: "mda-twista", slug: "mda-twista", name: "MDA Twista Potato",
-    listingType: "food", categories: ["Snacks", "Vegetarian"],
+    listingType: "food", categories: ["Truck 1", "Snacks", "Vegetarian"],
     description: { en: "Twist potatoes served fresh from the food-truck area." },
     locationId: "food-trucks", logo: "/brand/vendors/mda-twista-potato.jpg",
     confirmed: true, published: true
   },
   {
     id: "twist-spot", slug: "twist-spot", name: "The Twist Spot",
-    listingType: "food", categories: ["Snacks", "Vegetarian"],
+    listingType: "food", categories: ["Truck 4", "Snacks", "Vegetarian"],
     description: { en: "Twist potatoes served fresh from the food-truck area." },
     locationId: "food-trucks", logo: "/brand/vendors/the-twist-spot.jpg",
     confirmed: true, published: true
   },
   {
     id: "evaryde-gelato", slug: "evaryde-gelato", name: "Evaryde Gelato",
-    listingType: "food", categories: ["Gelato", "Food truck"],
+    listingType: "food", categories: ["Truck 3", "Gelato", "Food truck"],
     organiserNotes: ["Electricity requested"],
     description: { en: "Gelato and ice cream served from the food-truck area." },
     locationId: "food-trucks", logo: "/brand/vendors/evaryde-gelato.jpg",
@@ -542,9 +539,9 @@ export const listings: Listing[] = [
     locationId: "market-row", logo: "/brand/ngv-logo.png", confirmed: true, published: true
   },
   {
-    id: "nepthic", slug: "nepthic", name: "Nepthic Logic",
+    id: "nepthic", slug: "nepthic", name: "Nepthic",
     listingType: "market", categories: ["Stall 3", "Market stall"],
-    description: { en: "Visit Nepthic Logic at stall 3 in the festival marquee row." },
+    description: { en: "Visit Nepthic at stall 3 in the festival marquee row." },
     locationId: "market-row", logo: "/brand/vendors/nepthic-logic.png",
     confirmed: true, published: true
   },
@@ -563,9 +560,9 @@ export const listings: Listing[] = [
     confirmed: true, published: true
   },
   {
-    id: "meme-sweet-decorations", slug: "meme-sweet-decorations", name: "Meme Sweet Decorations",
+    id: "meme-sweet-decorations", slug: "meme-sweet-decorations", name: "AJ Sweet Decor",
     listingType: "market", categories: ["Stall 11", "Market stall"],
-    description: { en: "Visit Meme Sweet Decorations at stall 11 in the festival marquee row." },
+    description: { en: "Visit AJ Sweet Decor at stall 11 in the festival marquee row." },
     locationId: "market-row", logo: "/brand/vendors/stall-11-logo.png",
     confirmed: true, published: true
   },
@@ -578,8 +575,8 @@ export const listings: Listing[] = [
   },
   {
     id: "nab-stall", slug: "nab-stall", name: "NAB",
-    listingType: "market", categories: ["Stall 13", "Sponsor stall", "BYO gazebo"],
-    description: { en: "Visit NAB at stall 13. NAB will bring its own gazebo for this space." },
+    listingType: "market", categories: ["Stall 14", "Sponsor stall", "BYO gazebo"],
+    description: { en: "Visit NAB at stall 14. NAB will bring its own gazebo for this space." },
     locationId: "market-row", logo: "/brand/sponsors/platinum-nab.png",
     confirmed: true, published: true
   },
@@ -613,7 +610,7 @@ export const listings: Listing[] = [
   },
   {
     id: "alliance-stall", slug: "alliance-stall", name: "Alliance Estate Agents",
-    listingType: "market", categories: ["Stall 20", "Sponsor stall"],
+    listingType: "market", categories: ["Stall 19", "Sponsor stall"],
     description: { en: "Visit Alliance Estate Agents in the festival marquee row." },
     locationId: "market-row", logo: "/brand/sponsors/contributor-alliance-estate-agents.png",
     confirmed: true, published: true
@@ -678,7 +675,7 @@ const sponsorRows: SponsorRow[] = [
 
   ["sbs-south-asian", "SBS South Asian", "Media Partner", "media-sbs-south-asian.png"],
   ["nepal-edition", "Online News Nepal Edition", "Media Partner", "media-nepal-edition.png"],
-  ["routine-of-australia", "Routine of Australia", "Media Partner"],
+  ["routine-of-australia", "Routine of Australia", "Media Partner", "media-roa-routine-of-australia.png"],
   ["himal-times", "HimalTimes", "Media Partner", "media-himal-times.png"],
   ["kbc-khabar", "KBC Khabar", "Media Partner", "media-kbc-khabar.png"],
   ["samudayaka-kura", "Samudayaka Kura", "Media Partner", "media-samudayaka-kura.png"],
@@ -782,8 +779,8 @@ export const infoCards: InfoCard[] = [
   {
     id: "quiet", icon: "quiet",
     title: { en: "Quiet space" },
-    body: { en: "The Garden, behind the tennis court on the eastern side, is shaded and well away from the speakers. Use it for a break, for feeding, or if the crowd and the drums get to be too much." },
-    locationId: "garden"
+    body: { en: "The ANMC building is the quietest place on site — indoors, away from the speakers, with somewhere to sit. Use it for a break, for feeding, or if the crowd and the drums get to be too much. Ask any volunteer in a hi-vis vest and they will walk you there." },
+    locationId: "anmc"
   },
   {
     id: "water", icon: "water",

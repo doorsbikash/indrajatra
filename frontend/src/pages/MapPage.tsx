@@ -24,6 +24,27 @@ const stallNumber = (listing: Listing) => {
   return tag ? Number(tag.slice(6)) : null;
 };
 
+const truckNumber = (listing: Listing) => {
+  const tag = listing.categories.find((category) => /^Truck \d+$/.test(category));
+  return tag ? Number(tag.slice(6)) : null;
+};
+
+/* Geometry measured off the 2026 site map artwork, in its own pixels, so the
+   overlay is vector and stays sharp at any size. Stall 1 sits at the RIGHT
+   end of the row; the numbers count down to 20 on the left. */
+const MAP_W = 1240;
+const MAP_H = 1646;
+const STRIP = { x: 222, y: 208, w: 624, h: 35 };
+const STALL_W = STRIP.w / 20;
+const TRUCKS = { x: 112, y: 259, w: 83, h: 380 };
+const TRUCK_H = TRUCKS.h / 4;
+
+const stallBox = (n: number) => ({ x: STRIP.x + STRIP.w - n * STALL_W, y: STRIP.y, w: STALL_W, h: STRIP.h });
+const truckBox = (n: number) => ({ x: TRUCKS.x, y: TRUCKS.y + (n - 1) * TRUCK_H, w: TRUCKS.w, h: TRUCK_H });
+const px = (v: number, total: number) => `${(v / total) * 100}%`;
+const toneOf = (listing?: Listing) =>
+  !listing ? "is-empty" : listing.listingType === "food" ? "is-food" : "is-stall";
+
 export function MapPage() {
   const { data, locale } = useApp();
   const [params, setParams] = useSearchParams();
@@ -57,6 +78,22 @@ export function MapPage() {
     return Array.from({ length: 20 }, (_, index) => ({ number: index + 1, listing: byNumber.get(index + 1) }));
   }, [data.listings]);
 
+  const trucks = useMemo<StallRow[]>(() => {
+    const byNumber = new Map<number, Listing>();
+    data.listings
+      .filter((listing) => listing.published && listing.locationId === "food-trucks")
+      .forEach((listing) => {
+        const number = truckNumber(listing);
+        if (number) byNumber.set(number, listing);
+      });
+    return Array.from({ length: 4 }, (_, index) => ({ number: index + 1, listing: byNumber.get(index + 1) }));
+  }, [data.listings]);
+
+  const selectedTruckNumber = Number(params.get("truck")) || null;
+  const selectedTruck = selectedTruckNumber
+    ? trucks.find((truck) => truck.number === selectedTruckNumber)
+    : undefined;
+
   const selectedStall = selectedStallNumber
     ? stalls.find((stall) => stall.number === selectedStallNumber)
     : undefined;
@@ -79,6 +116,21 @@ export function MapPage() {
       setParams({}, { replace: true });
     }
   };
+
+  const selectTruck = (number: number | null) => {
+    if (number) {
+      setParams({ truck: String(number) }, { replace: true });
+      trackEvent("map_truck_selected", { number });
+    } else {
+      setParams({}, { replace: true });
+    }
+  };
+
+  const spot = selectedStall ?? selectedTruck;
+  const spotLabel = selectedStall
+    ? `Market stall ${selectedStall.number}`
+    : selectedTruck ? `Food truck ${selectedTruck.number}` : "";
+  const clearSpot = () => (selectedStall ? selectStall(null) : selectTruck(null));
 
   const route = selected
     ? data.routes.find((r) => r.toLocationId === selected.id && r.fromLocationId === "guest-entry")
@@ -103,7 +155,11 @@ export function MapPage() {
       <div className="map-wrap">
         <div className="map-canvas">
           <img src="/map/indra-jatra-2026-planned-site-map.jpeg" alt="Planned site layout for the festival at ANMC, Diggers Rest" />
-          {visible.filter((location) => location.id !== "market-row").map((location) => (
+          {visible
+            .filter((location) => location.id !== "market-row")
+            // the stall row and the truck bays draw their own numbered chips
+            .filter((location) => !(showStalls && location.id === "food-trucks"))
+            .map((location) => (
             <button
               key={location.id}
               type="button"
@@ -116,18 +172,71 @@ export function MapPage() {
               {locationNumbers.get(location.id)}
             </button>
           ))}
-          {showStalls && stalls.map((stall) => (
-            <button
-              key={`stall-${stall.number}`}
-              type="button"
-              className={`stall-hotspot${selectedStallNumber === stall.number ? " stall-hotspot--active" : ""}`}
-              style={{ left: `${67.3 - (stall.number - 1) * 2.55}%`, top: "13.45%" }}
-              onClick={() => selectStall(selectedStallNumber === stall.number ? null : stall.number)}
-              aria-label={`Stall ${stall.number}: ${stall.listing?.name ?? "Unassigned"}`}
-              aria-pressed={selectedStallNumber === stall.number}
-              title={`Stall ${stall.number}: ${stall.listing?.name ?? "Unassigned"}`}
-            />
-          ))}
+          {showStalls && (
+            <svg className="map-mask" viewBox={`0 0 ${MAP_W} ${MAP_H}`} aria-hidden="true" focusable="false">
+              {stalls.map((stall) => {
+                const b = stallBox(stall.number);
+                const on = selectedStallNumber === stall.number;
+                return (
+                  <g key={`m-stall-${stall.number}`} className={`mask-cell ${toneOf(stall.listing)}${on ? " is-on" : ""}`}>
+                    <rect x={b.x + 0.6} y={b.y} width={b.w - 1.2} height={b.h} rx={4} />
+                    <text x={b.x + b.w / 2} y={b.y + b.h / 2} dominantBaseline="central" textAnchor="middle" fontSize={23}>
+                      {stall.number}
+                    </text>
+                  </g>
+                );
+              })}
+              {trucks.map((truck) => {
+                const b = truckBox(truck.number);
+                const on = selectedTruckNumber === truck.number;
+                return (
+                  <g key={`m-truck-${truck.number}`} className={`mask-cell is-food${on ? " is-on" : ""}`}>
+                    <rect x={b.x + 2} y={b.y + 2} width={b.w - 4} height={b.h - 4} rx={6} />
+                    <text x={b.x + b.w / 2} y={b.y + b.h / 2} dominantBaseline="central" textAnchor="middle" fontSize={40}>
+                      T{truck.number}
+                    </text>
+                  </g>
+                );
+              })}
+            </svg>
+          )}
+
+          {showStalls && stalls.map((stall) => {
+            const b = stallBox(stall.number);
+            return (
+              <button
+                key={`stall-${stall.number}`}
+                type="button"
+                className={`stall-hotspot${selectedStallNumber === stall.number ? " stall-hotspot--active" : ""}`}
+                style={{
+                  left: px(b.x, MAP_W),
+                  top: px(b.y - 26, MAP_H),
+                  width: px(b.w, MAP_W),
+                  height: px(b.h + 52, MAP_H)
+                }}
+                onClick={() => selectStall(selectedStallNumber === stall.number ? null : stall.number)}
+                aria-label={`Stall ${stall.number}: ${stall.listing?.name ?? "Unassigned"}`}
+                aria-pressed={selectedStallNumber === stall.number}
+                title={`Stall ${stall.number}: ${stall.listing?.name ?? "Unassigned"}`}
+              />
+            );
+          })}
+
+          {showStalls && trucks.map((truck) => {
+            const b = truckBox(truck.number);
+            return (
+              <button
+                key={`truck-${truck.number}`}
+                type="button"
+                className={`stall-hotspot${selectedTruckNumber === truck.number ? " stall-hotspot--active" : ""}`}
+                style={{ left: px(b.x, MAP_W), top: px(b.y, MAP_H), width: px(b.w, MAP_W), height: px(b.h, MAP_H) }}
+                onClick={() => selectTruck(selectedTruckNumber === truck.number ? null : truck.number)}
+                aria-label={`Food truck ${truck.number}: ${truck.listing?.name ?? "Unassigned"}`}
+                aria-pressed={selectedTruckNumber === truck.number}
+                title={`Food truck ${truck.number}: ${truck.listing?.name ?? "Unassigned"}`}
+              />
+            );
+          })}
         </div>
       </div>
 
@@ -135,6 +244,8 @@ export function MapPage() {
         <span><i style={{ color: "var(--brand)" }} />Stage, culture &amp; food</span>
         <span><i style={{ color: "var(--clay-600)" }} />Toilets, first aid &amp; help</span>
         <span><i style={{ color: "var(--faint)" }} />Parking &amp; entry</span>
+        <span><i style={{ color: "var(--saffron-700)" }} />Food stalls &amp; trucks</span>
+        <span><i style={{ color: "var(--oxblood-700)" }} />Market &amp; services</span>
       </div>
 
       <section className="map-market" aria-labelledby="market-stalls-heading">
@@ -161,31 +272,55 @@ export function MapPage() {
         </div>
       </section>
 
-      {(selected || selectedStall) && (
+      <section className="map-market" aria-labelledby="food-trucks-heading">
+        <div className="row row--between">
+          <div>
+            <p className="eyebrow" style={{ marginBottom: 3 }}>Western edge</p>
+            <h2 id="food-trucks-heading">Food trucks</h2>
+          </div>
+          <span className="small muted">Four trucks</span>
+        </div>
+        <div className="stall-grid stall-grid--trucks">
+          {trucks.map((truck) => (
+            <button
+              key={truck.number}
+              type="button"
+              className="stall-tile stall-tile--food"
+              aria-pressed={selectedTruckNumber === truck.number}
+              onClick={() => selectTruck(truck.number)}
+            >
+              <strong>T{truck.number}</strong>
+              <span>{truck.listing?.name ?? "Unassigned"}</span>
+            </button>
+          ))}
+        </div>
+      </section>
+
+      {(selected || spot) && (
         <div className="map-sheet">
           <div className="row row--between" style={{ flexWrap: "nowrap", alignItems: "flex-start", gap: 12 }}>
             <div style={{ minWidth: 0 }}>
               <p className="eyebrow" style={{ marginBottom: 4 }}>
-                {selectedStall ? `Market stall ${selectedStall.number}` : selected?.type}
+                {spot ? spotLabel : selected?.type}
               </p>
               <h2 style={{ margin: 0, fontSize: "var(--step-2)" }}>
-                {selectedStall ? selectedStall.listing?.name ?? "Unassigned stall" : selected ? t(selected.name, locale) : ""}
+                {spot ? spot.listing?.name ?? "Not yet assigned" : selected ? t(selected.name, locale) : ""}
               </h2>
             </div>
-            <button type="button" className="btn btn--icon btn--sm" onClick={() => selectedStall ? selectStall(null) : select(null)} aria-label="Close details">
+            <button type="button" className="btn btn--icon btn--sm" onClick={() => (spot ? clearSpot() : select(null))} aria-label="Close details">
               <X size={16} />
             </button>
           </div>
-          {selectedStall?.listing?.logo && (
-            <div className={`stall-logo${selectedStall.listing.id === "accent-windows" ? " stall-logo--dark" : ""}`}>
-              <img src={selectedStall.listing.logo} alt={`${selectedStall.listing.name} logo`} />
+          {spot?.listing?.logo && (
+            <div className={`stall-logo${spot.listing.id === "accent-windows" ? " stall-logo--dark" : ""}`}>
+              <img src={spot.listing.logo} alt={`${spot.listing.name} logo`} />
             </div>
           )}
-          {selectedStall?.listing?.description && (
-            <p className="small muted" style={{ marginTop: 10 }}>{t(selectedStall.listing.description, locale)}</p>
+          {spot?.listing?.description && (
+            <p className="small muted" style={{ marginTop: 10 }}>{t(spot.listing.description, locale)}</p>
           )}
-          {selectedStall && !selectedStall.listing && (
-            <p className="small muted" style={{ marginTop: 10 }}>No stallholder is assigned to this space.</p>
+          {spot && !spot.listing && (
+            <p className="small muted" style={{ marginTop: 10 }}>This space is being held and has no vendor assigned.</p>
           )}
           {selected?.description && <p className="small muted" style={{ marginTop: 10 }}>{t(selected.description, locale)}</p>}
           {route && (

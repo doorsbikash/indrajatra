@@ -782,7 +782,7 @@ h4 { font-size: var(--step-0); font-family: var(--font-sans); font-weight: 600; 
   border: 1px solid var(--rule-strong); background: var(--ivory);
   touch-action: pan-x pan-y;
 }
-.map-canvas { position: relative; width: 100%; aspect-ratio: 1179 / 1545; }
+.map-canvas { position: relative; width: 100%; aspect-ratio: 1240 / 1646; }
 .map-canvas img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; }
 .marker {
   position: absolute; transform: translate(-50%, -50%);
@@ -1535,3 +1535,44 @@ h4 { font-size: var(--step-0); font-family: var(--font-sans); font-weight: 600; 
   #volunteer-qr-sheet .volunteer-qr__image { width: 340px; margin: 0 auto; }
   #volunteer-qr-sheet .volunteer-qr__actions { display: none; }
 }
+
+/* ==================================================================
+   SITE MAP — vector overlay for the stall row and the food trucks
+   ================================================================== */
+
+/* Drawn in the artwork's own coordinate space, so it stays sharp at any
+   size and lands exactly on the printed boxes. Purely visual: the tap
+   targets are the .stall-hotspot buttons sitting on top. */
+.map-mask {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+  pointer-events: none;
+}
+.map-mask text {
+  font-family: var(--font-mono);
+  font-weight: 600;
+  fill: var(--white);
+}
+.mask-cell rect { stroke: rgba(255, 255, 255, .55); stroke-width: 1.5; }
+.mask-cell.is-food rect  { fill: var(--saffron-700); }
+.mask-cell.is-stall rect { fill: var(--oxblood-700); }
+.mask-cell.is-empty rect { fill: var(--ivory); stroke: var(--rule-strong); }
+.mask-cell.is-empty text { fill: var(--muted); }
+.mask-cell.is-on rect {
+  stroke: var(--marigold-400); stroke-width: 5;
+  paint-order: stroke;
+}
+
+/* Tap zone: taller than the printed box, because 20 stalls across a phone
+   screen is about 12px each. The list below the map is the reliable way in. */
+.stall-hotspot {
+  position: absolute;
+  background: none; border: 0; padding: 0;
+  cursor: pointer; border-radius: 3px;
+  transform: none;
+}
+.stall-hotspot:focus-visible { outline: 2px solid var(--oxblood-700); outline-offset: 1px; }
+
+.stall-grid--trucks { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+@media (min-width: 560px) { .stall-grid--trucks { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+.stall-tile--food strong { color: var(--saffron-700); }
