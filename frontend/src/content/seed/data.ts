@@ -578,8 +578,8 @@ export const listings: Listing[] = [
   },
   {
     id: "nab-stall", slug: "nab-stall", name: "NAB",
-    listingType: "market", categories: ["Stall 13", "Sponsor stall"],
-    description: { en: "Visit NAB at stall 13 in the festival marquee row." },
+    listingType: "market", categories: ["Stall 13", "Sponsor stall", "BYO gazebo"],
+    description: { en: "Visit NAB at stall 13. NAB will bring its own gazebo for this space." },
     locationId: "market-row", logo: "/brand/sponsors/platinum-nab.png",
     confirmed: true, published: true
   },
