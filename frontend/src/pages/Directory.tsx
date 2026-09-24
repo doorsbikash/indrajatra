@@ -129,7 +129,12 @@ export function DirectoryPage() {
             Expressions of interest open in the middle of the year. Food vendors need a food
             registration certificate and public liability insurance.
           </p>
-          <a className="btn btn--sm" href="mailto:info@newaguthi.org.au?subject=Stall%20EOI%20-%20Indra%20Jatra">
+          <a
+            className="btn btn--sm"
+            href="https://newaguthi.org.au/contact-us/"
+            target="_blank"
+            rel="noreferrer"
+          >
             Register your interest
           </a>
         </div>
