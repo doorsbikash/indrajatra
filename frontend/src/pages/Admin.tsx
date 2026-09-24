@@ -199,6 +199,9 @@ export function AdminPage() {
             <div className="stack">
               {schedule.map((item, index) => {
                 const state = itemState(item, now);
+                const hasRunOverride = item.status !== "scheduled" || Boolean(
+                  item.effectiveStart || item.effectiveEnd || item.delayMinutes
+                );
                 const decisionItem = nextDecision?.afterId === item.id
                   ? schedule.find((candidate) => candidate.id === nextDecision.nextId)
                   : undefined;
@@ -249,6 +252,20 @@ export function AdminPage() {
                         }}>
                         <Ban size={14} />Cancel
                       </button>
+                      {hasRunOverride && (
+                        <button
+                          type="button"
+                          className="btn btn--sm"
+                          disabled={liveControlsBlocked}
+                          onClick={() => {
+                            liveStore.setStatus(item.id, "scheduled", now);
+                            setNextDecision(null);
+                            toast("Returned to the published schedule");
+                          }}
+                        >
+                          <RotateCcw size={14} />Back to scheduled
+                        </button>
+                      )}
                     </div>
                     {decisionItem && (
                       <div className="next-decision" role="status">
