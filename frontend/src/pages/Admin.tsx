@@ -30,7 +30,10 @@ const TABS: { id: Tab; label: string; icon: typeof Radio }[] = [
 ];
 
 export function AdminPage() {
-  const { data, organiserSchedule: schedule, announcements, now, locale, toast, profile, requireSignIn } = useApp();
+  const {
+    data, organiserSchedule: schedule, organiserControlsReady, announcements,
+    now, locale, toast, profile, requireSignIn
+  } = useApp();
   const [tab, setTab] = useState<Tab>("live");
   const [nextDecision, setNextDecision] = useState<{ afterId: string; nextId: string } | null>(null);
   const [, force] = useState(0);
@@ -43,6 +46,7 @@ export function AdminPage() {
   const minutes = clock.minutesFromOpen();
   const isPreview = clock.isPreview();
   const previewBlocksLiveChanges = isPreview && !isReadOnlyStaging;
+  const liveControlsBlocked = previewBlocksLiveChanges || !organiserControlsReady;
 
   if (!profile) {
     return (
@@ -164,7 +168,7 @@ export function AdminPage() {
                 type="button"
                 className="section__link"
                 style={{ background: "none", border: 0, cursor: "pointer" }}
-                disabled={previewBlocksLiveChanges}
+                disabled={liveControlsBlocked}
                 onClick={() => {
                   if (!window.confirm("Clear every live override — run sheet edits, photos and announcements — and go back to the published content?")) return;
                   liveStore.reset();
@@ -180,6 +184,14 @@ export function AdminPage() {
                 <p className="small" style={{ margin: 0 }}>
                   Preview clock is active. Return to <strong>Real time</strong> before starting,
                   delaying, completing or cancelling programme items.
+                </p>
+              </div>
+            )}
+
+            {!isReadOnlyStaging && !isPreview && !organiserControlsReady && (
+              <div className="card card--notice" style={{ marginBottom: "var(--s-4)" }}>
+                <p className="small" style={{ margin: 0 }}>
+                  Loading the latest live programme. Controls will unlock when the server is ready.
                 </p>
               </div>
             )}
@@ -209,15 +221,15 @@ export function AdminPage() {
                       </div>
                     </div>
                     <div className="admin-row__ctrls">
-                      <button type="button" className="btn btn--sm btn--jade" disabled={previewBlocksLiveChanges}
+                      <button type="button" className="btn btn--sm btn--jade" disabled={liveControlsBlocked}
                         onClick={() => { liveStore.setStatus(item.id, "live", now); toast(`${item.title.en} is live`); }}>
                         <Play size={14} />Start
                       </button>
-                      <button type="button" className="btn btn--sm" disabled={previewBlocksLiveChanges}
+                      <button type="button" className="btn btn--sm" disabled={liveControlsBlocked}
                         onClick={() => { liveStore.delay(item.id, 10, item); toast("Pushed back 10 minutes"); }}>
                         <Clock size={14} />+10 min
                       </button>
-                      <button type="button" className="btn btn--sm" disabled={previewBlocksLiveChanges}
+                      <button type="button" className="btn btn--sm" disabled={liveControlsBlocked}
                         onClick={() => {
                           liveStore.setStatus(item.id, "completed", now);
                           const next = schedule.slice(index + 1).find((candidate) => {
@@ -229,7 +241,7 @@ export function AdminPage() {
                         }}>
                         <CheckCheck size={14} />Done
                       </button>
-                      <button type="button" className="btn btn--sm btn--danger" disabled={previewBlocksLiveChanges}
+                      <button type="button" className="btn btn--sm btn--danger" disabled={liveControlsBlocked}
                         onClick={() => {
                           if (!window.confirm(`Cancel "${item.title.en}"? Visitors will see it struck out immediately.`)) return;
                           liveStore.setStatus(item.id, "cancelled", now);
@@ -247,20 +259,20 @@ export function AdminPage() {
                           </p>
                         </div>
                         <div className="admin-row__ctrls">
-                          <button type="button" className="btn btn--sm btn--jade" disabled={previewBlocksLiveChanges} onClick={() => {
+                          <button type="button" className="btn btn--sm btn--jade" disabled={liveControlsBlocked} onClick={() => {
                             liveStore.setStatus(decisionItem.id, "live", clock.now());
                             setNextDecision(null);
                             toast(`${decisionItem.title.en} is live`);
                           }}>
                             <Play size={14} />Start now
                           </button>
-                          <button type="button" className="btn btn--sm" disabled={previewBlocksLiveChanges} onClick={() => {
+                          <button type="button" className="btn btn--sm" disabled={liveControlsBlocked} onClick={() => {
                             setNextDecision(null);
                             toast("Next event kept at its scheduled time");
                           }}>
                             <Clock size={14} />Keep scheduled
                           </button>
-                          <button type="button" className="btn btn--sm" disabled={previewBlocksLiveChanges} onClick={() => {
+                          <button type="button" className="btn btn--sm" disabled={liveControlsBlocked} onClick={() => {
                             liveStore.delay(decisionItem.id, 10, decisionItem);
                             setNextDecision(null);
                             toast("Next event pushed back 10 minutes");
@@ -296,6 +308,7 @@ export function AdminPage() {
                       <button
                         type="button"
                         className={`btn btn--sm${a.published ? " btn--danger" : " btn--primary"}`}
+                        disabled={liveControlsBlocked}
                         onClick={() => {
                           if (!a.published && a.severity === "emergency"
                             && !window.confirm("Publish an EMERGENCY notice to every visitor screen?")) return;
@@ -309,6 +322,7 @@ export function AdminPage() {
                         <button
                           type="button"
                           className="btn btn--sm"
+                          disabled={liveControlsBlocked}
                           onClick={() => {
                             if (!window.confirm(`Delete "${a.title.en}"? It is removed from the console entirely.`)) return;
                             liveStore.removeAnnouncement(a.id);
@@ -325,7 +339,7 @@ export function AdminPage() {
             </div>
 
             <div style={{ marginTop: "var(--s-4)" }}>
-              <AnnouncementComposer now={now} toast={toast} />
+              <AnnouncementComposer now={now} disabled={liveControlsBlocked} toast={toast} />
             </div>
           </section>
 

@@ -8,6 +8,8 @@ export type AppState = {
   schedule: ScheduleItem[];
   /** Full programme used only inside the organiser console. */
   organiserSchedule: ScheduleItem[];
+  /** Live organiser controls stay locked until server state has loaded. */
+  organiserControlsReady: boolean;
   announcements: Announcement[];
   now: Date;
   locale: Locale;

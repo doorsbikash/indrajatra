@@ -34,6 +34,7 @@ export default function App() {
   const [ready, setReady] = useState(false);
   const [locale, setLocaleState] = useState<Locale>(localFestival.locale());
   const [live, setLive] = useState(liveStore.get());
+  const [organiserControlsReady, setOrganiserControlsReady] = useState(false);
   const [version, setVersion] = useState(0);
   const [tick, setTick] = useState(0);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
@@ -53,6 +54,7 @@ export default function App() {
   useEffect(() => {
     let active = true;
     liveStore.configureRemote(null, false);
+    setOrganiserControlsReady(isReadOnlyStaging);
     if (isReadOnlyStaging || !auth.usesApi || profile?.role !== "organiser" || !profile.csrfToken || clock.isPreview()) {
       return () => { active = false; };
     }
@@ -60,10 +62,11 @@ export default function App() {
       .then(async (response) => response.ok ? response.json() as Promise<{ state: LiveState | null }> : null)
       .then((payload) => {
         if (!active) return;
-        if (payload?.state) liveStore.hydrate(payload.state);
+        liveStore.hydrate(payload?.state ?? { schedule: {}, announcements: {}, updatedAt: 0 });
         liveStore.configureRemote(profile.csrfToken ?? null, true);
+        setOrganiserControlsReady(true);
       })
-      .catch(() => undefined);
+      .catch(() => setOrganiserControlsReady(false));
     return () => { active = false; };
   }, [profile, previewIso, isReadOnlyStaging]);
 
@@ -72,12 +75,12 @@ export default function App() {
     let active = true;
     let timer: number | undefined;
     const refresh = async () => {
-      if (clock.isPreview() || document.visibilityState !== "visible") return;
+      if ((isReadOnlyStaging && clock.isPreview()) || document.visibilityState !== "visible") return;
       try {
         const response = await fetch("/api/live", { credentials: "include" });
         if (!response.ok) return;
         const payload = await response.json() as { state: LiveState | null };
-        if (active && payload.state) liveStore.hydrate(payload.state);
+        if (active) liveStore.hydrate(payload.state ?? { schedule: {}, announcements: {}, updatedAt: 0 });
       } catch {
         // Keep the cached live state while offline.
       }
@@ -100,7 +103,7 @@ export default function App() {
       window.clearTimeout(timer);
       document.removeEventListener("visibilitychange", onVisibility);
     };
-  }, []);
+  }, [isReadOnlyStaging]);
 
   useEffect(() => {
     if (!auth.usesApi || !profile?.csrfToken) return;
@@ -170,6 +173,7 @@ export default function App() {
       data: view,
       schedule: applyVisitorVisibility(organiserSchedule, live),
       organiserSchedule,
+      organiserControlsReady,
       announcements: applyLiveAnnouncements(view.announcements, live),
       now: clock.now(),
       locale,
@@ -182,7 +186,7 @@ export default function App() {
       version,
       locationById: (id?: string) => view.locations.find((l) => l.id === id)
     };
-  }, [data, live, locale, setLocale, profile, signOut, requireSignIn, toast, version, tick]);
+  }, [data, live, organiserControlsReady, locale, setLocale, profile, signOut, requireSignIn, toast, version, tick]);
 
   if (!ready || !value) {
     return (

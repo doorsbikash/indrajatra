@@ -13,10 +13,11 @@ const SEVERITIES: { id: Announcement["severity"]; label: string; hint: string }[
 type Props = {
   /** The app's current time, so a notice written in rehearsal still shows. */
   now: Date;
+  disabled?: boolean;
   toast: (message: string) => void;
 };
 
-export function AnnouncementComposer({ now, toast }: Props) {
+export function AnnouncementComposer({ now, disabled = false, toast }: Props) {
   const [title, setTitle] = useState("");
   const [message, setMessage] = useState("");
   const [severity, setSeverity] = useState<Announcement["severity"]>("update");
@@ -88,7 +89,7 @@ export function AnnouncementComposer({ now, toast }: Props) {
         type="button"
         className="btn btn--primary btn--block"
         style={{ marginTop: "var(--s-4)" }}
-        disabled={!ready}
+        disabled={disabled || !ready}
         onClick={add}
       >
         <Plus size={16} />Add announcement
