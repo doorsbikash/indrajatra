@@ -47,6 +47,9 @@ final class Api
             if ($method === 'GET' && $path === '/api/live') {
                 $this->liveState();
             }
+            if ($method === 'POST' && $path === '/api/analytics') {
+                $this->recordAnalytics();
+            }
             if ($method === 'PUT' && $path === '/api/admin/live') {
                 $this->saveLiveState();
             }
@@ -116,6 +119,73 @@ final class Api
             'marketingConsent' => !empty($input['marketingConsent']),
         ];
         $this->createChallenge($profile['email'], 'register', $profile);
+    }
+
+    private function recordAnalytics(): never
+    {
+        $input = $this->body();
+        $allowedEvents = [
+            'page_view', 'qr_scan', 'trail_point_view', 'trail_point_discovered', 'passport_completed',
+            'schedule_view', 'schedule_item_saved', 'calendar_downloaded', 'map_view', 'map_marker_selected',
+            'map_stall_selected', 'map_truck_selected', 'directions_opened', 'announcement_viewed',
+            'eventbrite_clicked', 'membership_clicked', 'newsletter_submitted', 'class_clicked',
+            'stall_viewed', 'language_changed', 'pwa_install_prompted', 'pwa_installed',
+            'signin_started', 'signin_completed',
+        ];
+
+        $deviceId = trim((string) ($input['deviceId'] ?? ''));
+        $sessionId = trim((string) ($input['sessionId'] ?? ''));
+        $eventName = trim((string) ($input['event'] ?? ''));
+        if (!$this->isUuid($deviceId) || !$this->isUuid($sessionId) || !in_array($eventName, $allowedEvents, true)) {
+            $this->json(['error' => 'Invalid analytics event'], 422);
+        }
+
+        $path = $this->analyticsText($input['path'] ?? '/', 160, '/');
+        $deviceType = $this->analyticsChoice($input['deviceType'] ?? '', ['mobile', 'tablet', 'desktop'], 'desktop');
+        $displayMode = $this->analyticsChoice($input['displayMode'] ?? '', ['browser', 'standalone'], 'browser');
+        $properties = is_array($input['properties'] ?? null) ? $input['properties'] : [];
+        $contentId = null;
+        foreach (['id', 'code', 'number'] as $key) {
+            if (isset($properties[$key]) && is_scalar($properties[$key])) {
+                $contentId = $this->analyticsText($properties[$key], 160, '');
+                break;
+            }
+        }
+
+        $this->db->beginTransaction();
+        try {
+            $device = $this->db->prepare(
+                'INSERT INTO analytics_devices (device_id, device_type, display_mode) VALUES (?, ?, ?) '
+                . 'ON DUPLICATE KEY UPDATE device_type = VALUES(device_type), display_mode = VALUES(display_mode), last_seen_at = UTC_TIMESTAMP()'
+            );
+            $device->execute([$deviceId, $deviceType, $displayMode]);
+
+            $visit = $this->db->prepare(
+                'INSERT IGNORE INTO analytics_visits (device_id, session_id, landing_path) VALUES (?, ?, ?)'
+            );
+            $visit->execute([$deviceId, $sessionId, $path]);
+            $newVisit = $visit->rowCount() === 1;
+
+            $updateVisit = $this->db->prepare(
+                'UPDATE analytics_visits SET last_seen_at = UTC_TIMESTAMP(), page_views = page_views + ? WHERE session_id = ? AND device_id = ?'
+            );
+            $updateVisit->execute([$eventName === 'page_view' ? 1 : 0, $sessionId, $deviceId]);
+            if ($newVisit) {
+                $increment = $this->db->prepare('UPDATE analytics_devices SET visit_count = visit_count + 1 WHERE device_id = ?');
+                $increment->execute([$deviceId]);
+            }
+
+            $event = $this->db->prepare(
+                'INSERT INTO analytics_events (device_id, session_id, event_name, path, content_id) VALUES (?, ?, ?, ?, ?)'
+            );
+            $event->execute([$deviceId, $sessionId, $eventName, $path, $contentId !== '' ? $contentId : null]);
+            $this->db->commit();
+        } catch (Throwable $error) {
+            if ($this->db->inTransaction()) $this->db->rollBack();
+            throw $error;
+        }
+
+        $this->json(['ok' => true], 202);
     }
 
     private function requestLogin(): never
@@ -1136,6 +1206,24 @@ final class Api
             $this->json(['error' => 'Invalid email'], 422);
         }
         return $email;
+    }
+
+    private function isUuid(string $value): bool
+    {
+        return (bool) preg_match('/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i', $value);
+    }
+
+    private function analyticsChoice(mixed $value, array $allowed, string $fallback): string
+    {
+        $choice = trim((string) $value);
+        return in_array($choice, $allowed, true) ? $choice : $fallback;
+    }
+
+    private function analyticsText(mixed $value, int $max, string $fallback): string
+    {
+        $text = trim((string) $value);
+        if ($text === '' || mb_strlen($text) > $max || preg_match('/[\x00-\x1F\x7F]/u', $text)) return $fallback;
+        return $text;
     }
 
     private function secret(): string

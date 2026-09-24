@@ -109,7 +109,9 @@ export function MyFestivalPage() {
             <ShieldCheck size={17} style={{ flex: "0 0 auto", color: "var(--clay-600)", marginTop: 2 }} />
             <span className="muted">
               Your saved items and trail stamps live in this browser only.
-              They are never uploaded and never shared. Clearing them below removes them for good.
+              They are never uploaded or shared. The app separately records anonymous visit counts
+              and feature use without names, email addresses, IP addresses or device fingerprinting.
+              Clearing below removes your saved items and stamps for good.
             </span>
           </p>
           <dl className="def-list" style={{ margin: "var(--s-3) 0" }}>

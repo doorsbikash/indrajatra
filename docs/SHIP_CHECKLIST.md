@@ -103,5 +103,6 @@ Honest status. Everything under "Done" is built and tested. Everything under
 - The map is a static image with placed markers, not GPS. Deliberate — GPS on an open
   field with no landmarks is worse than a clear diagram.
 - The membership offer links to the website; there is no in-app payment.
-- Analytics is a local allow-list that logs to the console in dev and nothing in
-  production, until a server endpoint exists to receive it.
+- Analytics is first-party and allow-listed. Production records anonymous devices,
+  visits, page views and approved feature interactions without names, emails, IP
+  addresses, raw user agents or browser fingerprints.

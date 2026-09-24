@@ -6,6 +6,7 @@ import { clock } from "../lib/clock/clock";
 import { formatTime } from "../lib/dates/schedule";
 import { localFestival } from "../lib/storage/localFestival";
 import { SiteFooter } from "../components/SiteFooter";
+import { trackEvent } from "../lib/analytics/track";
 
 const NAV = [
   { to: "/", icon: Home, label: "Home", end: true },
@@ -30,6 +31,7 @@ export function Shell({ toast }: { toast: string | null }) {
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "instant" as ScrollBehavior });
+    trackEvent("page_view");
   }, [pathname]);
 
   void version;
