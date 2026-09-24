@@ -41,6 +41,7 @@ export function AdminPage() {
   const done = schedule.filter((i) => itemState(i, now) === "completed").length;
   const delayed = schedule.filter((i) => i.status === "delayed").length;
   const minutes = clock.minutesFromOpen();
+  const isPreview = clock.isPreview();
 
   if (!profile) {
     return (
@@ -132,7 +133,7 @@ export function AdminPage() {
                 <span className="event-card__time" style={{ fontSize: "var(--step-1)" }}>
                   {formatTime(now.toISOString())}
                 </span>
-                <span className="tiny muted">{clock.isPreview() ? "Preview clock" : "Real time"}</span>
+                <span className="tiny muted">{isPreview ? "Preview clock" : "Real time"}</span>
               </p>
               <input
                 className="range"
@@ -162,6 +163,7 @@ export function AdminPage() {
                 type="button"
                 className="section__link"
                 style={{ background: "none", border: 0, cursor: "pointer" }}
+                disabled={isPreview}
                 onClick={() => {
                   if (!window.confirm("Clear every live override — run sheet edits, photos and announcements — and go back to the published content?")) return;
                   liveStore.reset();
@@ -171,6 +173,15 @@ export function AdminPage() {
                 <RotateCcw size={14} />Reset all
               </button>
             </div>
+
+            {isPreview && (
+              <div className="card card--notice" style={{ marginBottom: "var(--s-4)" }}>
+                <p className="small" style={{ margin: 0 }}>
+                  Preview clock is active. Return to <strong>Real time</strong> before starting,
+                  delaying, completing or cancelling programme items.
+                </p>
+              </div>
+            )}
 
             <div className="stack">
               {schedule.map((item, index) => {
@@ -197,15 +208,15 @@ export function AdminPage() {
                       </div>
                     </div>
                     <div className="admin-row__ctrls">
-                      <button type="button" className="btn btn--sm btn--jade"
+                      <button type="button" className="btn btn--sm btn--jade" disabled={isPreview}
                         onClick={() => { liveStore.setStatus(item.id, "live", now); toast(`${item.title.en} is live`); }}>
                         <Play size={14} />Start
                       </button>
-                      <button type="button" className="btn btn--sm"
+                      <button type="button" className="btn btn--sm" disabled={isPreview}
                         onClick={() => { liveStore.delay(item.id, 10, item); toast("Pushed back 10 minutes"); }}>
                         <Clock size={14} />+10 min
                       </button>
-                      <button type="button" className="btn btn--sm"
+                      <button type="button" className="btn btn--sm" disabled={isPreview}
                         onClick={() => {
                           liveStore.setStatus(item.id, "completed", now);
                           const next = schedule.slice(index + 1).find((candidate) => {
@@ -217,7 +228,7 @@ export function AdminPage() {
                         }}>
                         <CheckCheck size={14} />Done
                       </button>
-                      <button type="button" className="btn btn--sm btn--danger"
+                      <button type="button" className="btn btn--sm btn--danger" disabled={isPreview}
                         onClick={() => {
                           if (!window.confirm(`Cancel "${item.title.en}"? Visitors will see it struck out immediately.`)) return;
                           liveStore.setStatus(item.id, "cancelled", now);
@@ -235,20 +246,20 @@ export function AdminPage() {
                           </p>
                         </div>
                         <div className="admin-row__ctrls">
-                          <button type="button" className="btn btn--sm btn--jade" onClick={() => {
+                          <button type="button" className="btn btn--sm btn--jade" disabled={isPreview} onClick={() => {
                             liveStore.setStatus(decisionItem.id, "live", clock.now());
                             setNextDecision(null);
                             toast(`${decisionItem.title.en} is live`);
                           }}>
                             <Play size={14} />Start now
                           </button>
-                          <button type="button" className="btn btn--sm" onClick={() => {
+                          <button type="button" className="btn btn--sm" disabled={isPreview} onClick={() => {
                             setNextDecision(null);
                             toast("Next event kept at its scheduled time");
                           }}>
                             <Clock size={14} />Keep scheduled
                           </button>
-                          <button type="button" className="btn btn--sm" onClick={() => {
+                          <button type="button" className="btn btn--sm" disabled={isPreview} onClick={() => {
                             liveStore.delay(decisionItem.id, 10, decisionItem);
                             setNextDecision(null);
                             toast("Next event pushed back 10 minutes");
