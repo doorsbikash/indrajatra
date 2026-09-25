@@ -271,6 +271,7 @@ const trailRows: TrailRow[] = [
     native: "इन्द्र द्यः",
     say: "IN-dra DYAH",
     locationId: "god-indra",
+    image: "/images/trail/indra-dyah.webp",
     teaser: "The only festival in the world that begins by arresting a god.",
     body:
       "Indra is the king of heaven. The story goes that he came down to the Kathmandu Valley in disguise, dressed as an ordinary farmer, to pick parijat - night-flowering jasmine - for a ritual his mother Basundhara needed to complete. He was caught in someone's garden, taken for a common thief, tied up, and put on public display.\n\nHis mother came looking for him. When the people of the valley realised whose hands they had bound, they let him go. Before leaving, the family made two promises in return: enough dew and mist to see the crops through the dry months, and safe passage to heaven for everyone who had died in the valley that year.\n\nThe figure you are standing in front of shows Indra exactly as he was caught - arms stretched wide, wrists bound. Not the god enthroned. The god embarrassed.",
@@ -390,6 +391,7 @@ const trailRows: TrailRow[] = [
     native: "बाँसुरी",
     say: "bahn-SOO-ree",
     locationId: "anmc",
+    image: "/images/trail/bansuri.webp",
     teaser: "The quiet half of Newa music, which almost nobody notices until it stops.",
     body:
       "Against the weight of the drums sits the bansuri - a simple side-blown bamboo flute with no keys and no reed, played entirely with the fingers and the breath. In Newa processional music it carries the melody that the percussion is built around.\n\nBhusya, the thick bronze cymbals, sit in between: loud enough to be heard over the dhimey, precise enough to mark every turn in the rhythm.\n\nNewa Guthi Victoria teaches bansuri, dhimey and bhusya weekly in Melbourne, to children and adults. The classes are open to anyone, whether or not you have any Newa background at all.",
