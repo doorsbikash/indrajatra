@@ -98,6 +98,9 @@ final class Api
             if ($method === 'GET' && $path === '/api/admin/check-ins') {
                 $this->checkInSummary();
             }
+            if ($method === 'GET' && $path === '/api/admin/analytics') {
+                $this->analyticsReport();
+            }
             if ($method === 'POST' && $path === '/api/admin/check-ins/scan') {
                 $this->scanAttendee();
             }
@@ -186,6 +189,71 @@ final class Api
         }
 
         $this->json(['ok' => true], 202);
+    }
+
+    private function analyticsReport(): never
+    {
+        $this->requireMasterOrganiser();
+
+        $totals = $this->db->query(
+            "SELECT (SELECT COUNT(*) FROM analytics_devices) AS devices, "
+            . "(SELECT COUNT(*) FROM analytics_visits) AS visits, "
+            . "(SELECT COALESCE(SUM(page_views), 0) FROM analytics_visits) AS page_views, "
+            . "(SELECT COUNT(*) FROM analytics_events) AS events, "
+            . "(SELECT COUNT(*) FROM analytics_devices WHERE first_seen_at >= UTC_DATE()) AS devices_today, "
+            . "(SELECT COUNT(*) FROM analytics_visits WHERE first_seen_at >= UTC_DATE()) AS visits_today"
+        )->fetch() ?: [];
+
+        $deviceTypes = $this->db->query(
+            'SELECT device_type AS label, COUNT(*) AS count FROM analytics_devices GROUP BY device_type ORDER BY count DESC'
+        )->fetchAll();
+        $displayModes = $this->db->query(
+            'SELECT display_mode AS label, COUNT(*) AS count FROM analytics_devices GROUP BY display_mode ORDER BY count DESC'
+        )->fetchAll();
+        $topPages = $this->db->query(
+            "SELECT path AS label, COUNT(*) AS count FROM analytics_events WHERE event_name = 'page_view' "
+            . 'GROUP BY path ORDER BY count DESC, path ASC LIMIT 10'
+        )->fetchAll();
+        $topEvents = $this->db->query(
+            "SELECT event_name AS label, COUNT(*) AS count FROM analytics_events WHERE event_name <> 'page_view' "
+            . 'GROUP BY event_name ORDER BY count DESC, event_name ASC LIMIT 10'
+        )->fetchAll();
+        $recentVisits = $this->db->query(
+            'SELECT v.id, v.landing_path, v.first_seen_at, v.last_seen_at, v.page_views, '
+            . 'd.device_type, d.display_mode FROM analytics_visits v '
+            . 'JOIN analytics_devices d ON d.device_id = v.device_id '
+            . 'ORDER BY v.first_seen_at DESC LIMIT 50'
+        )->fetchAll();
+
+        $normaliseCounts = static fn(array $rows): array => array_map(static fn(array $row): array => [
+            'label' => (string) $row['label'],
+            'count' => (int) $row['count'],
+        ], $rows);
+
+        $this->json([
+            'totals' => [
+                'devices' => (int) ($totals['devices'] ?? 0),
+                'visits' => (int) ($totals['visits'] ?? 0),
+                'pageViews' => (int) ($totals['page_views'] ?? 0),
+                'events' => (int) ($totals['events'] ?? 0),
+                'devicesToday' => (int) ($totals['devices_today'] ?? 0),
+                'visitsToday' => (int) ($totals['visits_today'] ?? 0),
+            ],
+            'deviceTypes' => $normaliseCounts($deviceTypes),
+            'displayModes' => $normaliseCounts($displayModes),
+            'topPages' => $normaliseCounts($topPages),
+            'topEvents' => $normaliseCounts($topEvents),
+            'recentVisits' => array_map(static fn(array $row): array => [
+                'id' => (int) $row['id'],
+                'landingPath' => (string) $row['landing_path'],
+                'firstSeenAt' => (string) $row['first_seen_at'],
+                'lastSeenAt' => (string) $row['last_seen_at'],
+                'pageViews' => (int) $row['page_views'],
+                'deviceType' => (string) $row['device_type'],
+                'displayMode' => (string) $row['display_mode'],
+            ], $recentVisits),
+            'generatedAt' => gmdate(DATE_ATOM),
+        ]);
     }
 
     private function requestLogin(): never
@@ -1109,6 +1177,17 @@ final class Api
         $query = $this->db->prepare('SELECT role FROM organiser_users WHERE visitor_id = ? LIMIT 1');
         $query->execute([$id]);
         if (!$query->fetchColumn()) $this->json(['error' => 'Organiser access required'], 403);
+        return $id;
+    }
+
+    private function requireMasterOrganiser(): int
+    {
+        $id = $this->requireOrganiser();
+        $query = $this->db->prepare('SELECT email FROM visitor_profiles WHERE id = ? LIMIT 1');
+        $query->execute([$id]);
+        if (mb_strtolower((string) $query->fetchColumn()) !== $this->masterOrganiserEmail()) {
+            $this->json(['error' => 'Master organiser access required'], 403);
+        }
         return $id;
     }
 

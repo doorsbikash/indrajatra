@@ -43,7 +43,7 @@ const locationRows: LocRow[] = [
     "The Australian Nepalese Multicultural Centre. The temples and the gods are inside, and the puja and rituals are carried out here.",
     "Step-free entry. The accessible toilet is inside, on the left as you enter."],
   ["water-refill", "Water Refill Station", "amenity", 56, 59,
-    "Free drinking water refill point above the ANMC building. Bring your bottle and refill here throughout the day.",
+    "Free drinking water refill point behind the ANMC building and temple. Bring your bottle and refill here throughout the day.",
     "Step-free access on level ground. Ask a volunteer if you need help filling or carrying a bottle."],
   ["ganesh-rath", "Ganesh Rath", "culture", 68, 45,
     "The Ganesh chariot, built new for 2026. It waits here before the procession and returns here afterwards.",

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import {
-  Ban, CheckCheck, Clock, Image, ListOrdered, Megaphone, Play, Radio, ShieldCheck, Store, Users,
+  Ban, BarChart3, CheckCheck, Clock, Image, ListOrdered, Megaphone, Play, Radio, ShieldCheck, Store, Users,
   RotateCcw, ShieldAlert, Trash2, Undo2
 } from "lucide-react";
 import { useApp } from "../app/AppContext";
@@ -15,10 +15,11 @@ import { StallEditor } from "../components/admin/StallEditor";
 import { VolunteerManager } from "../components/admin/VolunteerManager";
 import { OrganiserAccessRequest } from "../components/admin/OrganiserAccessRequest";
 import { OrganiserRequestManager } from "../components/admin/OrganiserRequestManager";
+import { AnalyticsDashboard } from "../components/admin/AnalyticsDashboard";
 import { FESTIVAL_DAY } from "../content/seed/data";
 import { t } from "../lib/text";
 
-type Tab = "live" | "access" | "volunteers" | "runsheet" | "stalls" | "photos";
+type Tab = "live" | "access" | "volunteers" | "runsheet" | "stalls" | "photos" | "reports";
 
 const TABS: { id: Tab; label: string; icon: typeof Radio }[] = [
   { id: "live", label: "Run the day", icon: Radio },
@@ -96,7 +97,17 @@ export function AdminPage() {
             <Icon size={14} />{label}
           </button>
         ))}
+        {profile.isMaster && <button
+          type="button"
+          className="chip"
+          aria-pressed={tab === "reports"}
+          onClick={() => setTab("reports")}
+        >
+          <BarChart3 size={14} />Visitor reports
+        </button>}
       </div>
+
+      {tab === "reports" && profile.isMaster && <AnalyticsDashboard />}
 
       {tab === "runsheet" && (
         <RunSheetEditor
