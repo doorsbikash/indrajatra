@@ -42,6 +42,9 @@ const locationRows: LocRow[] = [
   ["anmc", "ANMC Building", "community", 50, 59,
     "The Australian Nepalese Multicultural Centre. The temples and the gods are inside, and the puja and rituals are carried out here.",
     "Step-free entry. The accessible toilet is inside, on the left as you enter."],
+  ["water-refill", "Water Refill Station", "amenity", 62, 55,
+    "Free drinking water refill point above the ANMC building. Bring your bottle and refill here throughout the day.",
+    "Step-free access on level ground. Ask a volunteer if you need help filling or carrying a bottle."],
   ["ganesh-rath", "Ganesh Rath", "culture", 68, 45,
     "The Ganesh chariot, built new for 2026. It waits here before the procession and returns here afterwards.",
     "Stand behind the rope line. The chariot moves slowly but needs a wide, clear path."],
@@ -733,7 +736,7 @@ export const announcements: Announcement[] = [
   {
     id: "sun",
     title: { en: "Spring sun - bring a hat" },
-    message: { en: "Most of the site is open ground with little shade. Water is available at the food trucks and there is a shaded quiet space in the Garden." },
+    message: { en: "Most of the site is open ground with little shade. Free drinking water is available at the refill station above the ANMC building, and there is a shaded quiet space in the Garden." },
     severity: "update", startsAt: at("09:00"), published: true
   },
   {
@@ -800,9 +803,9 @@ export const infoCards: InfoCard[] = [
   },
   {
     id: "water", icon: "water",
-    title: { en: "Water and food" },
-    body: { en: "All hot food and drinks are along the western edge at the food trucks. Please note that no food or drink is permitted north of the marked line past the Media Station - signage on site makes this clear." },
-    locationId: "food-trucks"
+    title: { en: "Drinking water" },
+    body: { en: "Bring your bottle and refill it free at the water station above the ANMC building. The refill point is available throughout the festival." },
+    locationId: "water-refill"
   }
 ];
 
