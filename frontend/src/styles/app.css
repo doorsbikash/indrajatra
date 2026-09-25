@@ -383,7 +383,7 @@ h4 { font-size: var(--step-0); font-family: var(--font-sans); font-weight: 600; 
   transition: color var(--t-fast) var(--ease-out);
 }
 .bottom-nav a.active { color: var(--oxblood-700); }
-/* A rule, not a pill — the same device as the wordmark. */
+/* A rule, not a pill - the same device as the wordmark. */
 .bottom-nav a.active::before {
   content: ""; position: absolute; top: 0; left: 50%;
   width: 26px; height: 2px; transform: translateX(-50%);
@@ -474,7 +474,7 @@ h4 { font-size: var(--step-0); font-family: var(--font-sans); font-weight: 600; 
 }
 
 /* ==================================================================
-   8. PROGRAMME — the time rail
+   8. PROGRAMME - the time rail
    The day is the product, so the times are the spine: a single gold
    rule with the clock hung off it, and "now" marked at its true
    position.
@@ -579,7 +579,7 @@ h4 { font-size: var(--step-0); font-family: var(--font-sans); font-weight: 600; 
 .announce--emergency h3, .announce--emergency p, .announce--emergency svg { color: #fff; }
 
 /* ==================================================================
-   10. QUICK ACTIONS — one ruled grid, not six floating cards
+   10. QUICK ACTIONS - one ruled grid, not six floating cards
    ================================================================== */
 
 .quick {
@@ -1239,7 +1239,7 @@ h4 { font-size: var(--step-0); font-family: var(--font-sans); font-weight: 600; 
 .detail-hero__blank { z-index: -2; }
 
 /* ==================================================================
-   19. MOTIF — the lotus petal from the logo, redrawn as a rule
+   19. MOTIF - the lotus petal from the logo, redrawn as a rule
    ================================================================== */
 
 :root {
@@ -1341,7 +1341,7 @@ h4 { font-size: var(--step-0); font-family: var(--font-sans); font-weight: 600; 
 }
 
 /* ==================================================================
-   ORGANISER — run sheet editing and photo swaps
+   ORGANISER - run sheet editing and photo swaps
    ================================================================== */
 
 .admin-tabs {
@@ -1536,7 +1536,7 @@ h4 { font-size: var(--step-0); font-family: var(--font-sans); font-weight: 600; 
 }
 
 /* ==================================================================
-   SITE MAP — vector overlay for the stall row and the food trucks
+   SITE MAP - vector overlay for the stall row and the food trucks
    ================================================================== */
 
 /* Drawn in the artwork's own coordinate space, so it stays sharp at any

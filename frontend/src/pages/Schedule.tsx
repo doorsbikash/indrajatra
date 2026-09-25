@@ -134,7 +134,7 @@ export function SchedulePage() {
       <div className="card card--sunk">
         <p className="small muted" style={{ margin: 0 }}>
           Processions move at the speed of the crowd. If an item starts late, the organisers
-          update it from the stage and this page changes with it — a struck-through time means
+          update it from the stage and this page changes with it - a struck-through time means
           it has moved.
         </p>
       </div>

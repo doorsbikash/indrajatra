@@ -41,7 +41,7 @@ export function Passport({ compact = false }: { compact?: boolean }) {
               const on = discovered.includes(point.id);
               return (
                 <li key={point.id} className={`stamp${on ? " stamp--on" : ""}`}
-                    aria-label={`${point.number}. ${point.title.en} — ${on ? "found" : "not yet found"}`}>
+                    aria-label={`${point.number}. ${point.title.en} - ${on ? "found" : "not yet found"}`}>
                   {on ? <Check size={13} strokeWidth={3.5} /> : point.number}
                 </li>
               );

@@ -1,11 +1,11 @@
 /* ------------------------------------------------------------------
-   clock — the app's single source of "now".
+   clock - the app's single source of "now".
 
    On festival day this is just the wall clock. Before and after, it
    runs in preview mode against a simulated festival-day time so that
    Now / Next / Later, countdowns and live states can be demonstrated
    and tested. Preview is always visible to the user via the bar at
-   the top of the screen — it never silently lies about the time.
+   the top of the screen - it never silently lies about the time.
    ------------------------------------------------------------------ */
 
 import { FESTIVAL_DAY } from "../../content/seed/data";

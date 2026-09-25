@@ -1,5 +1,5 @@
 /* ------------------------------------------------------------------
-   Indra Jatra — Yenya Punhi Melbourne 2026
+   Indra Jatra - Yenya Punhi Melbourne 2026
    Design tokens.
 
    The palette is Newa Guthi Victoria's own, not an invention:
@@ -7,15 +7,15 @@
    the website theme (newa-guthi-victoria/assets/css/theme.css), and
    saffron + marigold are the two flat colours in the logo itself.
 
-   Type extends the logo's wordmark — heavy condensed uppercase set
-   between two rules — rather than importing an unrelated voice.
+   Type extends the logo's wordmark - heavy condensed uppercase set
+   between two rules - rather than importing an unrelated voice.
    ------------------------------------------------------------------ */
 
 :root {
   /* --- Oxblood: the organisation's maroon. Chrome and primary. ----- */
   --oxblood-900: #2C0C12;   /* deep ground for full-bleed blocks */
   --oxblood-800: #45131B;   /* theme --ngv-maroon-dark */
-  --oxblood-700: #6E1F2B;   /* theme --ngv-maroon — primary */
+  --oxblood-700: #6E1F2B;   /* theme --ngv-maroon - primary */
   --oxblood-600: #8A2A38;
   --oxblood-200: #E6C8CC;
   --oxblood-50:  #F7EDEE;
@@ -23,8 +23,8 @@
   /* --- Saffron + marigold: the two colours in the logo ------------- */
   --saffron-700: #A44C06;
   --saffron-600: #C25E0A;   /* passes AA on white */
-  --saffron-500: #F4801B;   /* logo orange — reserved for "on now" */
-  --marigold-400: #FFCE29;  /* logo yellow — highlights on dark only */
+  --saffron-500: #F4801B;   /* logo orange - reserved for "on now" */
+  --marigold-400: #FFCE29;  /* logo yellow - highlights on dark only */
   --saffron-50:  #FDF0E3;
 
   /* --- Gold: theme brand gold + its AA-safe text variant ----------- */

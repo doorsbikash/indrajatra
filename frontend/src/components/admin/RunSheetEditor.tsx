@@ -55,7 +55,7 @@ export function RunSheetEditor({ schedule, published, locations, day, canManageB
       categoryIds: []
     };
     liveStore.addItem(draft);
-    toast("Item added — give it a name and a time");
+    toast("Item added - give it a name and a time");
   }
 
   function runPreview() {
@@ -71,10 +71,10 @@ export function RunSheetEditor({ schedule, published, locations, day, canManageB
     if (!preview?.rows.length) return;
     if (mode === "replace") {
       if (!window.confirm(
-        `Replace the whole programme with these ${preview.rows.length} items? The published run sheet stays in the code — you can undo this with "Discard run sheet changes".`
+        `Replace the whole programme with these ${preview.rows.length} items? The published run sheet stays in the code - you can undo this with "Discard run sheet changes".`
       )) return;
       liveStore.replaceSchedule(preview.rows, published.map((i) => i.id));
-      toast(`Programme replaced — ${preview.rows.length} items`);
+      toast(`Programme replaced - ${preview.rows.length} items`);
     } else {
       preview.rows.forEach((row) => liveStore.addItem(row));
       toast(`${preview.rows.length} items added`);
@@ -181,7 +181,7 @@ export function RunSheetEditor({ schedule, published, locations, day, canManageB
                 <h3 style={{ marginTop: "var(--s-4)" }}>{preview.skipped.length} line{preview.skipped.length === 1 ? "" : "s"} skipped</h3>
                 <ul className="small muted" style={{ margin: "var(--s-2) 0 0", paddingLeft: "1.2rem" }}>
                   {preview.skipped.slice(0, 10).map((s, i) => (
-                    <li key={i}><code>{s.line.slice(0, 60)}</code> — {s.why}</li>
+                    <li key={i}><code>{s.line.slice(0, 60)}</code> - {s.why}</li>
                   ))}
                 </ul>
               </>

@@ -26,7 +26,7 @@ export function ExplorePage() {
       <div className="card card--sunk row" style={{ marginTop: "var(--s-4)", gap: 12, flexWrap: "nowrap" }}>
         <span className="icon-disc icon-disc--dark"><QrCode size={19} /></span>
         <p className="small muted" style={{ margin: 0 }}>
-          No QR scanner? Open your phone camera and point it at the sign — it will offer to open
+          No QR scanner? Open your phone camera and point it at the sign - it will offer to open
           the link. You can also read any stop here without scanning; the stamp is for finding it
           in person.
         </p>

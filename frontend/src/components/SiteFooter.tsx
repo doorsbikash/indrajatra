@@ -15,7 +15,7 @@ export function SiteFooter() {
 
         <p className="site-footer__org">{event.brandName}</p>
         <p className="site-footer__event">
-          Indra Jatra — Yenya Punhi {year}
+          Indra Jatra - Yenya Punhi {year}
           <span>
             {formatLongDate(event.startAt)} · {event.venueName}, Diggers Rest
           </span>

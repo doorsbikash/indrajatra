@@ -153,7 +153,7 @@ export function HomePage() {
           />
           <p className="small muted">
             Established in 2024 to preserve, promote and share Newa culture and heritage
-            across Australia — through festivals, weekly classes and community programs.
+            across Australia - through festivals, weekly classes and community programs.
           </p>
           <div className="row" style={{ marginTop: 12 }}>
             <Link className="btn btn--sm" to="/membership">Become a member</Link>
@@ -171,7 +171,7 @@ export function HomePage() {
         <h2>Today is free because of them</h2>
         <p className="small muted" style={{ marginBottom: "var(--s-5)" }}>
           Every business below put money behind this festival so nobody had to buy a ticket.
-          They are thanked from the stage at 3:30pm — and they are worth your business in return.
+          They are thanked from the stage at 3:30pm - and they are worth your business in return.
         </p>
         <SponsorWall compact />
         <Link className="btn btn--block" to="/directory" style={{ marginTop: "var(--s-5)" }}>

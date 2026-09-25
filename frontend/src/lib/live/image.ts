@@ -1,5 +1,5 @@
 /* ------------------------------------------------------------------
-   image — take a photo straight off an organiser's phone and make it
+   image - take a photo straight off an organiser's phone and make it
    small enough to hold in the live store and fast enough to load on
    a crowded 4G cell at Diggers Rest.
 
@@ -15,7 +15,7 @@ async function decode(file: File): Promise<CanvasImageSource & { width: number; 
     try {
       return await createImageBitmap(file, { imageOrientation: "from-image" });
     } catch {
-      /* Safari < 17 and some Android builds — fall through to <img>. */
+      /* Safari < 17 and some Android builds - fall through to <img>. */
     }
   }
   const url = URL.createObjectURL(file);

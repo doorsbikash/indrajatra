@@ -105,7 +105,7 @@ export function TrailPointPage() {
             }
           }}
         >
-          <Check size={17} />I'm standing here — collect the stamp
+          <Check size={17} />I'm standing here - collect the stamp
         </button>
       )}
 

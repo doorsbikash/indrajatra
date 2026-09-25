@@ -1,5 +1,5 @@
 /* ------------------------------------------------------------------
-   track — a deliberately small, allow-listed analytics surface.
+   track - a deliberately small, allow-listed analytics surface.
 
    No personal data, no free-text, no third-party script. Only the
    event names below are ever recorded, and only counts and ids that

@@ -111,7 +111,7 @@ export function PhotoManager({ data, schedule, toast }: Props) {
     <>
       <div className="card card--sunk">
         <p className="small muted" style={{ margin: 0 }}>
-          Photos are resized on this phone and kept in this browser — nothing is uploaded
+          Photos are resized on this phone and kept in this browser - nothing is uploaded
           anywhere. To ship a photo for good, drop the file into
           <code> frontend/public/images/</code> and point the content at it.
         </p>
@@ -142,7 +142,7 @@ export function PhotoManager({ data, schedule, toast }: Props) {
       <section className="section">
         <h2>Trail stops ({data.trailPoints.length})</h2>
         <p className="small muted">
-          Two stops ship without a photo on purpose — we would rather show nothing than the
+          Two stops ship without a photo on purpose - we would rather show nothing than the
           wrong thing. Add the real ones here as they are taken.
         </p>
         <div className="stack" style={{ marginTop: "var(--s-4)" }}>

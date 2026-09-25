@@ -170,7 +170,7 @@ export function AdminPage() {
                 style={{ background: "none", border: 0, cursor: "pointer" }}
                 disabled={liveControlsBlocked}
                 onClick={() => {
-                  if (!window.confirm("Clear every live override — run sheet edits, photos and announcements — and go back to the published content?")) return;
+                  if (!window.confirm("Clear every live override - run sheet edits, photos and announcements - and go back to the published content?")) return;
                   liveStore.reset();
                   toast("Everything reset");
                 }}
@@ -240,7 +240,7 @@ export function AdminPage() {
                             return nextState !== "completed" && nextState !== "cancelled";
                           });
                           setNextDecision(next ? { afterId: item.id, nextId: next.id } : null);
-                          toast(next ? "Marked complete — choose what happens next" : "Marked complete");
+                          toast(next ? "Marked complete - choose what happens next" : "Marked complete");
                         }}>
                         <CheckCheck size={14} />Done
                       </button>
@@ -309,7 +309,7 @@ export function AdminPage() {
             <h2>Announcements</h2>
             <p className="small muted">
               Publishing pushes a banner to the home screen. Emergency notices are red, full width
-              and cannot be dismissed — use that severity only for a genuine emergency.
+              and cannot be dismissed - use that severity only for a genuine emergency.
             </p>
             <div className="stack" style={{ marginTop: "var(--s-3)" }}>
               {announcements.map((a) => (

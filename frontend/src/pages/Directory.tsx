@@ -35,7 +35,7 @@ export function DirectoryPage() {
       <h1>Food &amp; stalls</h1>
       <p className="lead">
         Hot food runs along the western edge of the site. Market and community stalls are the
-        row of twenty near the lake. Bring some cash — reception out here can be patchy.
+        row of twenty near the lake. Bring some cash - reception out here can be patchy.
       </p>
 
       <div className="chips" role="group" aria-label="Filter stalls">
@@ -98,7 +98,7 @@ export function DirectoryPage() {
         <h2>Sponsors &amp; partners</h2>
         <p className="small muted">
           Entry is free because these businesses paid for it. They are thanked from the stage
-          at 3:30pm — and they are worth your business in return.
+          at 3:30pm - and they are worth your business in return.
         </p>
 
         <div style={{ marginTop: "var(--s-5)" }}>

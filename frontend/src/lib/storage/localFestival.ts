@@ -1,5 +1,5 @@
 /* ------------------------------------------------------------------
-   localFestival — everything the visitor does, stored on their own
+   localFestival - everything the visitor does, stored on their own
    device. Nothing here leaves the browser. The privacy screen in
    My Festival reads and clears exactly these keys.
    ------------------------------------------------------------------ */
@@ -29,7 +29,7 @@ function writeList(key: string, values: string[]) {
   try {
     localStorage.setItem(key, JSON.stringify([...new Set(values)]));
   } catch {
-    /* storage unavailable — this session stays in memory only */
+    /* storage unavailable - this session stays in memory only */
   }
 }
 

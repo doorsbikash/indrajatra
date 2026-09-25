@@ -34,7 +34,7 @@ export function ScanPage() {
           <div>
             <h1 style={{ fontSize: "var(--step-4)" }}>That code didn't match a stop</h1>
             <p className="lead" style={{ maxWidth: "36ch", margin: "0 auto" }}>
-              The sticker may be damaged, or it may belong to a different event. No problem —
+              The sticker may be damaged, or it may belong to a different event. No problem -
               you can reach every stop from the trail.
             </p>
           </div>

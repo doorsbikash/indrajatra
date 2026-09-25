@@ -1,13 +1,13 @@
 /* ------------------------------------------------------------------
-   liveStore — everything an organiser can change on the day, held on
+   liveStore - everything an organiser can change on the day, held on
    top of the published content.
 
    Three kinds of override live here:
 
-     1. Run state   — start / delay / complete / cancel an item.
-     2. Run sheet   — edit a title, time or location; add or remove
+     1. Run state   - start / delay / complete / cancel an item.
+     2. Run sheet   - edit a title, time or location; add or remove
                       items; replace the whole programme from a paste.
-     3. Photos      — swap the festival hero or any trail stop photo.
+     3. Photos      - swap the festival hero or any trail stop photo.
 
    The organiser screen writes here; every visitor screen in the same
    browser profile reads here. Changes propagate instantly across tabs
@@ -132,7 +132,7 @@ function commit(next: LiveState) {
   try {
     localStorage.setItem(KEY, JSON.stringify(state));
   } catch {
-    /* private mode or full quota — in-memory only for this session */
+    /* private mode or full quota - in-memory only for this session */
   }
   channel?.postMessage(state);
   listeners.forEach((fn) => fn(state));
@@ -157,7 +157,7 @@ function commitChecked(next: LiveState): WriteResult {
   try {
     localStorage.setItem(KEY, raw);
   } catch {
-    return { ok: false, reason: "The browser refused to save — storage is full or private browsing is on." };
+    return { ok: false, reason: "The browser refused to save - storage is full or private browsing is on." };
   }
   state = candidate;
   channel?.postMessage(state);
@@ -254,7 +254,7 @@ export const liveStore = {
     commit({ ...state, announcements: { ...state.announcements, [id]: published } });
   },
 
-  /** Write a new announcement. It starts unpublished — nothing is pushed
+  /** Write a new announcement. It starts unpublished - nothing is pushed
       to visitors until the organiser presses Publish on it. */
   addAnnouncement(draft: Omit<DraftAnnouncement, "id"> & { id?: string }): string {
     const id = draft.id ?? `notice-${Date.now().toString(36)}`;
@@ -263,7 +263,7 @@ export const liveStore = {
   },
 
   /** Remove an announcement the organiser wrote. Published ones are only
-      unpublished — the content in data.ts is never deleted from here. */
+      unpublished - the content in data.ts is never deleted from here. */
   removeAnnouncement(id: string) {
     const announcements = { ...state.announcements };
     delete announcements[id];

@@ -10,7 +10,7 @@ import { claimMembershipReward, getMembershipReward, type MembershipReward } fro
 const CLASSES = [
   { icon: Drum, name: "Dhimay", detail: "The two-headed processional drum. Children and adults, all levels." },
   { icon: Music2, name: "Bhusya Baja", detail: "Hand cymbals, played alongside the dhimay." },
-  { icon: Music2, name: "Bansuri", detail: "Bamboo flute. Start from nothing — no music background needed." },
+  { icon: Music2, name: "Bansuri", detail: "Bamboo flute. Start from nothing - no music background needed." },
   { icon: Users, name: "Newari dance", detail: "Traditional Newa dances, taught for performance at community events." }
 ];
 
@@ -58,7 +58,7 @@ export function MembershipPage() {
       <p className="eyebrow">Newa Guthi Victoria</p>
       <h1>Join the Guthi</h1>
       <p className="lead">
-        A guthi is how Newa festivals have been kept alive for centuries — a group of people
+        A guthi is how Newa festivals have been kept alive for centuries - a group of people
         who take on a duty and keep turning up. Today's festival exists because enough people
         in Melbourne said yes.
       </p>
@@ -134,7 +134,7 @@ export function MembershipPage() {
         <h2>What membership supports</h2>
         <div className="card card--sunk">
           <ul className="small muted" style={{ margin: 0, paddingLeft: "1.1rem" }}>
-            <li>Chariots, costumes, masks and instruments — including the new Ganesh Rath built for 2026</li>
+            <li>Chariots, costumes, masks and instruments - including the new Ganesh Rath built for 2026</li>
             <li>Weekly Dhimay, Bhusya Baja, Bansuri and dance classes for children and adults</li>
             <li>Four community festivals a year: World Newah Day, Biska Jatra, Indra Jatra and Mha Puja</li>
             <li>Keeping every one of them free to attend</li>

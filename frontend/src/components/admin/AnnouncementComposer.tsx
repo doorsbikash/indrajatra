@@ -5,7 +5,7 @@ import type { Announcement } from "../../lib/types";
 
 const SEVERITIES: { id: Announcement["severity"]; label: string; hint: string }[] = [
   { id: "info", label: "Info", hint: "Everyday notice. Visitors can dismiss it." },
-  { id: "update", label: "Update", hint: "Something has changed — a time, a place." },
+  { id: "update", label: "Update", hint: "Something has changed - a time, a place." },
   { id: "important", label: "Important", hint: "Visitors should read this before moving on." },
   { id: "emergency", label: "Emergency", hint: "Red, full width, cannot be dismissed. Genuine emergencies only." }
 ];
@@ -37,7 +37,7 @@ export function AnnouncementComposer({ now, disabled = false, toast }: Props) {
     setTitle("");
     setMessage("");
     setSeverity("update");
-    toast("Written — press Publish when you want visitors to see it");
+    toast("Written - press Publish when you want visitors to see it");
   }
 
   return (

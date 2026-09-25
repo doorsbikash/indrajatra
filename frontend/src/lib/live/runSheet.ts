@@ -1,5 +1,5 @@
 /* ------------------------------------------------------------------
-   runSheet — turn a pasted run sheet into programme items, and turn
+   runSheet - turn a pasted run sheet into programme items, and turn
    the current programme back into a block the developer can paste
    into content/seed/data.ts to publish it permanently.
 
@@ -12,12 +12,12 @@
 import type { ScheduleItem } from "../types";
 import type { DraftItem } from "./liveStore";
 
-/** Melbourne is AEST (+10:00) in late September — daylight saving starts in October. */
+/** Melbourne is AEST (+10:00) in late September - daylight saving starts in October. */
 const OFFSET = "+10:00";
 const TZ = "Australia/Melbourne";
 
 const TIME = /^(\d{1,2})\s*[:.]?\s*(\d{2})?\s*(am|pm|a\.m\.|p\.m\.)?$/i;
-const RANGE = /^(.+?)\s*(?:-|–|—|to)\s*(.+)$/i;
+const RANGE = /^(.+?)\s*(?:-|–|\u2014|to)\s*(.+)$/i;
 
 /** "10:05" (Melbourne, on the festival day) -> ISO string. */
 export function toIso(day: string, hhmm: string): string {
@@ -184,7 +184,7 @@ export function parseRunSheet(text: string, options: ParseOptions): ParseResult 
     });
   });
 
-  // No end time? Run the item up to the start of the next one — but only
+  // No end time? Run the item up to the start of the next one - but only
   // if that is close behind. A three-hour gap means the run sheet simply
   // did not say, and a 45-minute default reads better than a wrong block.
   const MAX_FILL_MINUTES = 90;

@@ -1,5 +1,5 @@
 /* ------------------------------------------------------------------
-   Yenya Punhi — Indra Jatra Melbourne 2026
+   Yenya Punhi - Indra Jatra Melbourne 2026
    Festival content.
 
    Sources used to build this file:
@@ -10,7 +10,7 @@
      · NGV-Intro.pdf (organisation, classes, contact)
 
    Cultural trail copy is written for visitors and marked
-   reviewStatus:"reviewed" — it is ready to read but still needs a
+   reviewStatus:"reviewed" - it is ready to read but still needs a
    final sign-off from the Newa Guthi Victoria cultural committee.
    Flip an entry to "approved" once the committee has signed it.
    ------------------------------------------------------------------ */
@@ -24,17 +24,17 @@ export const FESTIVAL_DAY = "2026-09-26";
 const at = (time: string) => `${FESTIVAL_DAY}T${time}:00+10:00`;
 
 /* ==================================================================
-   LOCATIONS — traced from the organiser's planned site map
+   LOCATIONS - traced from the organiser's planned site map
    ================================================================== */
 
 type LocRow = [string, string, LocationType, number, number, string, string];
 
 const locationRows: LocRow[] = [
   ["guest-entry", "Guest Entry & Exit", "entry", 72, 53,
-    "The single pedestrian entry and exit for all guests, off Duncans Lane. Entry is free — no ticket needed.",
+    "The single pedestrian entry and exit for all guests, off Duncans Lane. Entry is free - no ticket needed.",
     "Flat, sealed approach from the car park. Wheelchairs and prams come straight through; there are no steps or turnstiles."],
   ["vehicle-entry", "Vehicle Entry & Exit", "entry", 87, 91,
-    "All cars enter and leave here from Duncans Lane. Traffic runs one way through the site — follow the marshals.",
+    "All cars enter and leave here from Duncans Lane. Traffic runs one way through the site - follow the marshals.",
     "Drop-off directly at this point is possible. Tell a marshal if a passenger needs to be set down close to the entry."],
   ["main-stage", "Guest & MC Stage", "stage", 48, 52,
     "The main stage in front of the ANMC building. Everything on the program that is announced, performed or spoken happens here.",
@@ -55,7 +55,7 @@ const locationRows: LocRow[] = [
     "The great white Bhairab face, revealed only for Indra Jatra.",
     "Firm ground, viewable from a seated position."],
   ["samay-vo", "Samay Baji Display", "culture", 74, 25,
-    "Two display tables showing Samay Baji — the ritual Newa plate — and the story of each item on it.",
+    "Two display tables showing Samay Baji - the ritual Newa plate - and the story of each item on it.",
     "Tables are set at standing height with a lowered section at one end."],
   ["cultural-line", "Cultural Display Line", "culture", 74, 37,
     "The row of cultural displays along the eastern tree line: Ganesh Khath, Indra, Swet Bhairab and Samay Baji.",
@@ -79,7 +79,7 @@ const locationRows: LocRow[] = [
     "Main toilet block beside the ANMC building.",
     "The accessible toilet is inside the ANMC building, immediately to your left."],
   ["extra-toilets", "Extra Toilets", "amenity", 25, 58,
-    "Additional toilets, west of the main block — usually the shorter queue.",
+    "Additional toilets, west of the main block - usually the shorter queue.",
     "Portable units on level ground. Use the ANMC toilet for full wheelchair access."],
   ["lake", "Lake", "amenity", 48, 6,
     "The lake marks the northern boundary of the site. There is no access beyond this point.",
@@ -91,12 +91,12 @@ const locationRows: LocRow[] = [
     "Main visitor car park. Free, marshalled, and a two-minute walk to the entry.",
     "Compacted gravel. Ask a marshal for the accessible bays nearest the entry gate."],
   ["overflow-parking", "Overflow Parking", "parking", 42, 2,
-    "Opens when the main car park fills. Follow the marshals — they will wave you through.",
+    "Opens when the main car park fills. Follow the marshals - they will wave you through.",
     "Grass surface and a longer walk. If you need a shorter walk, tell a marshal at the vehicle entry."],
   ["meet-point", "Meet-Up Point", "amenity", 80, 56,
     "By the tennis court, next to the guest entry. The agreed place to meet if your group gets separated.",
     "Clearly signed, sheltered, and visible from the entry."],
-  ["garden-toilet", "Toilet — Tennis Court", "amenity", 80, 68.5,
+  ["garden-toilet", "Toilet - Tennis Court", "amenity", 80, 68.5,
     "Additional toilet beside the tennis court and the VIP guest waiting / meet-up point.",
     "Portable toilet on level ground. Use the ANMC toilet for full wheelchair access."]
 ];
@@ -115,7 +115,7 @@ export const locations: Location[] = locationRows.map(([id, name, type, mapX, ma
 }));
 
 /* ==================================================================
-   SCHEDULE — final event-day run sheet, 09:00–16:00
+   SCHEDULE - final event-day run sheet, 09:00–16:00
    Transcribed from the committee's EventDaySheet.docx.
    ================================================================== */
 
@@ -131,17 +131,17 @@ const scheduleRows: SchedRow[] = [
   ["arrival-registration", "Participant arrival and registration", "09:00", "09:05", "guest-entry",
     "Welcome tikaa, red and white kapang balla, and traditional music at the entrance.",
     ["community", "music"]],
-  ["ganesh-pooja", "Ganesh Pooja — Ganesh worship", "09:05", "09:20", "ganesh-rath",
+  ["ganesh-pooja", "Ganesh Pooja - Ganesh worship", "09:05", "09:20", "ganesh-rath",
     "The event day begins with worship of Ganesh.", ["culture"]],
-  ["naasa-pooja", "Naasa Pooja — musical instrument worship", "09:20", "09:35", "main-stage",
+  ["naasa-pooja", "Naasa Pooja - musical instrument worship", "09:20", "09:35", "main-stage",
     "Traditional musical instruments are honoured before the performances begin.", ["culture", "music"]],
   ["mask-worship", "Pulukisi, Lakhe and Jhyalincha Pooja", "09:35", "09:50", "cultural-line",
     "Ceremonial worship of the festival masks and characters.", ["culture", "family"]],
-  ["kumari-pooja-morning", "Kumari Pooja — Kumari worship", "09:50", "10:05", "kumari-rath",
+  ["kumari-pooja-morning", "Kumari Pooja - Kumari worship", "09:50", "10:05", "kumari-rath",
     "Morning worship for Kumari before the chariot ceremonies.", ["culture"]],
-  ["rath-pooja", "Rath Pooja — chariot worship", "10:05", "10:20", "kumari-rath",
+  ["rath-pooja", "Rath Pooja - chariot worship", "10:05", "10:20", "kumari-rath",
     "The festival chariots are blessed before the procession.", ["culture", "procession"]],
-  ["kumari-rathaarohan", "Kumari Rathaarohan — Kumari chariot ride", "10:20", "10:35", "kumari-rath",
+  ["kumari-rathaarohan", "Kumari Rathaarohan - Kumari chariot ride", "10:20", "10:35", "kumari-rath",
     "Kumari ascends the chariot as the procession prepares to move.", ["culture", "procession"], true],
   ["cultural-procession", "Cultural procession and street performances", "10:35", "11:50", "kumari-rath",
     "Lakhe and Pulukisi, the Sukunda rally, Dhimey and Bansuri accompany the procession.",
@@ -158,29 +158,29 @@ const scheduleRows: SchedRow[] = [
     "A welcome to the festival with essential site and safety information.", ["main-stage", "community"]],
   ["panas-lighting", "Panas lighting and national anthem", "12:05", "12:08", "main-stage",
     "Chief guest Basem Abdo MP joins the ceremonial lamp lighting and national anthem.", ["main-stage", "culture"]],
-  ["festival-overview", "Opening and festival overview — Ranjan Vaidya", "12:08", "12:10", "main-stage",
+  ["festival-overview", "Opening and festival overview - Ranjan Vaidya", "12:08", "12:10", "main-stage",
     "An overview of the day's festival activities.", ["main-stage", "community"]],
   ["kids-dhimay", "Kids Dhimay performance", "12:10", "12:12", "main-stage",
     "Young performers present traditional Dhimay music.", ["main-stage", "music", "family"], true],
-  ["president-welcome", "President's welcome — Maya Prasad Suwal", "12:12", "12:16", "main-stage",
+  ["president-welcome", "President's welcome - Maya Prasad Suwal", "12:12", "12:16", "main-stage",
     "The Newa Guthi Victoria president delivers the welcome address.", ["main-stage", "community"]],
-  ["chief-guest-address", "Chief guest address — Basem Abdo MP", "12:16", "12:21", "main-stage",
+  ["chief-guest-address", "Chief guest address - Basem Abdo MP", "12:16", "12:21", "main-stage",
     "Address from the Federal Member for Calwell.", ["main-stage", "community"]],
   ["mass-dhimay", "Mass Dhimay dance performance", "12:21", "12:25", "main-stage",
     "A combined Dhimay performance by the cultural groups.", ["main-stage", "music", "culture"], true],
-  ["nirajan-gauli", "Guest address — Nirajan Gauli", "12:25", "12:29", "main-stage",
+  ["nirajan-gauli", "Guest address - Nirajan Gauli", "12:25", "12:29", "main-stage",
     "Welcome address from the former Honorary Consul of Nepal to Victoria.", ["main-stage", "community"]],
-  ["roshena-campbell", "Guest address — Roshena Campbell", "12:29", "12:36", "main-stage",
+  ["roshena-campbell", "Guest address - Roshena Campbell", "12:29", "12:36", "main-stage",
     "Address from the Liberal candidate for the Western Metropolitan Region.", ["main-stage", "community"]],
-  ["josh-bull", "Guest address — Josh Bull MP", "12:36", "12:39", "main-stage",
+  ["josh-bull", "Guest address - Josh Bull MP", "12:36", "12:39", "main-stage",
     "Address from the State Member for Sunbury.", ["main-stage", "community"]],
-  ["john-lister", "Guest address — John Lister MP", "12:39", "12:42", "main-stage",
+  ["john-lister", "Guest address - John Lister MP", "12:39", "12:42", "main-stage",
     "Address from the State Member for Werribee.", ["main-stage", "community"]],
-  ["tilak-pokhrel", "Guest address — Tilak Pokhrel", "12:42", "12:45", "main-stage",
+  ["tilak-pokhrel", "Guest address - Tilak Pokhrel", "12:42", "12:45", "main-stage",
     "Address representing the Australian Nepalese Multicultural Centre.", ["main-stage", "community"]],
-  ["mahadev-dhanuk", "Guest address — Mahadev Dhanuk", "12:45", "12:48", "main-stage",
+  ["mahadev-dhanuk", "Guest address - Mahadev Dhanuk", "12:45", "12:48", "main-stage",
     "Address representing NRNA.", ["main-stage", "community"]],
-  ["sudip-shrestha", "Guest address — Sudip Shrestha", "12:48", "12:50", "main-stage",
+  ["sudip-shrestha", "Guest address - Sudip Shrestha", "12:48", "12:50", "main-stage",
     "Address from the Nepalese Association of Victoria president.", ["main-stage", "community"]],
   ["sponsor-acknowledgement", "Sponsor acknowledgement", "12:50", "13:00", "main-stage",
     "Recognition of the organisations supporting the festival.", ["main-stage", "community"]],
@@ -188,17 +188,17 @@ const scheduleRows: SchedRow[] = [
     "The formal programme closes and activities move back to the Rath area.", ["procession", "culture"]],
   ["lakhe-pulikisi-rath", "Lakhe, Jhyalincha and Pulukisi near the Rath", "13:10", "13:30", "kumari-rath",
     "Cultural characters, Dhimey and Bansuri perform beside the chariot.", ["culture", "music", "family"], true],
-  ["ladies-rath-pulling", "Rath pulling — ladies group", "13:15", "13:30", "kumari-rath",
+  ["ladies-rath-pulling", "Rath pulling - ladies group", "13:15", "13:30", "kumari-rath",
     "The ladies group leads the first Rath-pulling session.", ["procession", "culture"], true],
   ["senior-samman", "Senior Samman", "13:15", "13:30", "main-stage",
     "A community honour presentation for senior members.", ["main-stage", "community"]],
-  ["hatha-haayekegu", "Hatha Haayekegu — refreshment during Rath pulling", "13:20", "13:30", "kumari-rath",
+  ["hatha-haayekegu", "Hatha Haayekegu - refreshment during Rath pulling", "13:20", "13:30", "kumari-rath",
     "A traditional refreshment moment during the procession.", ["procession", "culture", "food"]],
-  ["book-launch", "Book launch — Bhim Neupane", "13:30", "13:45", "main-stage",
+  ["book-launch", "Book launch - Bhim Neupane", "13:30", "13:45", "main-stage",
     "Book launch followed by brief guest remarks.", ["main-stage", "community"]],
   ["floor-cultural-programme", "Cultural activities near the Rath", "13:30", "14:00", "kumari-rath",
     "Lakhe, Jhyalincha and Pulukisi continue their activities near the chariot.", ["culture", "family"]],
-  ["gents-rath-pulling", "Rath pulling — gents group", "14:00", "14:30", "kumari-rath",
+  ["gents-rath-pulling", "Rath pulling - gents group", "14:00", "14:30", "kumari-rath",
     "The gents group leads the second Rath-pulling session, with Lakhe and Pulukisi entertainment.",
     ["procession", "culture"], true],
   ["rath-arrival", "Rath reaches its destination", "14:30", "15:00", "kumari-rath",
@@ -244,7 +244,7 @@ export const scheduleCategories = [
 ];
 
 /* ==================================================================
-   CULTURAL TRAIL — 12 stops
+   CULTURAL TRAIL - 12 stops
    ================================================================== */
 
 type TrailRow = {
@@ -270,7 +270,7 @@ const trailRows: TrailRow[] = [
     locationId: "god-indra",
     teaser: "The only festival in the world that begins by arresting a god.",
     body:
-      "Indra is the king of heaven. The story goes that he came down to the Kathmandu Valley in disguise, dressed as an ordinary farmer, to pick parijat — night-flowering jasmine — for a ritual his mother Basundhara needed to complete. He was caught in someone's garden, taken for a common thief, tied up, and put on public display.\n\nHis mother came looking for him. When the people of the valley realised whose hands they had bound, they let him go. Before leaving, the family made two promises in return: enough dew and mist to see the crops through the dry months, and safe passage to heaven for everyone who had died in the valley that year.\n\nThe figure you are standing in front of shows Indra exactly as he was caught — arms stretched wide, wrists bound. Not the god enthroned. The god embarrassed.",
+      "Indra is the king of heaven. The story goes that he came down to the Kathmandu Valley in disguise, dressed as an ordinary farmer, to pick parijat - night-flowering jasmine - for a ritual his mother Basundhara needed to complete. He was caught in someone's garden, taken for a common thief, tied up, and put on public display.\n\nHis mother came looking for him. When the people of the valley realised whose hands they had bound, they let him go. Before leaving, the family made two promises in return: enough dew and mist to see the crops through the dry months, and safe passage to heaven for everyone who had died in the valley that year.\n\nThe figure you are standing in front of shows Indra exactly as he was caught - arms stretched wide, wrists bound. Not the god enthroned. The god embarrassed.",
     why:
       "Most festivals put their gods on a pedestal. This one keeps Indra tied up in a public square for eight days, and the whole city comes to look. It is a very Newa idea: the divine and the everyday are not separate worlds, and even a god can be humbled by farmers who catch him in the wrong garden.",
     lookFor: "The open, outstretched arms. In Kathmandu this image is displayed at Maru and Indra Chowk for the length of the festival.",
@@ -285,7 +285,7 @@ const trailRows: TrailRow[] = [
     image: "/images/trail/swet-bhairab.jpg",
     teaser: "A face kept behind a screen for 357 days of the year.",
     body:
-      "Swet Bhairab is the white, fierce form of Shiva — bulging eyes, bared fangs, a crown of skulls. In Kathmandu the great gilded mask stands at Hanuman Dhoka behind a wooden lattice, hidden almost the entire year. It is uncovered for Indra Jatra and covered again when the festival ends.\n\nWhen the screen comes down, rice beer runs from a pipe set in the mask's mouth, and the crowd presses forward to drink straight from it. Getting a mouthful is considered good fortune worth the crush.\n\nBhairab is frightening on purpose. He is a guardian. The terror is pointed outward, at whatever might harm the city, not at the people standing in front of him.",
+      "Swet Bhairab is the white, fierce form of Shiva - bulging eyes, bared fangs, a crown of skulls. In Kathmandu the great gilded mask stands at Hanuman Dhoka behind a wooden lattice, hidden almost the entire year. It is uncovered for Indra Jatra and covered again when the festival ends.\n\nWhen the screen comes down, rice beer runs from a pipe set in the mask's mouth, and the crowd presses forward to drink straight from it. Getting a mouthful is considered good fortune worth the crush.\n\nBhairab is frightening on purpose. He is a guardian. The terror is pointed outward, at whatever might harm the city, not at the people standing in front of him.",
     why:
       "The mask is a measure of the year. Its uncovering says the festival has started; its covering says the festival is over. Bringing that rhythm to Melbourne is how a community keeps a calendar that is not the one on the office wall.",
     lookFor: "The third eye, the skull crown, and the wide silver eyes. Look for the pipe at the mouth in photographs from Kathmandu.",
@@ -300,7 +300,7 @@ const trailRows: TrailRow[] = [
     image: "/images/trail/ganesh-rath.jpg",
     teaser: "Brand new for 2026, and built here in Melbourne.",
     body:
-      "Three chariots ride in the Kathmandu procession: Ganesh, Bhairab and Kumari. Ganesh goes first. He is the remover of obstacles, and no procession, wedding or new venture starts without him.\n\nThis chariot is new. The community built it this year specifically so that Melbourne's Indra Jatra could carry a full procession rather than a partial one — the single biggest addition to the 2026 festival.\n\nThe chariots are pulled by hand, by whoever takes hold of the rope. There is no crew and no ticket. That is the point: the procession only moves if enough people show up and pull.",
+      "Three chariots ride in the Kathmandu procession: Ganesh, Bhairab and Kumari. Ganesh goes first. He is the remover of obstacles, and no procession, wedding or new venture starts without him.\n\nThis chariot is new. The community built it this year specifically so that Melbourne's Indra Jatra could carry a full procession rather than a partial one - the single biggest addition to the 2026 festival.\n\nThe chariots are pulled by hand, by whoever takes hold of the rope. There is no crew and no ticket. That is the point: the procession only moves if enough people show up and pull.",
     why:
       "A chariot is a large, awkward, expensive object that serves no purpose for 364 days a year. Building one anyway, in a country on the other side of the world from where the tradition started, is a community saying it intends to still be here in twenty years.",
     lookFor: "Fresh paint and new timber. The tiered roof, marigold garlands and the long wooden pulling beams at the front.",
@@ -315,9 +315,9 @@ const trailRows: TrailRow[] = [
     image: "/images/trail/kumari-rath.jpg",
     teaser: "A king started this procession in 1756. It has not missed a year since.",
     body:
-      "Kumari Jatra — the chariot procession that now defines Indra Jatra — was added by King Jaya Prakash Malla in the middle of the eighteenth century. It runs over three days in Kathmandu, taking a different route through the old city each day so that every neighbourhood gets its turn.\n\nThe rope is the whole event. Hundreds of hands, mostly young men but increasingly everyone, haul the chariot metre by metre through streets barely wider than it is. There are collisions. There is shouting. Nobody is in charge in the way an event manager would understand.\n\nAt Melbourne's festival the route is shorter and the crowd smaller, but the rule is the same. If you want to be part of it, take the rope.",
+      "Kumari Jatra - the chariot procession that now defines Indra Jatra - was added by King Jaya Prakash Malla in the middle of the eighteenth century. It runs over three days in Kathmandu, taking a different route through the old city each day so that every neighbourhood gets its turn.\n\nThe rope is the whole event. Hundreds of hands, mostly young men but increasingly everyone, haul the chariot metre by metre through streets barely wider than it is. There are collisions. There is shouting. Nobody is in charge in the way an event manager would understand.\n\nAt Melbourne's festival the route is shorter and the crowd smaller, but the rule is the same. If you want to be part of it, take the rope.",
     why:
-      "In Kathmandu the procession is how the city checks on itself once a year — every quarter visited, every neighbourhood counted. A diaspora community has no old city to walk through, so the circuit around this site does the same work: it draws a line around who is here.",
+      "In Kathmandu the procession is how the city checks on itself once a year - every quarter visited, every neighbourhood counted. A diaspora community has no old city to walk through, so the circuit around this site does the same work: it draws a line around who is here.",
     lookFor: "The thick pulling rope and the rows of hands on it. Women in black-and-red haku patasi pulling together is now one of the defining images of the Melbourne festival.",
     related: ["ganesh-rath", "kumari"]
   },
@@ -330,7 +330,7 @@ const trailRows: TrailRow[] = [
     image: "/images/trail/kumari.jpg",
     teaser: "A child chosen as a goddess, who goes back to being a child.",
     body:
-      "The Kumari is a young girl, selected from the Shakya community, who is believed to hold the living presence of the goddess Taleju. She is chosen very young against a long list of physical and temperamental signs, and — the part everybody remembers — she must not be frightened by the dark or by loud noise.\n\nDuring Indra Jatra the Kumari leaves her house and rides the chariot through the city. Enormous crowds come for a glimpse. Historically even the king came to receive her blessing.\n\nHer term ends at puberty. A new Kumari is chosen, and the former Kumari returns to ordinary life, to school, to her family.",
+      "The Kumari is a young girl, selected from the Shakya community, who is believed to hold the living presence of the goddess Taleju. She is chosen very young against a long list of physical and temperamental signs, and - the part everybody remembers - she must not be frightened by the dark or by loud noise.\n\nDuring Indra Jatra the Kumari leaves her house and rides the chariot through the city. Enormous crowds come for a glimpse. Historically even the king came to receive her blessing.\n\nHer term ends at puberty. A new Kumari is chosen, and the former Kumari returns to ordinary life, to school, to her family.",
     why:
       "The Kumari is the clearest example of something Newa culture does constantly: it locates the sacred in a living person rather than in a statue, and then it hands that role on. The divinity is real, and it is temporary, and that is not a contradiction.",
     lookFor: "The painted fire eye on the forehead, the red silk, and the heavy gold-and-silver headdress. At Melbourne's festival a child from the community takes the role.",
@@ -345,10 +345,10 @@ const trailRows: TrailRow[] = [
     image: "/images/trail/lakhey.jpg",
     teaser: "A demon who fell in love with the city and stayed to protect its children.",
     body:
-      "Majipa Lakhey is a demon from the forest. The story is that he followed a woman he loved into Kathmandu and asked to stay. The city agreed on one condition — that he take part in the festival and protect the children of the quarter. He has been doing it ever since.\n\nThe Lakhey dances alone, in a heavy red mask with a mane of hair, moving in sudden bursts and long prowling stalks. He dances to his own rhythm, the Lakhey baja, and the drummers follow him rather than the other way round. He will charge at the crowd. Children scream and run and then immediately come back for more.\n\nThe dancer is usually from a specific family and the role is inherited.",
+      "Majipa Lakhey is a demon from the forest. The story is that he followed a woman he loved into Kathmandu and asked to stay. The city agreed on one condition - that he take part in the festival and protect the children of the quarter. He has been doing it ever since.\n\nThe Lakhey dances alone, in a heavy red mask with a mane of hair, moving in sudden bursts and long prowling stalks. He dances to his own rhythm, the Lakhey baja, and the drummers follow him rather than the other way round. He will charge at the crowd. Children scream and run and then immediately come back for more.\n\nThe dancer is usually from a specific family and the role is inherited.",
     why:
       "Lakhey is what the Newa tradition does with things that frighten people: rather than banishing them, it gives them a job, a costume and a place in the calendar. The monster becomes the guardian without ever stopping being a monster.",
-    lookFor: "The red mask with gold fangs and the wild red mane. Watch the drummers — they are following his feet.",
+    lookFor: "The red mask with gold fangs and the wild red mane. Watch the drummers - they are following his feet.",
     related: ["swet-bhairab", "dhimey"]
   },
   {
@@ -360,7 +360,7 @@ const trailRows: TrailRow[] = [
     image: "/images/trail/pulukisi.jpg",
     teaser: "He is not performing. He is genuinely still looking for Indra.",
     body:
-      "When Indra came down to the valley, he came on his elephant. Indra was caught and tied up; the elephant was not. So Pulukisi went looking for him — through the streets, into courtyards, around corners, refusing to accept that his master was gone.\n\nThat search is what you are watching. Pulukisi runs at the crowd, swings his trunk, pushes into gaps, and never settles anywhere for long. Two people are inside the frame, which is why the movement looks the way it does.\n\nHe is easily the favourite of every child at the festival, and reliably terrifying to a few of them.",
+      "When Indra came down to the valley, he came on his elephant. Indra was caught and tied up; the elephant was not. So Pulukisi went looking for him - through the streets, into courtyards, around corners, refusing to accept that his master was gone.\n\nThat search is what you are watching. Pulukisi runs at the crowd, swings his trunk, pushes into gaps, and never settles anywhere for long. Two people are inside the frame, which is why the movement looks the way it does.\n\nHe is easily the favourite of every child at the festival, and reliably terrifying to a few of them.",
     why:
       "The whole Indra story is told through the eyes of the people who caught him, except for this. Pulukisi is the one character who simply misses someone. It is the emotional centre of the festival hiding inside the funniest part of it.",
     lookFor: "The white body, the painted flowers, the long swinging trunk, and the two pairs of feet underneath.",
@@ -375,9 +375,9 @@ const trailRows: TrailRow[] = [
     image: "/images/trail/dhimey.jpg",
     teaser: "The drum that tells you the festival has started, from three streets away.",
     body:
-      "The dhimey is a wide, two-headed cylindrical drum worn at the hip. One head is struck with a curved stick, the other with the open palm — two different voices from one instrument. It is played in a group, never alone, and paired with bhusya, the heavy hand cymbals that cut across the top of it.\n\nEach rhythm has a name and a purpose. Some belong to a particular procession, some to a particular deity, some only to a particular time of year. Players learn them by ear and by repetition, standing next to someone who already knows them.\n\nNewa Guthi Victoria runs weekly Dhimey classes in Melbourne. Several of the players you will hear today started in that room.",
+      "The dhimey is a wide, two-headed cylindrical drum worn at the hip. One head is struck with a curved stick, the other with the open palm - two different voices from one instrument. It is played in a group, never alone, and paired with bhusya, the heavy hand cymbals that cut across the top of it.\n\nEach rhythm has a name and a purpose. Some belong to a particular procession, some to a particular deity, some only to a particular time of year. Players learn them by ear and by repetition, standing next to someone who already knows them.\n\nNewa Guthi Victoria runs weekly Dhimey classes in Melbourne. Several of the players you will hear today started in that room.",
     why:
-      "The rhythms are the part of this tradition most easily lost in migration — they are not written down, and they only survive if somebody in Melbourne is willing to teach them on a Sunday. Every player on the field today is a small argument that they will survive.",
+      "The rhythms are the part of this tradition most easily lost in migration - they are not written down, and they only survive if somebody in Melbourne is willing to teach them on a Sunday. Every player on the field today is a small argument that they will survive.",
     lookFor: "The stick in one hand, the bare palm on the other head, and the cymbal players watching the lead drummer's shoulders for the change.",
     related: ["bansuri", "lakhey"]
   },
@@ -389,10 +389,10 @@ const trailRows: TrailRow[] = [
     locationId: "anmc",
     teaser: "The quiet half of Newa music, which almost nobody notices until it stops.",
     body:
-      "Against the weight of the drums sits the bansuri — a simple side-blown bamboo flute with no keys and no reed, played entirely with the fingers and the breath. In Newa processional music it carries the melody that the percussion is built around.\n\nBhusya, the thick bronze cymbals, sit in between: loud enough to be heard over the dhimey, precise enough to mark every turn in the rhythm.\n\nNewa Guthi Victoria teaches bansuri, dhimey and bhusya weekly in Melbourne, to children and adults. The classes are open to anyone, whether or not you have any Newa background at all.",
+      "Against the weight of the drums sits the bansuri - a simple side-blown bamboo flute with no keys and no reed, played entirely with the fingers and the breath. In Newa processional music it carries the melody that the percussion is built around.\n\nBhusya, the thick bronze cymbals, sit in between: loud enough to be heard over the dhimey, precise enough to mark every turn in the rhythm.\n\nNewa Guthi Victoria teaches bansuri, dhimey and bhusya weekly in Melbourne, to children and adults. The classes are open to anyone, whether or not you have any Newa background at all.",
     why:
-      "Instruments are the easiest part of a culture to carry across an ocean and the hardest to keep playing once you arrive. A weekly class in a suburban hall is not a small thing — it is the mechanism by which the music is still here in thirty years.",
-    lookFor: "Bamboo with six finger holes and no keys. Ask a player to let you try one — they usually will.",
+      "Instruments are the easiest part of a culture to carry across an ocean and the hardest to keep playing once you arrive. A weekly class in a suburban hall is not a small thing - it is the mechanism by which the music is still here in thirty years.",
+    lookFor: "Bamboo with six finger holes and no keys. Ask a player to let you try one - they usually will.",
     related: ["dhimey", "newa-guthi"]
   },
   {
@@ -404,7 +404,7 @@ const trailRows: TrailRow[] = [
     image: "/images/trail/samay-baji.jpg",
     teaser: "A plate where every single item is there for a reason.",
     body:
-      "Samay Baji is the ritual Newa plate, served at every feast, festival and rite of passage. Nothing on it is decoration.\n\nAt the centre is baji — beaten rice, flattened and dried, the staple that keeps. Around it: black soybeans, roasted and salted; wo, a thick lentil pancake; a strip of marinated buffalo or chicken choila, grilled and dressed with mustard oil and chilli; a boiled egg; a slice of ginger and a clove of garlic; and, traditionally, aila, the home-distilled spirit.\n\nThe combination is not arbitrary. Each element carries a meaning in Newa practice, and the plate is shared rather than eaten alone — the sharing is half of what makes it Samay Baji rather than lunch.",
+      "Samay Baji is the ritual Newa plate, served at every feast, festival and rite of passage. Nothing on it is decoration.\n\nAt the centre is baji - beaten rice, flattened and dried, the staple that keeps. Around it: black soybeans, roasted and salted; wo, a thick lentil pancake; a strip of marinated buffalo or chicken choila, grilled and dressed with mustard oil and chilli; a boiled egg; a slice of ginger and a clove of garlic; and, traditionally, aila, the home-distilled spirit.\n\nThe combination is not arbitrary. Each element carries a meaning in Newa practice, and the plate is shared rather than eaten alone - the sharing is half of what makes it Samay Baji rather than lunch.",
     why:
       "You can lose a language in one generation and a festival in two, but food goes last. For a lot of Newa families in Melbourne, this plate is the most regular contact their children have with the culture.",
     lookFor: "The flattened rice in the centre, and the arrangement around it. Ask at the display table which item does what.",
@@ -419,7 +419,7 @@ const trailRows: TrailRow[] = [
     image: "/images/trail/newa-guthi.jpg",
     teaser: "The reason any of this still exists.",
     body:
-      "A guthi is a Newa social institution — a trust, a roster and an obligation rolled into one. Traditionally, a guthi owned land, and the income from that land paid for a specific duty: maintaining a temple, running a festival, carrying out funeral rites, repairing a courtyard. Membership was inherited. If it was your family's turn, you turned up.\n\nIt is how the Kathmandu Valley kept hundreds of festivals running for centuries without a government arts budget. No guthi, no festival.\n\nNewa Guthi Victoria was established in 2024 and launched at Nhu Daya Bhintuna. It has no land. What it has instead is a membership, a weekly class timetable, and a group of people who keep saying yes — which turns out to be the part that actually mattered all along.",
+      "A guthi is a Newa social institution - a trust, a roster and an obligation rolled into one. Traditionally, a guthi owned land, and the income from that land paid for a specific duty: maintaining a temple, running a festival, carrying out funeral rites, repairing a courtyard. Membership was inherited. If it was your family's turn, you turned up.\n\nIt is how the Kathmandu Valley kept hundreds of festivals running for centuries without a government arts budget. No guthi, no festival.\n\nNewa Guthi Victoria was established in 2024 and launched at Nhu Daya Bhintuna. It has no land. What it has instead is a membership, a weekly class timetable, and a group of people who keep saying yes - which turns out to be the part that actually mattered all along.",
     why:
       "Every performance, chariot, costume and plate of food at this festival exists because a guthi organised it. Understanding the guthi is understanding why a volunteer community can do what it does.",
     lookFor: "The Newa Guthi Victoria desk at stall 1 in the marquee row. Ask about membership, the weekly classes, or volunteering for next year.",
@@ -432,9 +432,9 @@ const trailRows: TrailRow[] = [
     say: "YEN-ya POON-hee",
     locationId: "main-stage",
     image: "/images/trail/yenya-story.jpg",
-    teaser: "The festival of Yen — which is what Kathmandu calls itself.",
+    teaser: "The festival of Yen - which is what Kathmandu calls itself.",
     body:
-      "In Nepal Bhasa, Kathmandu is Yen. Ya means a celebration. Yenya is simply \"the festival of Kathmandu\" — not one festival among many, but the festival, the one the city is named in.\n\nPunhi means full moon. Yenya Punhi is the full-moon day at the heart of it.\n\nIn Kathmandu the festival runs eight days. It opens with the raising of the yosin, a tall wooden pole planted at Hanuman Dhoka, and closes when the pole comes down. In between: the chariots, the masked dances, Swet Bhairab uncovered, families lighting lamps for relatives who died during the year, and a city that stops working and goes outside.\n\nMelbourne's version fits into one Saturday. Everything else about it is the same.",
+      "In Nepal Bhasa, Kathmandu is Yen. Ya means a celebration. Yenya is simply \"the festival of Kathmandu\" - not one festival among many, but the festival, the one the city is named in.\n\nPunhi means full moon. Yenya Punhi is the full-moon day at the heart of it.\n\nIn Kathmandu the festival runs eight days. It opens with the raising of the yosin, a tall wooden pole planted at Hanuman Dhoka, and closes when the pole comes down. In between: the chariots, the masked dances, Swet Bhairab uncovered, families lighting lamps for relatives who died during the year, and a city that stops working and goes outside.\n\nMelbourne's version fits into one Saturday. Everything else about it is the same.",
     why:
       "A festival named after a city, held by people who live eleven thousand kilometres from it, is a fair definition of what diaspora means. This day is Kathmandu's festival, held at Diggers Rest, and both of those facts are true at once.",
     lookFor: "The main stage program. Almost every item on it maps onto something that happens across eight days in Kathmandu.",
@@ -463,7 +463,7 @@ export const trailPoints: TrailPoint[] = trailRows.map((row, index) => ({
 }));
 
 /* ==================================================================
-   DIRECTORY — stallholders confirmed via the 2026 EOI process
+   DIRECTORY - stallholders confirmed via the 2026 EOI process
    ================================================================== */
 
 export const listings: Listing[] = [
@@ -623,7 +623,7 @@ export const listings: Listing[] = [
     confirmed: true, published: true
   },
   {
-    id: "info-desk", slug: "info-desk", name: "Media Station — Information",
+    id: "info-desk", slug: "info-desk", name: "Media Station - Information",
     listingType: "community", categories: ["Community", "Help"],
     description: { en: "Lost property, lost children, first aid directions, program questions and volunteer check-in. Staffed all day." },
     locationId: "media-station", confirmed: true, published: true
@@ -631,7 +631,7 @@ export const listings: Listing[] = [
 ];
 
 /* ==================================================================
-   SPONSORS — the businesses paying for a festival that is free at
+   SPONSORS - the businesses paying for a festival that is free at
    the gate. Logos and tiers come from the 2026 sponsor pack.
    ================================================================== */
 
@@ -732,7 +732,7 @@ export const announcements: Announcement[] = [
   },
   {
     id: "sun",
-    title: { en: "Spring sun — bring a hat" },
+    title: { en: "Spring sun - bring a hat" },
     message: { en: "Most of the site is open ground with little shade. Water is available at the food trucks and there is a shaded quiet space in the Garden." },
     severity: "update", startsAt: at("09:00"), published: true
   },
@@ -770,13 +770,13 @@ export const infoCards: InfoCard[] = [
   {
     id: "lost", icon: "lost",
     title: { en: "Lost child or lost property" },
-    body: { en: "Go straight to the Media Station in the centre of the site. Tell any volunteer — they will radio it in immediately. Agree a meeting point with your group when you arrive: the Meet-Up Point by the tennis court is the easiest one to find." },
+    body: { en: "Go straight to the Media Station in the centre of the site. Tell any volunteer - they will radio it in immediately. Agree a meeting point with your group when you arrive: the Meet-Up Point by the tennis court is the easiest one to find." },
     locationId: "media-station"
   },
   {
     id: "access", icon: "access",
     title: { en: "Accessibility" },
-    body: { en: "The site is flat with firm ground throughout. The accessible toilet is inside the ANMC building. Accessible parking bays are at the eastern end of the general car park, closest to the entry — ask a marshal at the vehicle entry. A seated viewing area with a clear view of the stage is kept to the left of the main stage." },
+    body: { en: "The site is flat with firm ground throughout. The accessible toilet is inside the ANMC building. Accessible parking bays are at the eastern end of the general car park, closest to the entry - ask a marshal at the vehicle entry. A seated viewing area with a clear view of the stage is kept to the left of the main stage." },
     locationId: "anmc"
   },
   {
@@ -788,20 +788,20 @@ export const infoCards: InfoCard[] = [
   {
     id: "parking", icon: "parking",
     title: { en: "Parking and getting here" },
-    body: { en: "Free parking on site. Enter from Duncans Lane and follow the marshals — the main car park is a two-minute walk from the entry, and overflow parking opens when it fills. Traffic runs one way through the site." },
+    body: { en: "Free parking on site. Enter from Duncans Lane and follow the marshals - the main car park is a two-minute walk from the entry, and overflow parking opens when it fills. Traffic runs one way through the site." },
     action: { label: "Open in Maps", href: "https://maps.google.com/?q=Australian+Nepalese+Multicultural+Centre+100+Duncans+Ln+Diggers+Rest+VIC+3427" },
     locationId: "parking"
   },
   {
     id: "quiet", icon: "quiet",
     title: { en: "Quiet space" },
-    body: { en: "If the crowd or the drums get to be too much, go to the Media Station in the centre of the site. A quiet place to sit and hearing assistance are both available on request — ask any volunteer in a hi-vis vest and they will walk you there." },
+    body: { en: "If the crowd or the drums get to be too much, go to the Media Station in the centre of the site. A quiet place to sit and hearing assistance are both available on request - ask any volunteer in a hi-vis vest and they will walk you there." },
     locationId: "media-station"
   },
   {
     id: "water", icon: "water",
     title: { en: "Water and food" },
-    body: { en: "All hot food and drinks are along the western edge at the food trucks. Please note that no food or drink is permitted north of the marked line past the Media Station — signage on site makes this clear." },
+    body: { en: "All hot food and drinks are along the western edge at the food trucks. Please note that no food or drink is permitted north of the marked line past the Media Station - signage on site makes this clear." },
     locationId: "food-trucks"
   }
 ];
@@ -810,13 +810,13 @@ export const faqs: FaqItem[] = [
   { id: "cost", q: { en: "How much does it cost to get in?" },
     a: { en: "Nothing. Entry is free for everyone, and there is no ticket to book or show." } },
   { id: "who", q: { en: "Do I need to be Newa or Nepali to come?" },
-    a: { en: "No. This is a public multicultural festival and everybody is welcome — including taking the chariot rope." } },
+    a: { en: "No. This is a public multicultural festival and everybody is welcome - including taking the chariot rope." } },
   { id: "kids", q: { en: "Is it good for young children?" },
-    a: { en: "Yes. There is face painting, a children's showcase at 1:45pm, and Pulukisi, which is the highlight of the day for most kids. Baby change and a feeding space are on site. Note that Lakhey and Pulukisi both charge at the crowd — some very young children find it frightening at first." } },
+    a: { en: "Yes. There is face painting, a children's showcase at 1:45pm, and Pulukisi, which is the highlight of the day for most kids. Baby change and a feeding space are on site. Note that Lakhey and Pulukisi both charge at the crowd - some very young children find it frightening at first." } },
   { id: "dogs", q: { en: "Can I bring my dog?" },
     a: { en: "Please leave pets at home. Assistance animals are always welcome." } },
   { id: "weather", q: { en: "What happens if it rains?" },
-    a: { en: "The festival goes ahead. The ANMC building provides indoor shelter, and the stage program may be re-ordered — check this app, which updates live." } },
+    a: { en: "The festival goes ahead. The ANMC building provides indoor shelter, and the stage program may be re-ordered - check this app, which updates live." } },
   { id: "cash", q: { en: "Do stalls take card?" },
     a: { en: "Most do, but mobile reception at Diggers Rest can be patchy. Bringing some cash is a good idea." } },
   { id: "volunteer", q: { en: "How do I help next year?" },
@@ -848,7 +848,7 @@ export const routes: MapRoute[] = [
 export const seedData: FestivalData = {
   event: {
     id: "ij26",
-    name: { en: "Indra Jatra — Yenya Punhi Melbourne 2026" },
+    name: { en: "Indra Jatra - Yenya Punhi Melbourne 2026" },
     shortName: { en: "Indra Jatra Melbourne" },
     tagline: { en: "Celebrate culture. Support community." },
     intro: {
@@ -864,7 +864,7 @@ export const seedData: FestivalData = {
     heroMedia: {
       src: "/images/festival-hero.jpg",
       alt: { en: "Pulukisi, the white elephant, dancing through the crowd at Indra Jatra Melbourne 2025" },
-      credit: "Indra Jatra — Yenya Punhi Melbourne 2025"
+      credit: "Indra Jatra - Yenya Punhi Melbourne 2025"
     },
     organiser: "Newa Guthi Victoria",
     brandName: "Newa Guthi Victoria",

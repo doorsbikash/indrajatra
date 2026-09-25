@@ -42,7 +42,7 @@ export function Shell({ toast }: { toast: string | null }) {
     <div className="shell">
       <header className={`appbar${scrolled ? " appbar--scrolled" : ""}`}>
         <div className="appbar__inner">
-          <Link to="/" className="brand" aria-label={`${data.event.brandName} — Indra Jatra 2026, home`}>
+          <Link to="/" className="brand" aria-label={`${data.event.brandName} - Indra Jatra 2026, home`}>
             <img className="brand__mark" src="/brand/ngv-mark.png" alt="" width={38} height={38} />
             <span className="brand__text">
               <span className="brand__org">{data.event.brandName}</span>
@@ -110,7 +110,7 @@ function PreviewBar({ now }: { now: Date }) {
       <div className="preview-bar__inner">
         <Clock size={13} />
         <span>
-          Preview — showing Saturday 26 September, {formatTime(now.toISOString())}
+          Preview - showing Saturday 26 September, {formatTime(now.toISOString())}
         </span>
         <button type="button" onClick={() => clock.setPreview(null)}>
           Use real time

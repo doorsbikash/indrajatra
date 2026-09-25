@@ -118,7 +118,7 @@ export function SignInSheet({
               {busy ? "Sending…" : <><Mail size={17} /> {mode === "eventbrite" ? "Verify my Eventbrite pass" : "Send my code"}</>}
             </button>
             <button type="button" className="btn btn--quiet btn--block" onClick={onClose}>
-              Not now — keep browsing
+              Not now - keep browsing
             </button>
           </form>
 
@@ -143,7 +143,7 @@ export function SignInSheet({
 
           {challenge.demoCode && (
             <p className="demo-code">
-              Demo mode — use code <b>{challenge.demoCode}</b>
+              Demo mode - use code <b>{challenge.demoCode}</b>
             </p>
           )}
 
