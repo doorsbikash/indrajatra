@@ -55,8 +55,8 @@ export default function App() {
             <p className="post-kicker">Yenya Punhi Melbourne 2026</p>
             <h1>Thank you, Melbourne</h1>
             <p>
-              Thank you to everyone who celebrated with us, volunteered, performed, supported a stall,
-              and helped carry the festival forward.
+              The weather may not have been on our side, but Melbourne showed up with warmth, energy
+              and community spirit. Thank you for celebrating with us. See you next year, bigger and better.
             </p>
           </div>
         </section>
