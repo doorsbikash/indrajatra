@@ -103,17 +103,8 @@ export default function App() {
 
           <div className="stall-grid">
             {stallholders.map((listing) => (
-              <article className="stall" key={listing.id}>
+              <article className="stall" key={listing.id} title={listing.name}>
                 <div className="stall__logo"><Logo listing={listing} /></div>
-                <div className="stall__body">
-                  <h3>{listing.name}</h3>
-                  {!listing.categories.includes("Sponsor stall") && (
-                    <p>{listing.description?.en ?? "Thank you for being part of Indra Jatra 2026."}</p>
-                  )}
-                  <div className="stall__tags">
-                    {listing.categories.slice(0, 3).map((category) => <span key={category}>{category}</span>)}
-                  </div>
-                </div>
               </article>
             ))}
           </div>
