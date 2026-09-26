@@ -107,7 +107,9 @@ export default function App() {
                 <div className="stall__logo"><Logo listing={listing} /></div>
                 <div className="stall__body">
                   <h3>{listing.name}</h3>
-                  <p>{listing.description?.en ?? "Thank you for being part of Indra Jatra 2026."}</p>
+                  {!listing.categories.includes("Sponsor stall") && (
+                    <p>{listing.description?.en ?? "Thank you for being part of Indra Jatra 2026."}</p>
+                  )}
                   <div className="stall__tags">
                     {listing.categories.slice(0, 3).map((category) => <span key={category}>{category}</span>)}
                   </div>
