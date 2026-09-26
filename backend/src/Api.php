@@ -12,6 +12,7 @@ use Throwable;
 
 final class Api
 {
+    private const EVENT_ARCHIVED = true;
     private const CODE_TTL_MINUTES = 10;
     private const MAX_ATTEMPTS = 5;
     private const MAX_REQUESTS_PER_15_MINUTES = 5;
@@ -25,6 +26,9 @@ final class Api
         try {
             if ($method === 'GET' && $path === '/api/health') {
                 $this->json(['ok' => true, 'service' => 'indra-jatra-api', 'mode' => getenv('IJ26_APP_ENV') ?: 'production']);
+            }
+            if (self::EVENT_ARCHIVED && ($path === '/api/organiser-request' || str_starts_with($path, '/api/admin/'))) {
+                $this->json(['error' => 'The 2026 event organiser console has been archived.'], 410);
             }
             if ($method === 'GET' && $path === '/api/auth/session') {
                 $this->session();

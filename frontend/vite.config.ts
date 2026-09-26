@@ -25,15 +25,14 @@ export default defineConfig({
         "icons/apple-touch-icon.png",
         "brand/ngv-logo.png",
         "brand/ngv-mark.png",
-        "images/festival-hero.jpg",
-        "map/indra-jatra-2026-planned-site-map.jpeg"
+        "images/festival-hero.jpg"
       ],
       manifest: {
         id: "/",
-        name: "Indra Jatra — Yenya Punhi Melbourne 2026",
+        name: "Indra Jatra - Yenya Punhi Melbourne 2026",
         short_name: "Indra Jatra",
         description:
-          "Your companion for Indra Jatra — Yenya Punhi Melbourne 2026. Live programme, site map, the Yenya cultural trail and everything you need on the day.",
+          "Thank you to the sponsors, partners, stallholders and community behind Indra Jatra Melbourne 2026.",
         start_url: "/",
         scope: "/",
         display: "standalone",
@@ -46,11 +45,6 @@ export default defineConfig({
           { src: "/icons/icon-192.png", sizes: "192x192", type: "image/png", purpose: "any" },
           { src: "/icons/icon-512.png", sizes: "512x512", type: "image/png", purpose: "any" },
           { src: "/icons/icon-maskable-512.png", sizes: "512x512", type: "image/png", purpose: "maskable" }
-        ],
-        shortcuts: [
-          { name: "What's on now", url: "/schedule" },
-          { name: "Site map", url: "/map" },
-          { name: "Cultural trail", url: "/explore" }
         ]
       },
       workbox: {
