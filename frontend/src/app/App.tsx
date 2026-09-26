@@ -20,6 +20,7 @@ const sponsors = seedData.listings.filter(
 const stallholders = seedData.listings.filter(
   (listing) =>
     listing.published &&
+    listing.slug !== "accent-windows" &&
     (listing.locationId === "market-row" || listing.locationId === "food-trucks")
 );
 
