@@ -83,7 +83,7 @@ export default function App() {
                 <div className={`partner-grid partner-grid--${tierClass(tier)}`}>
                   {listings.map((listing) => (
                     <div
-                      className={`partner-logo${tier === "Photography Partner" ? " partner-logo--dark" : ""}`}
+                      className={`partner-logo${tier === "Photography Partner" ? " partner-logo--dark" : ""}${listing.slug === "nepali-mate" ? " partner-logo--nepali-mate" : ""}`}
                       key={listing.id}
                       title={listing.name}
                     >
